@@ -3,11 +3,6 @@ use crate::{Bernoulli, set_parameters, calculate_uniform};
 
 impl Bernoulli {
     /// コンストラクタ
-    /// # 例
-    /// ```
-    /// use rand_simple::Bernoulli;
-    /// let bernoulli = Bernoulli::new(1192u32);
-    /// ```
     pub fn new(_seed: u32) -> Self {
         let (x, y, z, w) = set_parameters(_seed);
 
@@ -21,27 +16,12 @@ impl Bernoulli {
     }
 
     /// 乱数の種を返す
-    /// # 例
-    /// ```
-    /// use rand_simple::Bernoulli;
-    /// let bernoulli = Bernoulli::new(1192u32);
-    /// let used_seed: u32 = bernoulli.get_seed();
-    /// println!("乱数の種: {}", used_seed); // 1192u32
-    /// ```
     pub fn get_seed(&self) -> u32 {
         self.seed
     }
 
-    /// 乱数を計算する
-    /// 
-    /// theta: f64 ある事象が生じる確率[0, 1]
-    /// # 例
-    /// ```
-    /// use rand_simple::Bernoulli;
-    /// let bernoulli = Bernoulli::new(1192u32);
-    /// let next = bernoulli.next_uint(0.5f64);
-    /// println!("乱数: {}", next); // 0u32
-    /// ```
+    /// 乱数を返す
+    /// theta: ある事象が生じる確率
     pub fn next_uint(&self, theta: f64) -> u32 {
         let (x, y, z, w, f) 
         = calculate_uniform(
@@ -54,7 +34,7 @@ impl Bernoulli {
         self.z_cell.set(z);
         self.w_cell.set(w);
 
-        // 確率変数を計算する
+        // 確率変数を計算する()
         if f <= theta { 1u32 }
         else { 0u32 }
     }

@@ -3,11 +3,6 @@ use crate::{Uniform, set_parameters, calculate_uniform};
 
 impl Uniform {
     /// コンストラクタ
-    /// # 例
-    /// ```
-    /// use rand_simple::Uniform;
-    /// let uniform = Uniform::new(1192u32);
-    /// ```
     pub fn new(_seed: u32) -> Self {
         let (x, y, z, w) = set_parameters(_seed);
 
@@ -21,25 +16,11 @@ impl Uniform {
     }
 
     /// 乱数の種を返す
-    /// # 例
-    /// ```
-    /// use rand_simple::Uniform;
-    /// let uniform = Uniform::new(1192u32);
-    /// let used_seed: u32 = uniform.get_seed();
-    /// println!("乱数の種: {}", used_seed); // 1192u32
-    /// ```
     pub fn get_seed(&self) -> u32 {
         self.seed
     }
 
-    /// 乱数を計算する
-    /// # 例
-    /// ```
-    /// use rand_simple::Uniform;
-    /// let uniform = Uniform::new(1192u32);
-    /// let next = uniform.next_double();
-    /// println!("乱数: {}", next); // 0.8698977918526851f64
-    /// ```
+    /// 閉区間[0, 1]の乱数を返す
     pub fn next_double(&self) -> f64 {
         let (x, y, z, w, f) 
         = calculate_uniform(
@@ -54,4 +35,7 @@ impl Uniform {
 
         f
     }
+
 }
+
+

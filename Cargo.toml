@@ -1,11 +1,11 @@
 [package]
 name = "rand_simple"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Tremendous1192"]
 edition = "2021"
 description = "This trait provides random number generator based on XOR shift."
 readme = "README.md"
-repository = "https://github.com/Tremendous1192/rand_trait"
+repository = "https://github.com/Tremendous1192/rand_simple"
 license = "MIT OR Apache-2.0"
 keywords = ["rng", "random"]
 
