@@ -31,7 +31,15 @@ let next = bernoulli.next_uint(0.5f64);
 println!("乱数: {}", next); // 0u32
 ```
 
-# 外部ライブラリ依存
+## 幾何分布
+```rs
+use rand_simple::Geometric;
+let geometric = Geometric::new(1192u32);
+let next = geometric.next_uint(0.5f64);
+println!("乱数: {}", next); // 0u32
+```
+
+# 外部ライブラリからの独立性
 使い勝手を考慮して、外部ライブラリに依存しないライブラリを目指しています。
 
 そして、組み込みの時刻取得ライブラリが無いとのことで、時刻による乱数の初期化はありません。

@@ -1,5 +1,5 @@
 use std::cell::Cell;
-use crate::{Uniform, set_parameters, calculate_uniform};
+use crate::{Uniform, set_parameters, update_state_and_calculate_uniform};
 
 impl Uniform {
     /// コンストラクタ
@@ -21,19 +21,8 @@ impl Uniform {
     }
 
     /// 閉区間[0, 1]の乱数を返す
-    pub fn next_double(&self) -> f64 {
-        let (x, y, z, w, f) 
-        = calculate_uniform(
-            self.x_cell.get(), self.y_cell.get(),
-            self.z_cell.get(), self.w_cell.get());
-
-        // 状態を記録する
-        self.x_cell.set(x);
-        self.y_cell.set(y);
-        self.z_cell.set(z);
-        self.w_cell.set(w);
-
-        f
+    pub fn sample(&self) -> f64 {
+        update_state_and_calculate_uniform(&self.x_cell, &self.y_cell, &self.z_cell, &self.w_cell)
     }
 
 }
