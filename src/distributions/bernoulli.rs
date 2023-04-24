@@ -1,17 +1,11 @@
-use std::cell::Cell;
-use crate::{Bernoulli, set_parameters, update_state_and_calculate_uniform};
+use crate::{Bernoulli, set_state, update_and_uniform};
 
 impl Bernoulli {
     /// コンストラクタ
     pub fn new(_seed: u32) -> Self {
-        let (x, y, z, w) = set_parameters(_seed);
-
         Self {
             seed: _seed,
-            x_cell: Cell::new(x),
-            y_cell: Cell::new(y),
-            z_cell: Cell::new(z),
-            w_cell: Cell::new(w),
+            xyzw: set_state(_seed),
         }
     }
 
@@ -24,7 +18,7 @@ impl Bernoulli {
     /// 
     /// probability: ある事象が生じる確率
     pub fn sample(&self, probability: f64) -> u32 {
-        let f: f64 = update_state_and_calculate_uniform(&self.x_cell, &self.y_cell, &self.z_cell, &self.w_cell);
+        let f: f64 = update_and_uniform(&self.xyzw);
 
         // 確率変数を計算する()
         if f <= probability { 1u32 }

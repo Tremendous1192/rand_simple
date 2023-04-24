@@ -2,7 +2,7 @@
 //! 
 //! 例えば、```use rand_simple::Uniform;```と宣言するだけで、一様分布乱数を使用できます。
 //! 
-//! 偉大な先達[rand](https://crates.io/crates/rand)に対する差別化として、簡素なモジュール宣言による使いやすさを図っています。
+//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言による使いやすさを目指しています。
 
 use std::cell::Cell; // 書き換え可能なメンバー変数
 mod distributions; // 確率変数の詳細
@@ -10,32 +10,32 @@ mod distributions; // 確率変数の詳細
 mod tests; // テストモジュール
 
 // 共通処理
-// 状態変数の設定
-pub(crate) fn set_parameters(_seed: u32) -> (u32, u32, u32, u32) {
+// 状態変数(x, y, z, w)の設定
+pub(crate) fn set_state(_seed: u32) -> (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) {
     let x: u32 = 123456789;
     let y: u32 = (_seed as u64 >> 32) as u32 & 0xFFFFFFFF;
     let z: u32 = _seed & 0xFFFFFFFF;
     let w: u32 = x ^ z;
 
-    (x, y, z, w)
+    (Cell::<u32>::new(x), Cell::<u32>::new(y), Cell::<u32>::new(z), Cell::<u32>::new(w))
 }
 
 // 共通処理
 // 閉区間[0, 1]の一様乱数を計算して、状態変数を更新する
-pub(crate) fn update_state_and_calculate_uniform(_x: &Cell<u32>, _y: &Cell<u32>, _z: &Cell<u32>, _w: &Cell<u32>) -> f64 {
+pub(crate) fn update_and_uniform(_xyzw: &(Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>)) -> f64 {
     // 一様乱数を計算する
-    let t: u32 = _x.get() ^ (_x.get() << 11);
-    let x: u32 = _y.get();
-    let y: u32 = _z.get();
-    let z: u32 = _w.get();
-    let mut w: u32 = _w.get();
+    let t: u32 = _xyzw.0.get() ^ (_xyzw.0.get() << 11);
+    let x: u32 = _xyzw.1.get();
+    let y: u32 = _xyzw.2.get();
+    let z: u32 = _xyzw.3.get();
+    let mut w: u32 = _xyzw.3.get();
     w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
 
     // 状態変数を更新する
-    _x.set(x);
-    _y.set(y);
-    _z.set(z);
-    _w.set(w);
+    _xyzw.0.set(x);
+    _xyzw.1.set(y);
+    _xyzw.2.set(z);
+    _xyzw.3.set(w);
 
     // 乱数を返す
     (w as f64) / (std::u32::MAX as f64)
@@ -55,10 +55,7 @@ pub(crate) fn update_state_and_calculate_uniform(_x: &Cell<u32>, _y: &Cell<u32>,
 /// ```
 pub struct Bernoulli {
     seed: u32, // 乱数の種
-    x_cell: Cell<u32>, // 状態変数 その1
-    y_cell: Cell<u32>, // 状態変数 その2
-    z_cell: Cell<u32>, // 状態変数 その3
-    w_cell: Cell<u32>, // 状態変数 その4
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
 }
 
 /// 幾何分布を計算する構造体
@@ -75,10 +72,7 @@ pub struct Bernoulli {
 /// ```
 pub struct Geometric {
     seed: u32, // 乱数の種
-    x_cell: Cell<u32>, // 状態変数 その1
-    y_cell: Cell<u32>, // 状態変数 その2
-    z_cell: Cell<u32>, // 状態変数 その3
-    w_cell: Cell<u32>, // 状態変数 その4
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
 }
 
 /// 一様乱数を計算する構造体
@@ -95,10 +89,7 @@ pub struct Geometric {
 /// ```
 pub struct Uniform {
     seed: u32, // 乱数の種
-    x_cell: Cell<u32>, // 状態変数 その1
-    y_cell: Cell<u32>, // 状態変数 その2
-    z_cell: Cell<u32>, // 状態変数 その3
-    w_cell: Cell<u32>, // 状態変数 その4
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
 }
 
 
