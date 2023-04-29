@@ -1,14 +1,3 @@
-// 乱数の種を返すメソッドのテスト
-#[test]
-fn test_get_seed() {
-    use crate::Bernoulli;
-
-    let bernoulli = Bernoulli::new(1192u32);
-    let seed: u32 = bernoulli.get_seed();
-
-    assert_eq!(seed, 1192u32);
-}
-
 #[test]
 fn test_sample() {
     use crate::Bernoulli;

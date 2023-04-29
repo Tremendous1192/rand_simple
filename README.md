@@ -24,26 +24,31 @@ Xorshiftはたった4つの状態変数から周期 $2^{128} - 1$ の乱数計�
 ```rs
 use rand_simple::Uniform;
 let uniform = Uniform::new(1192u32);
-let next = uniform.sample();
+let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
 println!("乱数: {}", next); // 0.8698977918526851f64
+```
+## 正規分布
+```rs
+use rand_simple::Normal;
+let normal = Normal::new(1192u32, 765u32);
+let next = normal.sample(); // 平均値 0, 標準偏差 1 の標準正規分布
+println!("乱数: {}", next); // -1.2296205447119757
 ```
 ## ベルヌーイ分布
 ```rs
 use rand_simple::Bernoulli;
 let bernoulli = Bernoulli::new(1192u32);
-let next = bernoulli.sample(0.5f64);
+let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
 println!("乱数: {}", next); // 0u32
 ```
-
 ## 幾何分布
 ```rs
 use rand_simple::Geometric;
 let geometric = Geometric::new(1192u32);
-let next = geometric.sample(0.5f64);
+let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じるまでの試行回数
 println!("乱数: {}", next); // 4u32
 ```
-
-# 外部ライブラリからの独立性
+# 外部ライブラリからの独立
 使い勝手を考慮して、外部ライブラリに依存しないライブラリを目指しています。
 
-そして、組み込みの時刻取得ライブラリが無いとのことで、よくある時刻による乱数の初期化はありません。
+そして、デフォルトの時刻取得ライブラリが無いとのことで、よくある時刻による乱数の初期化はありません。

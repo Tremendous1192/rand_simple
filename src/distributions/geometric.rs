@@ -2,32 +2,21 @@ use crate::{Geometric, set_state, update_and_uniform};
 
 impl Geometric {
     /// コンストラクタ
+    /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
         Self {
-            seed: _seed,
             xyzw: set_state(_seed),
         }
     }
 
-    /// 乱数の種を返す
-    pub fn get_seed(&self) -> u32 {
-        self.seed
-    }
-
-    /// 乱数を返す
-    /// 
-    /// probability: ある事象が生じる確率
+    /// ある確率の事象が初めて生じるまでの試行回数を返す
+    /// * `probability` - ある事象が生じる確率
     pub fn sample(&self, probability: f64) -> u32 {
         let mut trial: u32 = 1;
 
         loop {
-            let f: f64 = update_and_uniform(&self.xyzw);
-
-            // 確率変数を計算する()
-            if f <= probability { break; }
+            if update_and_uniform(&self.xyzw) <= probability { return trial; }
             else { trial += 1; }
         }
-
-        trial
     }
 }
