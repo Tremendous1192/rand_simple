@@ -4,7 +4,7 @@
 //! 
 //! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
 
-//#[macro_use] mod macros; // マクロモジュール
+mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細
 #[cfg(test)] mod test_distributions; // テストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
@@ -49,12 +49,26 @@ const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 // 連続型確率変数
 
 /// 一様乱数を計算する構造体
-/// # 使用例
+/// # 使用例 1 (new関数)
 /// ```
 /// use rand_simple::Uniform;
-/// let uniform = Uniform::new(1192u32); // コンストラクタ
+/// let uniform = Uniform::new(1192u32);
 /// let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
 /// println!("乱数: {}", next); // 0.8698977918526851f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_uniform;
+/// let uniform = create_uniform!(1192u32);
+/// let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
+/// println!("乱数: {}", next); // 0.8698977918526851f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_uniform;
+/// let uniform = create_uniform!();
+/// let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
+/// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Uniform {
     xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数

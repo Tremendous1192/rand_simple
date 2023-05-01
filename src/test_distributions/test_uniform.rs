@@ -39,17 +39,14 @@ fn test_sample_vec() {
     assert_eq!(vec_left, vec_right);
 }
 
-/*
 #[test]
 fn test_constructor_macro() {
-    use crate::*;
-    let uniform = create_uniform!(1192u32);
+    let uniform = crate::create_uniform!(1192u32);
     let next_1: f64 = uniform.sample(); // 0.8698977918526851
     assert_eq!(next_1, 0.8698977918526851f64);
 
     // 基準時刻からの経過時間のナノ秒を乱数の種とした場合
-    let uniform_2 = create_uniform!();
+    let uniform_2 = crate::create_uniform!();
     let next_2: f64 = uniform_2.sample();
     println!("{}", next_2);
 }
-*/

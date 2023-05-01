@@ -21,11 +21,26 @@ Xorshiftはたった4つの状態変数から周期 $2^{128} - 1$ の乱数計�
 
 # 使用例
 ## 一様分布
+### new関数
 ```rust
 use rand_simple::Uniform;
 let uniform = Uniform::new(1192u32);
 let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
 println!("乱数: {}", next); // 0.8698977918526851f64
+```
+### マクロ・引数有り
+```rust
+use rand_simple::create_uniform;
+let uniform = create_uniform!(1192u32);
+let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
+println!("乱数: {}", next); // 0.8698977918526851f64
+```
+### マクロ・引数無し
+```rust
+use rand_simple::create_uniform;
+let uniform = create_uniform!();
+let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
+println!("乱数: {}", next); // 値不明
 ```
 ## 正規分布
 ```rust
@@ -59,6 +74,5 @@ println!("乱数: {}", next); // 4u32
 使い勝手を考慮して、外部ライブラリに依存しないライブラリを目指しています。
 
 ```use std::time::SystemTime::now();```で現在時刻を呼べることを知りました。
-失礼いたしました。
 順次、宣言的マクロを用いた時刻による初期化を組み込んでいきたいと思います。
 ~~そして、デフォルトの時刻取得ライブラリが無いとのことで、よくある時刻による乱数の初期化はありません。~~
