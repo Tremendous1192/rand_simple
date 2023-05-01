@@ -4,7 +4,7 @@
 //! 
 //! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
 
-#[macro_use] mod macros; // マクロモジュール
+//#[macro_use] mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細
 #[cfg(test)] mod test_distributions; // テストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
