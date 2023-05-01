@@ -2,7 +2,7 @@
 // 連続型確率変数
 mod uniform; // 一様分布
 mod normal; // 正規分布
-//mod half_normal; // 半正規分布
+mod half_normal; // 半正規分布
 //mod log_normal; // 対数正規分布
 //mod cauchy; // コーシー分布
 //mod levy; // レヴィ分布

@@ -2,12 +2,12 @@
 //! 
 //! 例えば、```use rand_simple::Uniform;```と宣言するだけで、一様分布乱数を使用できます。
 //! 
-//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言による使いやすさを目指しています。
+//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
 
-use std::cell::Cell; // 書き換え可能なメンバー変数
+#[macro_use] mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細
-#[cfg(test)]
-mod test_distributions; // テストモジュール
+#[cfg(test)] mod test_distributions; // テストモジュール
+use std::cell::Cell; // 書き換え可能なメンバー変数
 
 // 共通処理
 // 状態変数(x, y, z, w)を設定する
@@ -75,8 +75,20 @@ pub struct Normal {
     even_result: Cell<f64>, // 偶数回目の計算結果
 }
 
-// 半正規分布を計算する構造体
-//pub struct HalfNormal {}
+/// 半正規分布を計算する構造体
+/// # 使用例
+/// ```
+/// use rand_simple::HalfNormal;
+/// let half_normal = HalfNormal::new(1192u32, 765u32); // コンストラクタ
+/// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
+/// println!("乱数: {}", next); // 2.5308912695634582
+/// ```
+pub struct HalfNormal {
+    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
+    even_result: Cell<f64>, // 偶数回目の計算結果
+}
 
 // 対数正規分布を計算する構造体
 //pub struct LogNormal {}
