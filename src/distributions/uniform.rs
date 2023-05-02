@@ -16,3 +16,15 @@ impl Uniform {
 }
 
 
+#[macro_export]
+/// 一様乱数のインスタンスを生成するマクロ
+macro_rules! create_uniform {
+    // 引数無し
+    () => {{
+        $crate::Uniform::new($crate::create_seed())
+    }};
+    // 引数有り
+    ($seed: expr) => {
+        $crate::Uniform::new($seed as u32)
+    };
+}

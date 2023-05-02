@@ -16,3 +16,16 @@ impl Bernoulli {
         else { 0u32 }
     }
 }
+
+#[macro_export]
+/// ベルヌーイ分布のインスタンスを生成するマクロ
+macro_rules! create_bernoulli {
+    // 引数無し
+    () => {{
+        $crate::Bernoulli::new($crate::create_seed())
+    }};
+    // 引数有り
+    ($seed: expr) => {
+        $crate::Bernoulli::new($seed as u32)
+    };
+}

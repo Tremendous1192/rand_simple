@@ -44,5 +44,18 @@ impl HalfNormal {
             }
         }
     }
+}
 
+#[macro_export]
+/// 半正規分布のインスタンスを生成するマクロ
+macro_rules! create_half_normal {
+    // 引数無し
+    () => {{
+        let seeds: (u32, u32) = $crate::create_seeds();
+        $crate::HalfNormal::new(seeds.0, seeds.1)
+    }};
+    // 引数有り
+    ($seed_1: expr, $seed_2: expr) => {
+        $crate::HalfNormal::new($seed_1 as u32, $seed_2 as u32)
+    };
 }

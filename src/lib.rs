@@ -2,12 +2,21 @@
 //! 
 //! 例えば、```use rand_simple::Uniform;```と宣言するだけで、一様分布乱数を使用できます。
 //! 
-//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
+//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、
+//! 簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
+//! # 使用例
+//! ```
+//! use rand_simple::Uniform;
+//! let uniform = Uniform::new(1192u32);
+//! let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
+//! println!("乱数: {}", next); // 0.8698977918526851f64
+//! ```
 
-mod macros; // マクロモジュール
+//mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細
 #[cfg(test)] mod test_distributions; // テストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
+use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
 // 共通処理
 // 状態変数(x, y, z, w)を設定する
@@ -42,9 +51,23 @@ pub(crate) fn update_and_uniform(_xyzw: &(Cell<u32>, Cell<u32>, Cell<u32>, Cell<
 }
 
 // 一様乱数を計算するための分母
-// 一々呼び出すよりは定数にしておいた方が計算速度が軽いのではないか?
+// 一々呼び出すよりは定数にしておいた方が計算時間が短いのではないか?
 const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 
+// 共通処理
+/// 現在時刻から乱数の種を計算する関数
+pub fn create_seed() -> u32 {
+    // 4_294_967_295u32 / 24 * 60 * 60 * 1000ミリ秒/日 ≒ 49.7日周期
+    SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards").as_millis() as u32
+}
+
+// 共通処理
+/// 正規分布等2つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
+pub fn create_seeds() -> (u32, u32) {
+    let duration = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
+    // 49.7日周期と4秒周期の組み合わせ
+    (duration.as_millis() as u32, duration.as_nanos() as u32)
+}
 
 // 連続型確率変数
 
@@ -75,12 +98,26 @@ pub struct Uniform {
 }
 
 /// 正規分布を計算する構造体
-/// # 使用例
+/// # 使用例 1 (new関数)
 /// ```
 /// use rand_simple::Normal;
-/// let normal = Normal::new(1192u32, 765u32); // コンストラクタ
+/// let normal = Normal::new(1192u32, 765u32);
 /// let next = normal.sample(); // 平均値 0, 標準偏差 1 の標準正規分布
 /// println!("乱数: {}", next); // -1.2296205447119757
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_normal;
+/// let create_normal = create_normal!(1192u32, 765u32);
+/// let next = create_normal.sample(); // 平均値 0, 標準偏差 1 の標準正規分布
+/// println!("乱数: {}", next); // -1.2296205447119757
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_normal;
+/// let create_normal = create_normal!();
+/// let next = create_normal.sample(); // 平均値 0, 標準偏差 1 の標準正規分布
+/// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Normal {
     xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
@@ -90,12 +127,26 @@ pub struct Normal {
 }
 
 /// 半正規分布を計算する構造体
-/// # 使用例
+/// # 使用例 1 (new関数)
 /// ```
 /// use rand_simple::HalfNormal;
-/// let half_normal = HalfNormal::new(1192u32, 765u32); // コンストラクタ
+/// let half_normal = HalfNormal::new(1192u32, 765u32);
 /// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
 /// println!("乱数: {}", next); // 2.5308912695634582
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_half_normal;
+/// let half_normal = create_half_normal!(1192u32, 765u32);
+/// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
+/// println!("乱数: {}", next); // 2.5308912695634582
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_half_normal;
+/// let half_normal = create_half_normal!();
+/// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
+/// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct HalfNormal {
     xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
@@ -207,12 +258,26 @@ pub struct HalfNormal {
 // 離散型確率変数
 
 /// ベルヌーイ分布を計算する構造体
-/// # 使用例
+/// # 使用例 1 (new関数)
 /// ```
 /// use rand_simple::Bernoulli;
-/// let bernoulli = Bernoulli::new(1192u32); // コンストラクタ
+/// let bernoulli = Bernoulli::new(1192u32);
 /// let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
 /// println!("乱数: {}", next); // 0u32
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_bernoulli;
+/// let bernoulli = create_bernoulli!(1192u32);
+/// let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
+/// println!("乱数: {}", next); // 0u32
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_bernoulli;
+/// let bernoulli = create_bernoulli!();
+/// let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
+/// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Bernoulli {
     xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
@@ -222,12 +287,26 @@ pub struct Bernoulli {
 //pub  struct Binomial {}
 
 /// 幾何分布を計算する構造体
-/// # 使用例
+/// # 使用例 1 (new関数)
 /// ```
 /// use rand_simple::Geometric;
-/// let geometric = Geometric::new(1192u32); // コンストラクタ
+/// let geometric = Geometric::new(1192u32);
 /// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
 /// println!("乱数: {}", next); // 4u32
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_geometric;
+/// let geometric = create_geometric!(1192u32);
+/// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
+/// println!("乱数: {}", next); // 4u32
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_geometric;
+/// let geometric = create_geometric!();
+/// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
+/// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Geometric {
     xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数

@@ -46,5 +46,18 @@ impl Normal {
             }
         }
     }
+}
 
+#[macro_export]
+/// 正規分布のインスタンスを生成するマクロ
+macro_rules! create_normal {
+    // 引数無し
+    () => {{
+        let seeds: (u32, u32) = $crate::create_seeds();
+        $crate::Normal::new(seeds.0, seeds.1)
+    }};
+    // 引数有り
+    ($seed_1: expr, $seed_2: expr) => {
+        $crate::Normal::new($seed_1 as u32, $seed_2 as u32)
+    };
 }

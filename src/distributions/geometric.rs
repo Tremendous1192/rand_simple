@@ -20,3 +20,16 @@ impl Geometric {
         }
     }
 }
+
+#[macro_export]
+/// 幾何分布のインスタンスを生成するマクロ
+macro_rules! create_geometric {
+    // 引数無し
+    () => {{
+        $crate::Geometric::new($crate::create_seed())
+    }};
+    // 引数有り
+    ($seed: expr) => {
+        $crate::Geometric::new($seed as u32)
+    };
+}
