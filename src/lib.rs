@@ -218,8 +218,34 @@ pub struct HalfCauchy {
     xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
 }
 
-// レヴィ分布を計算する構造体
-//pub struct Levy {}
+/// レヴィ分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::Levy;
+/// let levy = Levy::new(1192u32, 765u32);
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 0.15611801640551176f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_levy;
+/// let levy = create_levy!(1192u32, 765u32);
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 0.15611801640551176f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_levy;
+/// let levy = create_levy!();
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct Levy {
+    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
+    even_result: Cell<f64>, // 偶数回目の計算結果
+}
 
 // 指数分布を計算する構造体
 //pub struct Exponential {}
