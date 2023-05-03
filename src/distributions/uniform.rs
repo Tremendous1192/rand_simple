@@ -17,7 +17,7 @@ impl Uniform {
 
 
 #[macro_export]
-/// 一様乱数のインスタンスを生成するマクロ
+/// 一様分布のインスタンスを生成するマクロ
 macro_rules! create_uniform {
     // 引数無し
     () => {{

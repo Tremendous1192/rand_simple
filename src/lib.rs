@@ -164,8 +164,35 @@ pub struct HalfNormal {
 // 対数正規分布を計算する構造体
 //pub struct LogNormal {}
 
-// コーシー分布を計算する構造体
-//pub struct Cauchy {}
+/// コーシー分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::Cauchy;
+/// let cauchy = Cauchy::new(1192u32, 765u32);
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 1.0046339315561652f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_cauchy;
+/// let cauchy = create_cauchy!(1192u32, 765u32);
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 1.0046339315561652f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_cauchy;
+/// let cauchy = create_cauchy!();
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct Cauchy {
+    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+}
+
+// 半コーシー分布を計算する構造体
+// pub struct HalfCauchy
 
 // レヴィ分布を計算する構造体
 //pub struct Levy {}
