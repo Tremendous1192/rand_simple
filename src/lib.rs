@@ -191,8 +191,32 @@ pub struct Cauchy {
     xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
 }
 
-// 半コーシー分布を計算する構造体
-// pub struct HalfCauchy
+/// 半コーシー分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::HalfCauchy;
+/// let half_cauchy = HalfCauchy::new(1192u32, 765u32);
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 0.9999951805774843f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_half_cauchy;
+/// let half_cauchy = create_half_cauchy!(1192u32, 765u32);
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 0.9999951805774843f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_half_cauchy;
+/// let half_cauchy = create_half_cauchy!();
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct HalfCauchy {
+    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+}
 
 // レヴィ分布を計算する構造体
 //pub struct Levy {}

@@ -5,7 +5,7 @@ mod test_normal; // 正規分布
 mod test_half_normal; // 半正規分布
 //mod test_log_normal; // 対数正規分布
 mod test_cauchy; // コーシー分布
-//mod test_half_cauchy; // 半コーシー分布
+mod test_half_cauchy; // 半コーシー分布
 //mod test_levy; // レヴィ分布
 //mod test_exponential; // 指数分布
 //mod test_laplace; // ラプラス分布
