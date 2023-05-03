@@ -7,7 +7,7 @@ mod half_normal; // 半正規分布
 mod cauchy; // コーシー分布
 mod half_cauchy; // 半コーシー分布
 mod levy; // レヴィ分布
-//mod exponential; // 指数分布
+mod exponential; // 指数分布
 //mod laplace; // ラプラス分布
 //mod rayleigh; // レイリー分布
 //mod weibull; // ワイブル分布

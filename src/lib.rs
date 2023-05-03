@@ -247,8 +247,31 @@ pub struct Levy {
     even_result: Cell<f64>, // 偶数回目の計算結果
 }
 
-// 指数分布を計算する構造体
-//pub struct Exponential {}
+/// 指数分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::Exponential;
+/// let exponential = Exponential::new(1192u32);
+/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 1.4145870106554208f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_exponential;
+/// let exponential = create_exponential!(1192u32);
+/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 1.4145870106554208f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_exponential;
+/// let exponential = create_exponential!();
+/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct Exponential {
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+}
 
 // ラプラス分布を計算する構造体
 //pub struct Laplace {}
