@@ -89,3 +89,34 @@ fn test_sample() {
     let next_4 = uniform_4.test_sample(&());
     assert_eq!(next_1, next_4);
 }
+
+// ここまで、オーバーロードのテスト部分
+
+
+#[macro_export]
+/// 確率変数を計算するマクロのテスト。変数名は固定
+macro_rules! test_call_method {
+    ($object: expr, $min: ident, $max: ident) => {{
+        let range: f64 = ($max as f64 - $min as f64).abs();
+        let origin: f64 = ($max as f64).min($min as f64);
+        $object.sample() * range + origin
+    }};
+    // 正規分布等用
+    ($object: expr, $mu: ident, $theta: ident) => {
+        $object.sample() * ($theta as f64) + ($mu as f64)
+    };
+    ($object:expr) => {
+        $object.sample()
+    };
+}
+
+#[test]
+fn test_macro_sample() {
+    use crate::{Uniform, test_call_method};
+    let uniform = Uniform::new(1192u32);
+    let min: f64 = 0f64;
+    let max: f64 = 1f64;
+    assert_eq!(test_call_method!(uniform), 0.8698977918526851f64);
+    assert_eq!(test_call_method!(uniform, min, max), 0.8698962295590659f64);
+}
+
