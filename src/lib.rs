@@ -273,8 +273,31 @@ pub struct Exponential {
     xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
 }
 
-// ラプラス分布を計算する構造体
-//pub struct Laplace {}
+/// ラプラス分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::Laplace;
+/// let laplace = Laplace::new(1192u32);
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // -1.2961143823579562f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_laplace;
+/// let laplace = create_laplace!(1192u32);
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // -1.2961143823579562f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_laplace;
+/// let laplace = create_laplace!();
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct Laplace {
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+}
 
 // レイリー分布を計算する構造体
 //pub struct Rayleigh {}

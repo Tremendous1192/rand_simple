@@ -19,6 +19,9 @@ Xorshiftはたった4つの状態変数から周期 $2^{128} - 1$ の乱数計�
 0.001秒ごとに乱数を生成したとしても、ループが完了するまで$10^{28}$年かかるそうなので、
 ちょっとした乱数生成の範疇ではこれで十分だと考えています。
 
+# 外部ライブラリからの独立
+使い勝手を考慮して、外部ライブラリに依存しないライブラリを目指しています。
+
 # 使用例
 ## 一様分布
 #### new関数
@@ -84,6 +87,13 @@ let let exponential = Exponential::new(1192u32);
 let next = exponential.sample(); // 尺度母数 θ = 1の乱数
 println!("乱数: {}", next); // 1.4145870106554208f64
 ```
+## ラプラス分布
+```rust
+use rand_simple::Laplace;
+let laplace = Laplace::new(1192u32);
+let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+println!("乱数: {}", next); // -1.2961143823579562f64
+```
 ## ベルヌーイ分布
 ```rust
 use rand_simple::Bernoulli;
@@ -98,5 +108,3 @@ let geometric = Geometric::new(1192u32);
 let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じるまでの試行回数
 println!("乱数: {}", next); // 4u32
 ```
-# 外部ライブラリからの独立
-使い勝手を考慮して、外部ライブラリに依存しないライブラリを目指しています。

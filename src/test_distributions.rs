@@ -8,7 +8,7 @@ mod test_cauchy; // コーシー分布
 mod test_half_cauchy; // 半コーシー分布
 mod test_levy; // レヴィ分布
 mod test_exponential; // 指数分布
-//mod test_laplace; // ラプラス分布
+mod test_laplace; // ラプラス分布
 //mod test_rayleigh; // レイリー分布
 //mod test_weibull; // ワイブル分布
 //mod test_gunbel; // ガンベル分布
