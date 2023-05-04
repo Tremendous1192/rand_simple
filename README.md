@@ -56,6 +56,34 @@ let half_normal = HalfNormal::new(1192u32, 765u32);
 let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
 println!("乱数: {}", next); // 2.5308912695634582
 ```
+## コーシー分布
+```rust
+use rand_simple::Cauchy;
+let cauchy = Cauchy::new(1192u32, 765u32);
+let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+println!("乱数: {}", next); // 1.0046339315561652f64
+```
+## 半コーシー分布
+```rust
+use rand_simple::HalfCauchy;
+let half_cauchy = HalfCauchy::new(1192u32, 765u32);
+let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+println!("乱数: {}", next); // 0.9999951805774843f64
+```
+## レヴィ分布
+```rust
+use rand_simple::Levy;
+let levy = Levy::new(1192u32, 765u32);
+let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+println!("乱数: {}", next); // 0.15611801640551176f64
+```
+## 指数分布
+```rust
+use rand_simple::Exponential;
+let let exponential = Exponential::new(1192u32);
+let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+println!("乱数: {}", next); // 1.4145870106554208f64
+```
 ## ベルヌーイ分布
 ```rust
 use rand_simple::Bernoulli;
