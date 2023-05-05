@@ -299,8 +299,31 @@ pub struct Laplace {
     xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
 }
 
-// レイリー分布を計算する構造体
-//pub struct Rayleigh {}
+/// レイリー分布を計算する構造体
+/// # 使用例 1 (new関数)
+/// ```
+/// use rand_simple::Rayleigh;
+/// let rayleigh = Rayleigh::new(1192u32);
+/// let next = rayleigh.sample(); // 尺度母数 σ = 1の標準指数分布
+/// println!("乱数: {}", next); // 1.6820148695272708f64
+/// ```
+/// # 使用例 2 (マクロ・引数有り)
+/// ```
+/// use rand_simple::create_rayleigh;
+/// let rayleigh = create_rayleigh!(1192u32);
+/// let next = rayleigh.sample(); // 尺度母数 σ = 1の標準指数分布
+/// println!("乱数: {}", next); // 1.6820148695272708f64
+/// ```
+/// # 使用例 3 (マクロ・引数無し)
+/// ```
+/// use rand_simple::create_rayleigh;
+/// let rayleigh = create_rayleigh!();
+/// let next = rayleigh.sample(); // 尺度母数 θ = 1の標準指数分布
+/// println!("乱数: {}", next); // 値不明
+/// ```
+pub struct Rayleigh {
+    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+}
 
 // ワイブル分布を計算する構造体
 //pub struct Weibull {}
