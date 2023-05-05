@@ -13,24 +13,25 @@ impl Cauchy {
         }
     }
 
-    /// 平均値 0, 標準偏差 1 の標準正規分布乱数を返す
+    /// 標準コーシー分布に従う乱数を返す
+    /// * 位置母数 0
+    /// * 尺度母数 1
     pub fn sample(&self) -> f64 {
+        // アルゴリズム 3.27
         loop {
             // step 1: 区間(0, 1) の一様乱数u1, u2を独立に発生させる。ただし、u2 ≒ 0.5
             let u1: f64 = update_and_uniform(&self.xyzw_1);
             let u2: f64 = update_and_uniform(&self.xyzw_2);
+            if u2 == 0.5f64 { continue; }
 
-            if 0f64 < u1 && u1 < 1f64 && 0f64 < u2 && u2 < 1f64 && u2 != 0.5f64 {
-                // step 2: 中間変数を生成する
-                let v1 = 2f64 * u1 - 1f64;
-                let v2 = 2f64 * u2 - 1f64;
-                let w = v1 * v1 + v2 * v2;
+            // step 2: 中間変数を生成する
+            let v1 = 2f64 * u1 - 1f64;
+            let v2 = 2f64 * u2 - 1f64;
+            let w = v1.powi(2) + v2.powi(2);
 
-                // step 3: w < 1のとき、乱数を計算する
-                if w < 1f64 {
-                    return v1 / v2;
-                }
-
+            // step 3: w < 1のとき、戻り値計算に移る
+            if w < 1f64 {
+                return v1 / v2;
             }
         }
     }
@@ -38,13 +39,13 @@ impl Cauchy {
 
 #[macro_export]
 /// コーシー分布のインスタンスを生成するマクロ
+/// * `() =>` - 乱数の種は自動生成
+/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 macro_rules! create_cauchy {
-    // 引数無し
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
         $crate::Cauchy::new(seeds.0, seeds.1)
     }};
-    // 引数有り
     ($seed_1: expr, $seed_2: expr) => {
         $crate::Cauchy::new($seed_1 as u32, $seed_2 as u32)
     };

@@ -13,22 +13,22 @@ impl HalfCauchy {
         }
     }
 
-    /// 平均値 0, 標準偏差 1 の標準正規分布乱数を返す
+    /// 標準半コーシー分布に従う乱数を返す
+    /// * 尺度母数 1
     pub fn sample(&self) -> f64 {
+        // アルゴリズム 3.34
         loop {
-            // step 1: 区間(0, 1) の一様乱数u1, u2を独立に発生させる。ただし、u2 ≒ 0.5
+            // step 1: 区間(0, 1) の一様乱数u1, 区間(0, 1)のu2を独立に発生させる。
             let u1: f64 = update_and_uniform(&self.xyzw_1);
             let u2: f64 = update_and_uniform(&self.xyzw_2);
+            if u1 == 1f64 || u2 == 0f64 || u2 == 1f64 { continue; }
 
-            if 0f64 < u1 && u1 < 1f64 && 0f64 < u2 && u2 < 1f64 {
-                // step 2: 中間変数を生成する
-                let w = u1 * u1 + u2 * u2;
+            // step 2: 中間変数を生成する
+            let w = u1.powi(2) + u2.powi(2);
 
-                // step 3: w < 1のとき、乱数を計算する
-                if w < 1f64 {
-                    return u1 / u2;
-                }
-
+            // step 3: w < 1のとき、戻り値計算に移る
+            if w < 1f64 {
+                return u1 / u2;
             }
         }
     }
@@ -36,13 +36,13 @@ impl HalfCauchy {
 
 #[macro_export]
 /// 半コーシー分布のインスタンスを生成するマクロ
+/// * `() =>` - 乱数の種は自動生成
+/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 macro_rules! create_half_cauchy {
-    // 引数無し
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
         $crate::HalfCauchy::new(seeds.0, seeds.1)
     }};
-    // 引数有り
     ($seed_1: expr, $seed_2: expr) => {
         $crate::HalfCauchy::new($seed_1 as u32, $seed_2 as u32)
     };

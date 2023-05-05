@@ -16,10 +16,12 @@ impl HalfNormal {
         }
     }
 
-    /// 標準偏差 1 の標準正規分布乱数を返す
+    /// 標準半正規分布に従う乱数を返す
+    /// * 標準偏差 1
     pub fn sample(&self) -> f64 {
+        // アルゴリズム 3.17
+        // step 1 & 5: 偶数回目の乱数は、奇数回目で計算したもう一つの値を返す
         if self.even_flag.get() {
-            // step 1 & 5: 偶数回目の乱数は、奇数回目で計算したもう一つの値を返す
             self.even_flag.set(false);
             self.even_result.get()
         }
@@ -30,14 +32,14 @@ impl HalfNormal {
                 let u2: f64 = update_and_uniform(&self.xyzw_2);
 
                 // step 3: 中間変数を生成する
-                let v = u1 * u1 + u2 * u2;
+                let v = u1.powi(2) + u2.powi(2);
 
                 // step 4: 0 < v < 1 のとき、乱数を計算する
                 if 0f64 < v && v < 1f64 {
                     let w: f64 = (-2f64 * v.ln() / v).sqrt();
-                    self.even_result.set(u2 * w); // y2
 
                     // step 5: 計算した乱数を返す
+                    self.even_result.set(u2 * w); // y2
                     self.even_flag.set(true);
                     return u1 * w; // y1
                 }
@@ -48,13 +50,13 @@ impl HalfNormal {
 
 #[macro_export]
 /// 半正規分布のインスタンスを生成するマクロ
+/// * `() =>` - 乱数の種は自動生成
+/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 macro_rules! create_half_normal {
-    // 引数無し
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
         $crate::HalfNormal::new(seeds.0, seeds.1)
     }};
-    // 引数有り
     ($seed_1: expr, $seed_2: expr) => {
         $crate::HalfNormal::new($seed_1 as u32, $seed_2 as u32)
     };

@@ -169,21 +169,21 @@ pub struct HalfNormal {
 /// ```
 /// use rand_simple::Cauchy;
 /// let cauchy = Cauchy::new(1192u32, 765u32);
-/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布
 /// println!("乱数: {}", next); // 1.0046339315561652f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_cauchy;
 /// let cauchy = create_cauchy!(1192u32, 765u32);
-/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布
 /// println!("乱数: {}", next); // 1.0046339315561652f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
 /// use rand_simple::create_cauchy;
 /// let cauchy = create_cauchy!();
-/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Cauchy {
@@ -196,21 +196,21 @@ pub struct Cauchy {
 /// ```
 /// use rand_simple::HalfCauchy;
 /// let half_cauchy = HalfCauchy::new(1192u32, 765u32);
-/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の標準半コーシー分布
 /// println!("乱数: {}", next); // 0.9999951805774843f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_half_cauchy;
 /// let half_cauchy = create_half_cauchy!(1192u32, 765u32);
-/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の標準半コーシー分布
 /// println!("乱数: {}", next); // 0.9999951805774843f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
 /// use rand_simple::create_half_cauchy;
 /// let half_cauchy = create_half_cauchy!();
-/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
+/// let next = half_cauchy.sample(); // 尺度母数 θ = 1の標準半コーシー分布
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct HalfCauchy {
@@ -223,21 +223,21 @@ pub struct HalfCauchy {
 /// ```
 /// use rand_simple::Levy;
 /// let levy = Levy::new(1192u32, 765u32);
-/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布
 /// println!("乱数: {}", next); // 0.15611801640551176f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_levy;
 /// let levy = create_levy!(1192u32, 765u32);
-/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布
 /// println!("乱数: {}", next); // 0.15611801640551176f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
 /// use rand_simple::create_levy;
 /// let levy = create_levy!();
-/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Levy {
@@ -252,21 +252,21 @@ pub struct Levy {
 /// ```
 /// use rand_simple::Exponential;
 /// let exponential = Exponential::new(1192u32);
-/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// let next = exponential.sample(); // 尺度母数 θ = 1の標準指数分布
 /// println!("乱数: {}", next); // 1.4145870106554208f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_exponential;
 /// let exponential = create_exponential!(1192u32);
-/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// let next = exponential.sample(); // 尺度母数 θ = 1の標準指数分布
 /// println!("乱数: {}", next); // 1.4145870106554208f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
 /// use rand_simple::create_exponential;
 /// let exponential = create_exponential!();
-/// let next = exponential.sample(); // 尺度母数 θ = 1の乱数
+/// let next = exponential.sample(); // 尺度母数 θ = 1の標準指数分布
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Exponential {
@@ -278,21 +278,21 @@ pub struct Exponential {
 /// ```
 /// use rand_simple::Laplace;
 /// let laplace = Laplace::new(1192u32);
-/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
-/// println!("乱数: {}", next); // -1.2961143823579562f64
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布
+/// println!("乱数: {}", next); // -0.7214398300954756f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_laplace;
 /// let laplace = create_laplace!(1192u32);
-/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
-/// println!("乱数: {}", next); // -1.2961143823579562f64
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布
+/// println!("乱数: {}", next); // -0.7214398300954756f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
 /// use rand_simple::create_laplace;
 /// let laplace = create_laplace!();
-/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
+/// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Laplace {

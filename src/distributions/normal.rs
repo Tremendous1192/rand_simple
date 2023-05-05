@@ -16,10 +16,13 @@ impl Normal {
         }
     }
 
-    /// 平均値 0, 標準偏差 1 の標準正規分布乱数を返す
+    /// 標準正規分布に従う乱数を返す
+    /// * 平均値 0
+    /// * 標準偏差 1
     pub fn sample(&self) -> f64 {
+        // アルゴリズム 3.2
+        // step 1 & 5: 偶数回目の乱数は、奇数回目で計算したもう一つの値を返す
         if self.even_flag.get() {
-            // step 1 & 5: 偶数回目の乱数は、奇数回目で計算したもう一つの値を返す
             self.even_flag.set(false);
             self.even_result.get()
         }
@@ -32,14 +35,14 @@ impl Normal {
                 // step 3: 中間変数を生成する
                 let v1 = 2f64 * u1 - 1f64;
                 let v2 = 2f64 * u2 - 1f64;
-                let v = v1 * v1 + v2 * v2;
+                let v = v1.powi(2) + v2.powi(2);
 
-                // step 4: 0 < v < 1 のとき、乱数を計算する
+                // step 4: 0 < v < 1 のとき、戻り値計算に移る
                 if 0f64 < v && v < 1f64 {
                     let w: f64 = (-2f64 * v.ln() / v).sqrt();
-                    self.even_result.set(v2 * w); // y2
 
                     // step 5: 計算した乱数を返す
+                    self.even_result.set(v2 * w); // y2
                     self.even_flag.set(true);
                     return v1 * w; // y1
                 }
@@ -50,13 +53,13 @@ impl Normal {
 
 #[macro_export]
 /// 正規分布のインスタンスを生成するマクロ
+/// * `() =>` - 乱数の種は自動生成
+/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 macro_rules! create_normal {
-    // 引数無し
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
         $crate::Normal::new(seeds.0, seeds.1)
     }};
-    // 引数有り
     ($seed_1: expr, $seed_2: expr) => {
         $crate::Normal::new($seed_1 as u32, $seed_2 as u32)
     };

@@ -9,12 +9,14 @@ impl Exponential {
         }
     }
 
-    /// 閉区間[0, 1]の乱数を返す
+    /// 標準指数分布に従う乱数を返す
+    /// * 尺度母数 1
     pub fn sample(&self) -> f64 {
+        // アルゴリズム 3.42
         loop {
             // step 1: [0, 1)の一様乱数を生成する
             let u = update_and_uniform(&self.xyzw);
-            if 0f64 < u {
+            if u < 1f64 {
                 let mut u_dash: f64 = 1f64 - u;
 
                 // step 2:
@@ -41,13 +43,13 @@ impl Exponential {
 
 
 #[macro_export]
-/// 一様分布のインスタンスを生成するマクロ
+/// 指数分布のインスタンスを生成するマクロ
+/// * `() =>` - 乱数の種は自動生成
+/// * `($seed: expr) =>` - 乱数の種を指定する
 macro_rules! create_exponential {
-    // 引数無し
     () => {{
         $crate::Exponential::new($crate::create_seed())
     }};
-    // 引数有り
     ($seed: expr) => {
         $crate::Exponential::new($seed as u32)
     };
