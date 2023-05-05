@@ -2,15 +2,15 @@
 fn test_sample() {
     let generator = crate::HalfCauchy::new(1192u32, 765u32);
 
-    assert_eq!(generator.sample(), 0.9999951805774843f64);
-    assert_eq!(generator.sample(), 0.997692678256128f64);
-    assert_eq!(generator.sample(), 1.0000036370605054f64);
-    assert_eq!(generator.sample(), 3.2349256430464535f64);
-    assert_eq!(generator.sample(), 1.1500040204613344f64);
+    assert_eq!(generator.sample(), 0.9999971261133705f64);
+    assert_eq!(generator.sample(), 1.0000006123608847f64);
+    assert_eq!(generator.sample(), 1.001230545252217f64);
+    assert_eq!(generator.sample(), 0.9999965747013356f64);
+    assert_eq!(generator.sample(), 0.9999998376367998f64);
 
-    assert_eq!(generator.sample(), 4.180015813756806f64);
-    assert_eq!(generator.sample(), 1.0074269792982646f64);
-    assert_eq!(generator.sample(), 1.0077822523388844f64);
-    assert_eq!(generator.sample(), 1.0588897399529487f64);
-    assert_eq!(generator.sample(), 0.30202564055362213f64);
+    assert_eq!(generator.sample(), 2.6883468716739234f64);
+    assert_eq!(generator.sample(), 1.000551624185551f64);
+    assert_eq!(generator.sample(), 0.9999995197148379f64);
+    assert_eq!(generator.sample(), 1.186710771584489f64);
+    assert_eq!(generator.sample(), 0.33121880315616975f64);
 }

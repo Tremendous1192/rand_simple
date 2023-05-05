@@ -71,8 +71,8 @@ fn test_sample() {
 
     // 最初に実装した乱数計算メソッド
     let uniform = Uniform::new(1192u32);
-    let next_1: f64 = uniform.sample(); // 0.8698977918526851
-    assert_eq!(next_1, 0.8698977918526851f64);
+    let next_1: f64 = uniform.sample(); // 0.8512317447111084
+    assert_eq!(next_1, 0.8512317447111084f64);
 
     // オーバーロード(引数 2個)
     let uniform_2 = Uniform::new(1192u32);
@@ -116,7 +116,7 @@ fn test_macro_sample() {
     let uniform = Uniform::new(1192u32);
     let min: f64 = 0f64;
     let max: f64 = 1f64;
-    assert_eq!(test_call_method!(uniform), 0.8698977918526851f64);
-    assert_eq!(test_call_method!(uniform, min, max), 0.8698962295590659f64);
+    assert_eq!(test_call_method!(uniform), 0.8512317447111084f64);
+    assert_eq!(test_call_method!(uniform, min, max), 0.11755379967334535f64);
 }
 

@@ -20,38 +20,32 @@ use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
 // 共通処理
 // 状態変数(x, y, z, w)を設定する
+// 下記の論文の初期値を参考にする
+// https://www.researchgate.net/publication/5142825_Xorshift_RNGs
 pub(crate) fn set_state(_seed: u32) -> (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) {
-    let x: u32 = 123456789;
-    let y: u32 = (_seed as u64 >> 32) as u32 & 0xFFFFFFFF;
-    let z: u32 = _seed & 0xFFFFFFFF;
-    let w: u32 = x ^ z;
-
-    (Cell::<u32>::new(x), Cell::<u32>::new(y), Cell::<u32>::new(z), Cell::<u32>::new(w))
+    (Cell::<u32>::new(123456789),
+    Cell::<u32>::new(362436069),
+    Cell::<u32>::new(521288629),
+    Cell::<u32>::new(_seed))
 }
 
 // 共通処理
 // 閉区間[0, 1]の一様乱数を計算して、状態変数を更新する
+// Wikipediaが分かりやすい
+// https://ja.wikipedia.org/wiki/Xorshift
 pub(crate) fn update_and_uniform(_xyzw: &(Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>)) -> f64 {
-    // 一様乱数を計算する
+    // t = x ^ (x << 11)
     let t: u32 = _xyzw.0.get() ^ (_xyzw.0.get() << 11);
-    let x: u32 = _xyzw.1.get();
-    let y: u32 = _xyzw.2.get();
-    let z: u32 = _xyzw.3.get();
-    let mut w: u32 = _xyzw.3.get();
-    w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+    _xyzw.0.set(_xyzw.1.get()); // x = y
+    _xyzw.1.set(_xyzw.2.get()); // y = z
+    _xyzw.2.set(_xyzw.3.get()); // z = w
+    // w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+    _xyzw.3.set( (_xyzw.3.get() ^ (_xyzw.3.get() >> 19)) ^ (t ^ (t >> 8)) );
 
-    // 状態変数を更新する
-    _xyzw.0.set(x);
-    _xyzw.1.set(y);
-    _xyzw.2.set(z);
-    _xyzw.3.set(w);
-
-    // 一様乱数を返す
-    (w as f64) / MAX_U32_AS_F64
+    (_xyzw.3.get() as f64) / MAX_U32_AS_F64
 }
 
 // 一様乱数を計算するための分母
-// 一々呼び出すよりは定数にしておいた方が計算時間が短いのではないか?
 const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 
 // 共通処理
@@ -77,14 +71,14 @@ pub fn create_seeds() -> (u32, u32) {
 /// use rand_simple::Uniform;
 /// let uniform = Uniform::new(1192u32);
 /// let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-/// println!("乱数: {}", next); // 0.8698977918526851f64
+/// println!("乱数: {}", next); // 0.8512317447111084f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_uniform;
 /// let uniform = create_uniform!(1192u32);
 /// let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-/// println!("乱数: {}", next); // 0.8698977918526851f64
+/// println!("乱数: {}", next); // 0.8512317447111084f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -138,14 +132,14 @@ pub struct Normal {
 /// use rand_simple::HalfNormal;
 /// let half_normal = HalfNormal::new(1192u32, 765u32);
 /// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
-/// println!("乱数: {}", next); // 2.5308912695634582
+/// println!("乱数: {}", next); // 1.8943489630074781
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_half_normal;
 /// let half_normal = create_half_normal!(1192u32, 765u32);
 /// let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
-/// println!("乱数: {}", next); // 2.5308912695634582
+/// println!("乱数: {}", next); // 1.8943489630074781
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -170,14 +164,14 @@ pub struct HalfNormal {
 /// use rand_simple::Cauchy;
 /// let cauchy = Cauchy::new(1192u32, 765u32);
 /// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布
-/// println!("乱数: {}", next); // 1.0046339315561652f64
+/// println!("乱数: {}", next); // 0.9999997103138784f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_cauchy;
 /// let cauchy = create_cauchy!(1192u32, 765u32);
 /// let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布
-/// println!("乱数: {}", next); // 1.0046339315561652f64
+/// println!("乱数: {}", next); // 0.9999997103138784f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -197,14 +191,14 @@ pub struct Cauchy {
 /// use rand_simple::HalfCauchy;
 /// let half_cauchy = HalfCauchy::new(1192u32, 765u32);
 /// let next = half_cauchy.sample(); // 尺度母数 θ = 1の標準半コーシー分布
-/// println!("乱数: {}", next); // 0.9999951805774843f64
+/// println!("乱数: {}", next); // 0.9999971261133705f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_half_cauchy;
 /// let half_cauchy = create_half_cauchy!(1192u32, 765u32);
 /// let next = half_cauchy.sample(); // 尺度母数 θ = 1の標準半コーシー分布
-/// println!("乱数: {}", next); // 0.9999951805774843f64
+/// println!("乱数: {}", next); // 0.9999971261133705f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -224,14 +218,14 @@ pub struct HalfCauchy {
 /// use rand_simple::Levy;
 /// let levy = Levy::new(1192u32, 765u32);
 /// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布
-/// println!("乱数: {}", next); // 0.15611801640551176f64
+/// println!("乱数: {}", next); // 0.27866346364478645f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_levy;
 /// let levy = create_levy!(1192u32, 765u32);
 /// let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布
-/// println!("乱数: {}", next); // 0.15611801640551176f64
+/// println!("乱数: {}", next); // 0.27866346364478645f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -253,14 +247,14 @@ pub struct Levy {
 /// use rand_simple::Exponential;
 /// let exponential = Exponential::new(1192u32);
 /// let next = exponential.sample(); // 尺度母数 θ = 1の標準指数分布
-/// println!("乱数: {}", next); // 1.4145870106554208f64
+/// println!("乱数: {}", next); // 1.5180935542424843f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_exponential;
 /// let exponential = create_exponential!(1192u32);
 /// let next = exponential.sample(); // 尺度母数 θ = 1の標準指数分布
-/// println!("乱数: {}", next); // 1.4145870106554208f64
+/// println!("乱数: {}", next); // 1.5180935542424843f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -279,14 +273,14 @@ pub struct Exponential {
 /// use rand_simple::Laplace;
 /// let laplace = Laplace::new(1192u32);
 /// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布
-/// println!("乱数: {}", next); // -0.7214398300954756f64
+/// println!("乱数: {}", next); // -0.824946373682539f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_laplace;
 /// let laplace = create_laplace!(1192u32);
 /// let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布
-/// println!("乱数: {}", next); // -0.7214398300954756f64
+/// println!("乱数: {}", next); // -0.824946373682539f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -305,14 +299,14 @@ pub struct Laplace {
 /// use rand_simple::Rayleigh;
 /// let rayleigh = Rayleigh::new(1192u32);
 /// let next = rayleigh.sample(); // 尺度母数 σ = 1の標準指数分布
-/// println!("乱数: {}", next); // 1.6820148695272708f64
+/// println!("乱数: {}", next); // 1.742465812716269f64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_rayleigh;
 /// let rayleigh = create_rayleigh!(1192u32);
 /// let next = rayleigh.sample(); // 尺度母数 σ = 1の標準指数分布
-/// println!("乱数: {}", next); // 1.6820148695272708f64
+/// println!("乱数: {}", next); // 1.742465812716269f64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -444,14 +438,14 @@ pub struct Bernoulli {
 /// use rand_simple::Geometric;
 /// let geometric = Geometric::new(1192u32);
 /// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
-/// println!("乱数: {}", next); // 4u32
+/// println!("乱数: {}", next); // 2u32
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_geometric;
 /// let geometric = create_geometric!(1192u32);
 /// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
-/// println!("乱数: {}", next); // 4u32
+/// println!("乱数: {}", next); // 2u32
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
