@@ -49,7 +49,7 @@ pub fn create_seed() -> u32 {
 pub fn create_seeds() -> (u32, u32) {
     let duration = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
     // 49.7日周期と4秒周期の組み合わせ
-    (duration.as_millis() as u32, duration.as_nanos() as u32)
+    (duration.as_millis() as u32, std::u32::MAX - duration.as_nanos() as u32)
 }
 
 // 連続型確率変数
