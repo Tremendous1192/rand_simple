@@ -11,19 +11,19 @@ impl Geometric {
 
     /// ある確率の事象が初めて生じるまでの試行回数を返す
     /// * `probability` - ある事象が生じる確率
-    pub fn sample(&self, probability: f64) -> u32 {
-        if probability <= 0f64 {return std::u32::MAX}; // オーバーフロー対策
+    pub fn sample(&self, probability: f64) -> u64 {
+        // オーバーフロー対策
+        if probability < 0f64 {return std::u64::MAX};
 
         // アルゴリズム 4.13
         // step 1: x = 1と初期設定する
-        let mut x: u32 = 1;
-        loop {
-            // step 2: 区間[0, 1]の一様乱数uを発生させる
-            // step 3: u ≦ θ(発生確率)のときxを所望の乱数として出力する
-            // u > θのときはxの値を1増やしてstep 2に戻る
-            if update_and_uniform(&self.xyzw) <= probability { return x; }
-            else { x += 1; }
-        }
+        let mut x: u64 = 1;
+
+        // step 2: 区間[0, 1]の一様乱数uを発生させる
+        // step 3: u ≦ θ(発生確率)のときxを所望の乱数として出力する
+        // u > θのときはxの値を1増やしてstep 2に戻る
+        while update_and_uniform(&self.xyzw) > probability { x += 1u64; }        
+        return x;
     }
 }
 
