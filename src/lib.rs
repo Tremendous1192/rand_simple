@@ -24,10 +24,12 @@ pub(crate) fn set_state(_seed: u32) -> (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u3
 // https://ja.wikipedia.org/wiki/Xorshift
 pub(crate) fn update_and_uniform(_xyzw: &(Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>)) -> f64 {
     // t = x ^ (x << 11)
-    let t: u32 = _xyzw.0.get() ^ (_xyzw.0.get() << 11);
-    _xyzw.0.set(_xyzw.1.get()); // x = y
-    _xyzw.1.set(_xyzw.2.get()); // y = z
-    _xyzw.2.set(_xyzw.3.get()); // z = w
+    let calculate_t = |x: u32| {x ^ (x << 11)};
+    let t: u32 = calculate_t(_xyzw.0.take());
+
+    // x_new = y, y_new = z, z_new = w 
+    _xyzw.0.set( _xyzw.1.replace( _xyzw.2.replace(_xyzw.3.get()) ) );
+
     // w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
     _xyzw.3.set( (_xyzw.3.get() ^ (_xyzw.3.get() >> 19)) ^ (t ^ (t >> 8)) );
 
