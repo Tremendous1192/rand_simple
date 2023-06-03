@@ -1,11 +1,13 @@
-use crate::{Bernoulli, set_state, update_and_uniform};
+use crate::{Bernoulli, initialize, update};
+use std::cell::Cell;
 
 impl Bernoulli {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
+        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
-            xyzw: set_state(_seed),
+            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
         }
     }
 
@@ -15,7 +17,7 @@ impl Bernoulli {
         // step 1: 区間[0, 1]の一様乱数uを発生させる
         // step 2: u ≦ θ(発生確率)のとき1を所望の乱数として出力する
         // u > θのときは0を出力する
-        if update_and_uniform(&self.xyzw) <= probability { 1u32 }
+        if update(&self.x, &self.y, &self.z, &self.w) <= probability { 1u32 }
         else { 0u32 }
     }
 }

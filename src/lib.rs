@@ -1,7 +1,6 @@
 #![doc = include_str!("../README.md")]
 
 
-//mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細
 #[cfg(test)] mod test_distributions; // テストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
@@ -11,29 +10,24 @@ use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 // 状態変数(x, y, z, w)を設定する
 // 下記の論文の初期値を参考にする
 // https://www.researchgate.net/publication/5142825_Xorshift_RNGs
-pub(crate) fn set_state(_seed: u32) -> (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) {
-    (Cell::<u32>::new(123456789),
-    Cell::<u32>::new(362436069),
-    Cell::<u32>::new(521288629),
-    Cell::<u32>::new(_seed))
+pub(crate) fn initialize(_seed: u32) -> (u32, u32, u32, u32) {
+    (123456789, 362436069, 521288629, _seed)
 }
 
 // 共通処理
 // 閉区間[0, 1]の一様乱数を計算して、状態変数を更新する
 // Wikipediaが分かりやすい
 // https://ja.wikipedia.org/wiki/Xorshift
-pub(crate) fn update_and_uniform(_xyzw: &(Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>)) -> f64 {
-    // t = x ^ (x << 11)
-    let calculate_t = |x: u32| {x ^ (x << 11)};
-    let t: u32 = calculate_t(_xyzw.0.take());
+pub(crate) fn update(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> f64 {
+    // t = x ^ (x << 11), x_new = y, y_new = z, z_new = w
+    let calculate_t = |arg: u32| arg ^ (arg << 11);
+    let t: u32 = calculate_t(x.replace( y.replace( z.replace(w.get()) ) ));
 
-    // x_new = y, y_new = z, z_new = w 
-    _xyzw.0.set( _xyzw.1.replace( _xyzw.2.replace(_xyzw.3.get()) ) );
+    // w_ new = w ^ (w >> 19) ^ (t ^ (t >>8))
+    let calculate_w = |arg: u32| (arg ^ (arg >> 19)) ^ (t ^ (t >> 8));
+    w.set( calculate_w(w.take()) );
 
-    // w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-    _xyzw.3.set( (_xyzw.3.get() ^ (_xyzw.3.get() >> 19)) ^ (t ^ (t >> 8)) );
-
-    (_xyzw.3.get() as f64) / MAX_U32_AS_F64
+    (w.get() as f64) / MAX_U32_AS_F64
 }
 
 // 一様乱数を計算するための分母
@@ -79,7 +73,7 @@ pub fn create_seeds() -> (u32, u32) {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Uniform {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+	x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 /// オーバーロードを付与するためのテストトレイト
 /// 
@@ -111,8 +105,8 @@ pub trait TestUniformSample {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Normal {
-    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
-    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
     even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
     even_result: Cell<f64>, // 偶数回目の計算結果
 }
@@ -140,8 +134,8 @@ pub struct Normal {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct HalfNormal {
-    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
-    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
     even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
     even_result: Cell<f64>, // 偶数回目の計算結果
 }
@@ -172,8 +166,8 @@ pub struct HalfNormal {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Cauchy {
-    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
-    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
 }
 
 /// 半コーシー分布を計算する構造体
@@ -199,8 +193,8 @@ pub struct Cauchy {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct HalfCauchy {
-    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
-    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
 }
 
 /// レヴィ分布を計算する構造体
@@ -226,8 +220,8 @@ pub struct HalfCauchy {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Levy {
-    xyzw_1: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
-    xyzw_2: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>), // 状態変数
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
     even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
     even_result: Cell<f64>, // 偶数回目の計算結果
 }
@@ -255,7 +249,7 @@ pub struct Levy {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Exponential {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 
 /// ラプラス分布を計算する構造体
@@ -281,7 +275,7 @@ pub struct Exponential {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Laplace {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 
 /// レイリー分布を計算する構造体
@@ -307,7 +301,7 @@ pub struct Laplace {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Rayleigh {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 
 // ワイブル分布を計算する構造体
@@ -417,7 +411,7 @@ pub struct Rayleigh {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Bernoulli {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 
 // 二項分布
@@ -446,7 +440,7 @@ pub struct Bernoulli {
 /// println!("乱数: {}", next); // 値不明
 /// ```
 pub struct Geometric {
-    xyzw: (Cell<u32>, Cell<u32>, Cell<u32>, Cell<u32>) // 状態変数
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
 
 // ポアソン分布を計算する構造体

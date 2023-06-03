@@ -1,11 +1,13 @@
-use crate::{Geometric, set_state, update_and_uniform};
+use crate::{Geometric, initialize, update};
+use std::cell::Cell;
 
 impl Geometric {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
+        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
-            xyzw: set_state(_seed),
+            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
         }
     }
 
@@ -22,7 +24,7 @@ impl Geometric {
         // step 2: 区間[0, 1]の一様乱数uを発生させる
         // step 3: u ≦ θ(発生確率)のときxを所望の乱数として出力する
         // u > θのときはxの値を1増やしてstep 2に戻る
-        while update_and_uniform(&self.xyzw) > probability { x += 1u64; }        
+        while update(&self.x, &self.y, &self.z, &self.w) > probability { x += 1u64; }        
         return x;
     }
 }

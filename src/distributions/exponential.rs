@@ -1,11 +1,13 @@
-use crate::{Exponential, set_state, update_and_uniform};
+use crate::{Exponential, initialize, update};
+use std::cell::Cell;
 
 impl Exponential {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
+        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
-            xyzw: set_state(_seed),
+            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
         }
     }
 
@@ -15,7 +17,7 @@ impl Exponential {
         // アルゴリズム 3.42
         loop {
             // step 1: [0, 1)の一様乱数を生成する
-            let u = update_and_uniform(&self.xyzw);
+            let u = update(&self.x, &self.y, &self.z, &self.w);
             if u < 1f64 {
                 let mut u_dash: f64 = 1f64 - u;
 

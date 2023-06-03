@@ -1,4 +1,4 @@
-use crate::{Levy, set_state, update_and_uniform};
+use crate::{Levy, initialize, update};
 use std::cell::Cell;
 
 impl Levy {
@@ -7,10 +7,11 @@ impl Levy {
     /// * `_seed_2` - 乱数の種。`_seed_1`と同じ値の場合、コンストラクタ側で変更する。
     pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
         let _seed_other = if _seed_1 != _seed_2 { _seed_2 } else { (_seed_1 as u64 + 1192u64) as u32};
-
+        let xyzw0: (u32, u32, u32, u32) = initialize(_seed_1);
+        let xyzw1: (u32, u32, u32, u32) = initialize(_seed_other);
         Self {
-            xyzw_1: set_state(_seed_1),
-            xyzw_2: set_state(_seed_other),
+            x0: Cell::new(xyzw0.0), y0: Cell::new(xyzw0.1), z0: Cell::new(xyzw0.2), w0: Cell::new(xyzw0.3),
+            x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
             even_flag: Cell::<bool>::new(false),
             even_result: Cell::<f64>::new(1f64),
         }
@@ -30,8 +31,8 @@ impl Levy {
         else {
             loop {
                 // HN step 2: 独立な一様乱数を2個生成する
-                let u1: f64 = update_and_uniform(&self.xyzw_1);
-                let u2: f64 = update_and_uniform(&self.xyzw_2);
+                let u1: f64 = update(&self.x0, &self.y0, &self.z0, &self.w0);
+                let u2: f64 = update(&self.x1, &self.y1, &self.z1, &self.w1);
                 if u1 == 0f64 || u2 == 0f64 { continue; }
 
                 // HN step 3: 中間変数を生成する

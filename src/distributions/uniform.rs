@@ -1,17 +1,19 @@
-use crate::{Uniform, set_state, update_and_uniform};
+use crate::{Uniform, initialize, update};
+use std::cell::Cell;
 
 impl Uniform {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
+        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
-            xyzw: set_state(_seed),
+            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
         }
     }
 
     /// 閉区間[0, 1]の乱数を返す
     pub fn sample(&self) -> f64 {
-        update_and_uniform(&self.xyzw)
+        update(&self.x, &self.y, &self.z, &self.w)
     }
 }
 
@@ -36,12 +38,12 @@ impl TestUniformSample for (f64, f64) {
     fn test_sample(uniform: &Uniform, foo: &Self) -> f64{
         let origin = foo.0.min(foo.1);
         let range = (foo.0 - foo.1).abs();
-        update_and_uniform(&uniform.xyzw) * range + origin
+        uniform.sample() * range + origin
     }
 }
 impl TestUniformSample for () {
     fn test_sample(uniform: &Uniform, _foo: &Self) -> f64{
-        update_and_uniform(&uniform.xyzw)
+        uniform.sample()
     }
 }
 

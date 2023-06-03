@@ -1,11 +1,13 @@
-use crate::{Rayleigh, set_state, update_and_uniform};
+use crate::{Rayleigh, initialize, update};
+use std::cell::Cell;
 
 impl Rayleigh {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
+        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
-            xyzw: set_state(_seed),
+            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
         }
     }
 
@@ -16,7 +18,7 @@ impl Rayleigh {
         // 標準指数分布に従う乱数z≧0を生成する
         loop {
             // Exp step 1: [0, 1)の一様乱数を生成する
-            let u = update_and_uniform(&self.xyzw);
+            let u = update(&self.x, &self.y, &self.z, &self.w);
             if u < 1f64 {
                 let mut u_dash: f64 = 1f64 - u;
 
