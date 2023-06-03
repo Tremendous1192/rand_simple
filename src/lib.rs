@@ -1,16 +1,5 @@
-//! このライブラリは、疑似乱数を簡単に呼び出すことができるライブラリです。
-//! 
-//! 例えば、```use rand_simple::Uniform;```と宣言するだけで、一様分布乱数を使用できます。
-//! 
-//! 偉大な先達[rand](https://crates.io/crates/rand)と比較して、
-//! 簡素なモジュール宣言と豊富な確率変数による使いやすさを目指しています。
-//! # 使用例
-//! ```
-//! use rand_simple::Uniform;
-//! let uniform = Uniform::new(1192u32);
-//! let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-//! println!("乱数: {}", next); // 0.8698977918526851f64
-//! ```
+#![doc = include_str!("../README.md")]
+
 
 //mod macros; // マクロモジュール
 mod distributions; // 確率変数の詳細

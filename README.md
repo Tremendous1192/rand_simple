@@ -83,7 +83,7 @@ println!("乱数: {}", next); // 0.15611801640551176f64
 ## 指数分布
 ```rust
 use rand_simple::Exponential;
-let let exponential = Exponential::new(1192u32);
+let exponential = Exponential::new(1192u32);
 let next = exponential.sample(); // 尺度母数 θ = 1の乱数
 println!("乱数: {}", next); // 1.4145870106554208f64
 ```
