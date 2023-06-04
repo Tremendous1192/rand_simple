@@ -25,7 +25,7 @@ impl Geometric {
         // step 3: u ≦ θ(発生確率)のときxを所望の乱数として出力する
         // u > θのときはxの値を1増やしてstep 2に戻る
         while update(&self.x, &self.y, &self.z, &self.w) > probability { x += 1u64; }        
-        return x;
+        x
     }
 }
 
