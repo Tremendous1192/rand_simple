@@ -388,14 +388,14 @@ pub struct Rayleigh {
 /// use rand_simple::Bernoulli;
 /// let bernoulli = Bernoulli::new(1192u32);
 /// let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
-/// println!("乱数: {}", next); // 0u32
+/// println!("乱数: {}", next); // 0u64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_bernoulli;
 /// let bernoulli = create_bernoulli!(1192u32);
 /// let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
-/// println!("乱数: {}", next); // 0u32
+/// println!("乱数: {}", next); // 0u64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```
@@ -417,14 +417,14 @@ pub struct Bernoulli {
 /// use rand_simple::Geometric;
 /// let geometric = Geometric::new(1192u32);
 /// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
-/// println!("乱数: {}", next); // 2u32
+/// println!("乱数: {}", next); // 2u64
 /// ```
 /// # 使用例 2 (マクロ・引数有り)
 /// ```
 /// use rand_simple::create_geometric;
 /// let geometric = create_geometric!(1192u32);
 /// let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じた試行回数
-/// println!("乱数: {}", next); // 2u32
+/// println!("乱数: {}", next); // 2u64
 /// ```
 /// # 使用例 3 (マクロ・引数無し)
 /// ```

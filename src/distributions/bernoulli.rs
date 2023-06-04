@@ -13,12 +13,12 @@ impl Bernoulli {
 
     /// ある確率の事象が生じたか(1)、否か(0)を返す
     /// * `probability` - ある事象が生じる確率
-    pub fn sample(&self, probability: f64) -> u32 {
+    pub fn sample(&self, probability: f64) -> u64 {
         // step 1: 区間[0, 1]の一様乱数uを発生させる
         // step 2: u ≦ θ(発生確率)のとき1を所望の乱数として出力する
         // u > θのときは0を出力する
-        if update(&self.x, &self.y, &self.z, &self.w) <= probability { 1u32 }
-        else { 0u32 }
+        if update(&self.x, &self.y, &self.z, &self.w) <= probability { 1u64 }
+        else { 0u64 }
     }
 }
 
