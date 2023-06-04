@@ -75,12 +75,6 @@ pub fn create_seeds() -> (u32, u32) {
 pub struct Uniform {
 	x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
 }
-/// オーバーロードを付与するためのテストトレイト
-/// 
-/// 運用がうまくいくことを確認した後、本番トレイトに置き換えて削除する
-pub trait TestUniformSample {
-    fn test_sample(uniform: &Uniform, _foo: &Self) -> f64;
-}
 
 /// 正規分布を計算する構造体
 /// # 使用例 1 (new関数)
