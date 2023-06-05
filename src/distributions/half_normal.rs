@@ -14,11 +14,11 @@ impl HalfNormal {
             x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
             even_flag: Cell::<bool>::new(false),
             even_result: Cell::<f64>::new(0f64),
+            std: Cell::new(1f64),
         }
     }
 
     /// 標準半正規分布に従う乱数を返す
-    /// * 標準偏差 1
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.17
         // step 1 & 5: 偶数回目の乱数は、奇数回目で計算したもう一つの値を返す
@@ -40,11 +40,23 @@ impl HalfNormal {
                     let w: f64 = (-2f64 * v.ln() / v).sqrt();
 
                     // step 5: 計算した乱数を返す
-                    self.even_result.set(u2 * w); // y2
+                    self.even_result.set(u2 * w * self.std.get()); // y2
                     self.even_flag.set(true);
-                    return u1 * w; // y1
+                    return u1 * w * self.std.get(); // y1
                 }
             }
+        }
+    }
+
+    /// 確率変数のパラメータを変更する
+    /// * `variance` - 分散
+    pub fn try_set_params(&self, variance: f64) -> Result<f64, &str> {
+        if variance < 0f64 {
+            Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        }
+        else {
+            self.std.set(variance.sqrt());
+            Ok( self.std.get().powi(2) )
         }
     }
 }
@@ -53,6 +65,16 @@ impl HalfNormal {
 /// 半正規分布のインスタンスを生成するマクロ
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
+/// # 使用例 1
+/// ```
+/// let half_normal = rand_simple::create_half_normal!(1192u32, 765u32);
+/// assert_eq!(half_normal.sample(), 1.8943489630074781f64);
+/// ```
+/// # 使用例 2
+/// ```
+/// let half_normal = rand_simple::create_half_normal!();
+/// println!("乱数: {}", half_normal.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
 macro_rules! create_half_normal {
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
@@ -61,4 +83,16 @@ macro_rules! create_half_normal {
     ($seed_1: expr, $seed_2: expr) => {
         $crate::HalfNormal::new($seed_1 as u32, $seed_2 as u32)
     };
+}
+
+
+impl std::fmt::Display for HalfNormal {
+    /// println!マクロなどで表示するためのフォーマッタ
+    /// * 構造体の型
+    /// * 分散
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "分散: {}", self.std.get().powi(2))?;
+        Ok(())
+    }
 }

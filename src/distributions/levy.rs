@@ -14,12 +14,12 @@ impl Levy {
             x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
             even_flag: Cell::<bool>::new(false),
             even_result: Cell::<f64>::new(1f64),
+            location: Cell::new(0f64),
+            scale: Cell::new(1f64),
         }
     }
 
-    /// 標準レヴィ分布に従う乱数を返す
-    /// * 位置母数 0
-    /// * 尺度母数 1
+    /// レヴィ分布に従う乱数を返す
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.40
         // step 1: 標準半正規分布HN(1)に従う乱数Zをz > 0の範囲で生成する
@@ -43,11 +43,25 @@ impl Levy {
                     let w: f64 = (-2f64 * v.ln() / v).sqrt();
 
                     // step 2: 乱数を返す
-                    self.even_result.set((u2 * w).powi(-2)); // x2
+                    self.even_result.set((u2 * w).powi(-2) * self.scale.get() + self.location.get()); // x2
                     self.even_flag.set(true);
-                    return (u1 * w).powi(-2); // x1
+                    return (u1 * w).powi(-2) * self.scale.get() + self.location.get(); // x1
                 }
             }
+        }
+    }
+
+    /// 確率変数のパラメータを変更する
+    /// * `location` - 位置母数
+    /// * `scale` - 尺度母数
+    pub fn try_set_params(&self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
+        if scale <= 0f64 {
+            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        }
+        else {
+            self.location.set(location);
+            self.scale.set(scale);
+            Ok( (self.location.get(), self.scale.get()) )
         }
     }
 }
@@ -56,6 +70,16 @@ impl Levy {
 /// レヴィ分布のインスタンスを生成するマクロ
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
+/// # 使用例 1
+/// ```
+/// let levy = rand_simple::create_levy!(1192u32, 765u32);
+/// assert_eq!(levy.sample(), 0.27866346364478645f64);
+/// ```
+/// # 使用例 2
+/// ```
+/// let levy = rand_simple::create_levy!();
+/// println!("乱数: {}", levy.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
 macro_rules! create_levy {
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
@@ -64,4 +88,18 @@ macro_rules! create_levy {
     ($seed_1: expr, $seed_2: expr) => {
         $crate::Levy::new($seed_1 as u32, $seed_2 as u32)
     };
+}
+
+
+impl std::fmt::Display for Levy {
+    /// println!マクロなどで表示するためのフォーマッタ
+    /// * 構造体の型
+    /// * 位置母数
+    /// * 尺度母数
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "位置母数: {}", self.location.get())?;
+        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        Ok(())
+    }
 }

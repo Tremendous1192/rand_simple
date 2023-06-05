@@ -24,87 +24,70 @@ Xorshiftはたった4つの状態変数から周期 $2^{128} - 1$ の乱数計�
 
 # 使用例
 ## 一様分布
-#### new関数
+#### new()関数でインスタンスを生成する
 ```rust
-use rand_simple::Uniform;
-let uniform = Uniform::new(1192u32);
-let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-println!("乱数: {}", next); // 0.8698977918526851f64
+let uniform = rand_simple::Uniform::new(1192u32);
+// 初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す
+assert_eq!(uniform.sample(), 0.8512317447111084f64);
+
+// 確率変数のパラメータを変更する場合
+let min: f64 = -1f64;
+let max: f64 = 1f64;
+let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
+assert_eq!(uniform.sample(), -0.7648924006533093f64);
 ```
-#### マクロ・引数有り(他の構造体にもcreate_XXの生成マクロを用意しています)
+#### インスタンス生成マクロ 1(他の構造体にもcreate_XXの生成マクロを用意しています)
 ```rust
-use rand_simple::create_uniform;
-let uniform = create_uniform!(1192u32);
-let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-println!("乱数: {}", next); // 0.8698977918526851f64
+let uniform = rand_simple::create_uniform!(1192u32);
+assert_eq!(uniform.sample(), 0.8512317447111084f64);
 ```
-#### マクロ・引数無し
+#### インスタンス生成マクロ 2
 ```rust
-use rand_simple::create_uniform;
-let uniform = create_uniform!();
-let next = uniform.sample(); // 閉区間[0, 1]の一様乱数
-println!("乱数: {}", next); // 値不明
+let uniform = rand_simple::create_uniform!();
+println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
 ```
 ## 正規分布
 ```rust
-use rand_simple::Normal;
-let normal = Normal::new(1192u32, 765u32);
-let next = normal.sample(); // 平均値 0, 標準偏差 1 の標準正規分布
-println!("乱数: {}", next); // -1.2296205447119757
+let normal = rand_simple::Normal::new(1192u32, 765u32);
+assert_eq!(normal.sample(), 0.11478775584530312f64); // 平均値 0, 標準偏差 1 の標準正規分布
 ```
 ## 半正規分布
 ```rust
-use rand_simple::HalfNormal;
-let half_normal = HalfNormal::new(1192u32, 765u32);
-let next = half_normal.sample(); // 標準偏差 1 の標準半正規分布
-println!("乱数: {}", next); // 2.5308912695634582
+let half_normal = rand_simple::HalfNormal::new(1192u32, 765u32);
+assert_eq!(half_normal.sample(), 1.8943489630074781f64); // 標準偏差 1 の標準半正規分布
 ```
 ## コーシー分布
 ```rust
-use rand_simple::Cauchy;
-let cauchy = Cauchy::new(1192u32, 765u32);
-let next = cauchy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
-println!("乱数: {}", next); // 1.0046339315561652f64
+let cauchy = rand_simple::Cauchy::new(1192u32, 765u32);
+assert_eq!(cauchy.sample(), 0.9999997103138784f64); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
 ```
 ## 半コーシー分布
 ```rust
-use rand_simple::HalfCauchy;
-let half_cauchy = HalfCauchy::new(1192u32, 765u32);
-let next = half_cauchy.sample(); // 尺度母数 θ = 1の乱数
-println!("乱数: {}", next); // 0.9999951805774843f64
+let half_cauchy = rand_simple::HalfCauchy::new(1192u32, 765u32);
+assert_eq!(half_cauchy.sample(), 0.9999971261133705f64); // 尺度母数 θ = 1の乱数
 ```
 ## レヴィ分布
 ```rust
-use rand_simple::Levy;
-let levy = Levy::new(1192u32, 765u32);
-let next = levy.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
-println!("乱数: {}", next); // 0.15611801640551176f64
+let levy = rand_simple::Levy::new(1192u32, 765u32);
+assert_eq!(levy.sample(), 0.27866346364478645f64); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
 ```
 ## 指数分布
 ```rust
-use rand_simple::Exponential;
-let exponential = Exponential::new(1192u32);
-let next = exponential.sample(); // 尺度母数 θ = 1の乱数
-println!("乱数: {}", next); // 1.4145870106554208f64
+let exponential = rand_simple::Exponential::new(1192u32);
+assert_eq!(exponential.sample(), 1.5180935542424843f64); // 尺度母数 θ = 1の乱数
 ```
 ## ラプラス分布
 ```rust
-use rand_simple::Laplace;
-let laplace = Laplace::new(1192u32);
-let next = laplace.sample(); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
-println!("乱数: {}", next); // -1.2961143823579562f64
+let laplace = rand_simple::Laplace::new(1192u32);
+assert_eq!(laplace.sample(), -0.824946373682539f64); // 位置母数 μ = 0, 尺度母数 θ = 1の乱数
 ```
 ## ベルヌーイ分布
 ```rust
-use rand_simple::Bernoulli;
-let bernoulli = Bernoulli::new(1192u32);
-let next = bernoulli.sample(0.5f64); // 発生確率 0.5の事象が生じたか(1)、否か(0)
-println!("乱数: {}", next); // 0u32
+let bernoulli = rand_simple::Bernoulli::new(1192u32);
+assert_eq!(bernoulli.sample(), 0u64); // 発生確率 0.5の事象が生じたか(1u64)、否か(0u64)
 ```
 ## 幾何分布
 ```rust
-use rand_simple::Geometric;
-let geometric = Geometric::new(1192u32);
-let next = geometric.sample(0.5f64); // 発生確率 0.5の事象が初めて生じるまでの試行回数
-println!("乱数: {}", next); // 4u32
+let geometric = rand_simple::Geometric::new(1192u32);
+assert_eq!(geometric.sample(), 2u64); // 発生確率 0.5の事象が初めて生じるまでの試行回数
 ```

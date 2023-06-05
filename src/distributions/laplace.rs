@@ -8,12 +8,12 @@ impl Laplace {
         let xyzw: (u32, u32, u32, u32) = initialize(_seed);
         Self {
             x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
+            location: Cell::new(0f64),
+            scale: Cell::new(1f64),
         }
     }
 
-    /// 標準ラプラス分布に従う乱数を返す
-    /// * 位置母数 0
-    /// * 尺度母数 1
+    /// ラプラス分布に従う乱数を返す
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.46
         loop {
@@ -40,11 +40,25 @@ impl Laplace {
                     }
                     else {
                         // step 6
-                        return sign * (a + std::f64::consts::LN_2 * (u_dash_dash_dash - 1f64));
+                        return sign * (a + std::f64::consts::LN_2 * (u_dash_dash_dash - 1f64)) * self.scale.get() + self.location.get();
                     }
                 }
             }
         }        
+    }
+
+    /// 確率変数のパラメータを変更する
+    /// * `location` - 位置母数
+    /// * `scale` - 尺度母数
+    pub fn try_set_params(&self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
+        if scale <= 0f64 {
+            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        }
+        else {
+            self.location.set(location);
+            self.scale.set(scale);
+            Ok( (self.location.get(), self.scale.get()) )
+        }
     }
 }
 
@@ -53,6 +67,16 @@ impl Laplace {
 /// ラプラス分布のインスタンスを生成するマクロ
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed: expr) =>` - 乱数の種を指定する
+/// # 使用例 1
+/// ```
+/// let laplace = rand_simple::create_laplace!(1192u32);
+/// assert_eq!(laplace.sample(), -0.824946373682539f64);
+/// ```
+/// # 使用例 2
+/// ```
+/// let laplace = rand_simple::create_laplace!();
+/// println!("乱数: {}", laplace.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
 macro_rules! create_laplace {
     // 引数無し
     () => {{
@@ -62,4 +86,18 @@ macro_rules! create_laplace {
     ($seed: expr) => {
         $crate::Laplace::new($seed as u32)
     };
+}
+
+
+impl std::fmt::Display for Laplace {
+    /// println!マクロなどで表示するためのフォーマッタ
+    /// * 構造体の型
+    /// * 位置母数
+    /// * 尺度母数
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "位置母数: {}", self.location.get())?;
+        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        Ok(())
+    }
 }

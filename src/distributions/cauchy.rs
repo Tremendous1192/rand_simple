@@ -12,12 +12,12 @@ impl Cauchy {
         Self {
             x0: Cell::new(xyzw0.0), y0: Cell::new(xyzw0.1), z0: Cell::new(xyzw0.2), w0: Cell::new(xyzw0.3),
             x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
+            location: Cell::new(0f64),
+            scale: Cell::new(1f64),
         }
     }
 
-    /// 標準コーシー分布に従う乱数を返す
-    /// * 位置母数 0
-    /// * 尺度母数 1
+    /// コーシー分布に従う乱数を返す
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.27
         loop {
@@ -33,8 +33,22 @@ impl Cauchy {
 
             // step 3: w < 1のとき、戻り値計算に移る
             if w < 1f64 {
-                return v1 / v2;
+                return v1 / v2 * self.scale.get() + self.location.get();
             }
+        }
+    }
+
+    /// 確率変数のパラメータを変更する
+    /// * `location` - 位置母数
+    /// * `scale` - 尺度母数
+    pub fn try_set_params(&self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
+        if scale <= 0f64 {
+            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        }
+        else {
+            self.location.set(location);
+            self.scale.set(scale);
+            Ok( (self.location.get(), self.scale.get()) )
         }
     }
 }
@@ -43,6 +57,16 @@ impl Cauchy {
 /// コーシー分布のインスタンスを生成するマクロ
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
+/// # 使用例 1
+/// ```
+/// let cauchy = rand_simple::create_cauchy!(1192u32, 765u32);
+/// assert_eq!(cauchy.sample(), 0.9999997103138784f64);
+/// ```
+/// # 使用例 2
+/// ```
+/// let cauchy = rand_simple::create_cauchy!();
+/// println!("乱数: {}", cauchy.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
 macro_rules! create_cauchy {
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
@@ -51,4 +75,18 @@ macro_rules! create_cauchy {
     ($seed_1: expr, $seed_2: expr) => {
         $crate::Cauchy::new($seed_1 as u32, $seed_2 as u32)
     };
+}
+
+
+impl std::fmt::Display for Cauchy {
+    /// println!マクロなどで表示するためのフォーマッタ
+    /// * 構造体の型
+    /// * 位置母数
+    /// * 尺度母数
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "位置母数: {}", self.location.get())?;
+        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        Ok(())
+    }
 }

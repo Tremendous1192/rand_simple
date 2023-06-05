@@ -12,11 +12,11 @@ impl HalfCauchy {
         Self {
             x0: Cell::new(xyzw0.0), y0: Cell::new(xyzw0.1), z0: Cell::new(xyzw0.2), w0: Cell::new(xyzw0.3),
             x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
+            scale: Cell::new(1f64),
         }
     }
 
-    /// 標準半コーシー分布に従う乱数を返す
-    /// * 尺度母数 1
+    /// 半コーシー分布に従う乱数を返す
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.34
         loop {
@@ -30,8 +30,20 @@ impl HalfCauchy {
 
             // step 3: w < 1のとき、戻り値計算に移る
             if w < 1f64 {
-                return u1 / u2;
+                return u1 / u2 * self.scale.get();
             }
+        }
+    }
+
+    /// 確率変数のパラメータを変更する
+    /// * `scale` - 尺度母数
+    pub fn try_set_params(&self, scale: f64) -> Result<f64, &str> {
+        if scale <= 0f64 {
+            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        }
+        else {
+            self.scale.set(scale);
+            Ok( self.scale.get() )
         }
     }
 }
@@ -40,6 +52,16 @@ impl HalfCauchy {
 /// 半コーシー分布のインスタンスを生成するマクロ
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
+/// # 使用例 1
+/// ```
+/// let half_cauchy = rand_simple::create_half_cauchy!(1192u32, 765u32);
+/// assert_eq!(half_cauchy.sample(), 0.9999971261133705f64);
+/// ```
+/// # 使用例 2
+/// ```
+/// let half_cauchy = rand_simple::create_half_cauchy!();
+/// println!("乱数: {}", half_cauchy.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
 macro_rules! create_half_cauchy {
     () => {{
         let seeds: (u32, u32) = $crate::create_seeds();
@@ -48,4 +70,16 @@ macro_rules! create_half_cauchy {
     ($seed_1: expr, $seed_2: expr) => {
         $crate::HalfCauchy::new($seed_1 as u32, $seed_2 as u32)
     };
+}
+
+
+impl std::fmt::Display for HalfCauchy {
+    /// println!マクロなどで表示するためのフォーマッタ
+    /// * 構造体の型
+    /// * 尺度母数
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        Ok(())
+    }
 }
