@@ -11,6 +11,7 @@ mod test_exponential; // 指数分布
 mod test_laplace; // ラプラス分布
 mod test_rayleigh; // レイリー分布
 mod test_weibull; // ワイブル分布
+mod test_reflected_weibull; // 反射ワイブル分布
 //mod test_gunbel; // ガンベル分布
 //mod test_gamma; // ガンマ分布
 //mod test_beta; // ベータ分布

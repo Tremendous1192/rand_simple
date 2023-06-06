@@ -277,6 +277,28 @@ pub struct Weibull {
     scale: Cell<f64>, // 尺度母数
 }
 
+/// 反射ワイブル分布
+/// # 使用例
+/// ```
+/// let reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
+/// 
+/// // 初期設定の場合、形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1の標準ワイブル分布に従う乱数を返す
+/// assert_eq!(reflected_weibull.sample(), 1.2122183368953001f64);
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let shape: f64 = 2f64;
+/// let location: f64 = 3f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64, f64), &str> = reflected_weibull.try_set_params(shape, location, scale);
+/// assert_eq!(reflected_weibull.sample(), 1.1951864361788733f64);
+/// ```
+pub struct ReflectedWeibull {
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
+    shape_inv: Cell<f64>, // 形状母数の逆数
+    location: Cell<f64>, // 位置母数
+    scale: Cell<f64>, // 尺度母数
+}
+
 // ガンベル分布を計算する構造体
 //pub struct Gunbel {}
 
