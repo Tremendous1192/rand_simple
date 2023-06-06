@@ -74,7 +74,7 @@ assert_eq!(levy.sample(), 0.27866346364478645f64); // 位置母数 μ = 0, 尺�
 ## 指数分布
 ```rust
 let exponential = rand_simple::Exponential::new(1192u32);
-assert_eq!(exponential.sample(), 1.5180935542424843f64); // 尺度母数 θ = 1の乱数
+assert_eq!(exponential.sample(), 1.9053655174552453f64); // 尺度母数 θ = 1の乱数
 ```
 ## ラプラス分布
 ```rust

@@ -187,12 +187,12 @@ pub struct Levy {
 /// let exponential = rand_simple::Exponential::new(1192u32);
 /// 
 /// // 初期設定の場合、尺度母数 θ = 1の標準指数分布に従う乱数を返す
-/// assert_eq!(exponential.sample(), 1.5180935542424843f64);
+/// assert_eq!(exponential.sample(), 1.9053655174552453f64);
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let scale: f64 = 1.5f64;
 /// let result: Result<f64, &str> = exponential.try_set_params(scale);
-/// assert_eq!(exponential.sample(), 0.7952745164168542f64);
+/// assert_eq!(exponential.sample(), 0.187586182253475f64);
 /// ```
 pub struct Exponential {
     x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
@@ -243,13 +243,13 @@ pub struct Rayleigh {
 /// let weibull = rand_simple::Weibull::new(1192u32);
 /// 
 /// // 初期設定の場合、形状母数 γ = 1, 尺度母数 η = 1の標準ワイブル分布に従う乱数を返す
-/// assert_eq!(weibull.sample(), 1.5180935542424843f64);
+/// assert_eq!(weibull.sample(), 1.9053655174552453f64);
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let shape: f64 = 2f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64), &str> = weibull.try_set_params(shape, scale);
-/// assert_eq!(weibull.sample(), 1.0922050057682766f64);
+/// assert_eq!(weibull.sample(), 0.530451951999625f64);
 /// ```
 pub struct Weibull {
     x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数

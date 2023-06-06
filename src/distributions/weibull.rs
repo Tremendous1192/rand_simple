@@ -16,37 +16,17 @@ impl Weibull {
     /// ワイブル分布に従う乱数を返す
     pub fn sample(&self) -> f64 {
         // アルゴリズム 3.52
-        loop {
-            // Exp step 1: [0, 1)の一様乱数を生成する
-            let u = update(&self.x, &self.y, &self.z, &self.w);
-            if u < 1f64 {
-                let mut u_dash: f64 = 1f64 - u;
+        // step 1: 標準指数分布に従う乱数Zをz > 0の範囲で生成する
 
-                // Exp step 2:
-                let mut a: f64 =0f64;
+        // 指数分布 step 1: U ~ (0, 1) (z > 0のため開区間に修正)
+        let mut u: f64 = update(&self.x, &self.y, &self.z, &self.w);
+        while u == 1f64 || u == 0f64 {u = update(&self.x, &self.y, &self.z, &self.w);}
+        // 指数分布 step 2: Z = -ln(1-U) (標準指数分布のため、step 2で終了)
+        let z: f64 = - (1f64 - u).ln();
 
-                loop {
-                    // Exp step 3: u" = 2u'
-                    let u_dash_dash = 2f64 * u_dash;
-
-                    // Exp step 4
-                    if u_dash_dash < 1f64 {
-                        a += std::f64::consts::LN_2;
-                        u_dash = u_dash_dash;
-                    }
-                    else {
-                        // Exp step 5
-                        // step 1: 標準指数分布に従う乱数Zをz>0の範囲で生成する
-                        let z: f64 = a + std::f64::consts::LN_2 * (u_dash_dash - 1f64);
-                        if z > 0f64 {
-                            // step 2: Y = Z^γ_inve
-                            // step 3: Z = ηY
-                            return self.scale.get() * z.powf(self.shape_inv.get());
-                        }
-                    }
-                }
-            }
-        }        
+        // step 2: Y = Z^γ_inve
+        // step 3: Z = ηY
+        self.scale.get() * z.powf(self.shape_inv.get())
     }
 
     /// 確率変数のパラメータを変更する
@@ -71,7 +51,7 @@ impl Weibull {
 /// # 使用例 1
 /// ```
 /// let weibull = rand_simple::create_weibull!(1192u32);
-/// assert_eq!(weibull.sample(), 1.5180935542424843f64);
+/// assert_eq!(weibull.sample(), 1.9053655174552453f64);
 /// ```
 /// # 使用例 2
 /// ```/// let weibull = rand_simple::create_weibull!();
