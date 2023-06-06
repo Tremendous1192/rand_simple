@@ -238,7 +238,24 @@ pub struct Rayleigh {
 }
 
 // ワイブル分布を計算する構造体
-//pub struct Weibull {}
+/// # 使用例
+/// ```
+/// let weibull = rand_simple::Weibull::new(1192u32);
+/// 
+/// // 初期設定の場合、形状母数 γ = 1, 尺度母数 η = 1の標準ワイブル分布に従う乱数を返す
+/// assert_eq!(weibull.sample(), 1.5180935542424843f64);
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let shape: f64 = 2f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64), &str> = weibull.try_set_params(shape, scale);
+/// assert_eq!(weibull.sample(), 1.0922050057682766f64);
+/// ```
+pub struct Weibull {
+    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
+    shape_inv: Cell<f64>, // 形状母数の逆数
+    scale: Cell<f64>, // 尺度母数
+}
 
 // ガンベル分布を計算する構造体
 //pub struct Gunbel {}

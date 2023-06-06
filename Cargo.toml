@@ -1,6 +1,6 @@
 [package]
 name = "rand_simple"
-version = "0.0.31"
+version = "0.0.32"
 authors = ["Tremendous1192"]
 edition = "2021"
 description = "The simple random number generator that is independent from the other libraries and based on XOR shift."
