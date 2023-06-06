@@ -116,7 +116,27 @@ pub struct HalfNormal {
 }
 
 // 対数正規分布を計算する構造体
-//pub struct LogNormal {}
+/// # 使用例
+/// ```
+/// let log_normal = rand_simple::LogNormal::new(1192u32, 765u32);
+/// 
+/// // 初期設定の場合、平均値 0, 標準偏差 1 の標準対数正規分布に従う乱数を返す
+/// assert_eq!(log_normal.sample(), 1.1216353517595588f64);
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let mean: f64 = -3f64;
+/// let variance: f64 = 2f64;
+/// let result: Result<(f64, f64), &str> = log_normal.try_set_params(mean, variance);
+/// assert_eq!(log_normal.sample(), 1.1216353890566597f64);
+/// ```
+pub struct LogNormal {
+    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
+	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
+    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
+    even_result: Cell<f64>, // 偶数回目の計算結果
+    mean: Cell<f64>, // 平均
+    std: Cell<f64>, // 標準偏差
+}
 
 /// コーシー分布を計算する構造体
 /// # 使用例
