@@ -1,8 +1,10 @@
 // インスタンスにmutを付与せずに、メンバー変数を変更できるかを試す構造体
+#[cfg(test)]
 struct TestMutableField {
     member_mut: u32,
 }
 
+#[cfg(test)]
 impl TestMutableField {
     // コンストラクタ
     fn new() -> Self {
