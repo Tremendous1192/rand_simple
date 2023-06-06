@@ -51,7 +51,7 @@ impl HalfNormal {
     /// 確率変数のパラメータを変更する
     /// * `variance` - 分散
     pub fn try_set_params(&self, variance: f64) -> Result<f64, &str> {
-        if variance < 0f64 {
+        if variance <= 0f64 {
             Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
@@ -62,7 +62,7 @@ impl HalfNormal {
 }
 
 #[macro_export]
-/// 半正規分布のインスタンスを生成するマクロ
+/// 半正規分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 /// # 使用例 1

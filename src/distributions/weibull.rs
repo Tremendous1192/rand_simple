@@ -30,10 +30,11 @@ impl Weibull {
     }
 
     /// 確率変数のパラメータを変更する
+    /// * `shape` - 形状母数
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&self,shape: f64, scale: f64) -> Result<(f64, f64), &str> {
-        if scale <= 0f64 {
-            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+    pub fn try_set_params(&self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
+        if shape <= 0f64 || scale <= 0f64 {
+            Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
             self.shape_inv.set(shape.powi(-1));
@@ -45,7 +46,7 @@ impl Weibull {
 
 
 #[macro_export]
-/// 指数分布のインスタンスを生成するマクロ
+/// ワイブル分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1

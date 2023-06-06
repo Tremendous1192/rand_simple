@@ -28,7 +28,7 @@ impl Geometric {
     /// 確率変数のパラメータを変更する
     /// * `probability` - 尺度母数
     pub fn try_set_params(&self, probability: f64) -> Result<f64, &str> {
-        if probability < 0f64 || 1f64 < probability {
+        if !(0f64..=1f64).contains(&probability) {
             Err("発生確率尺度母数が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
@@ -39,7 +39,7 @@ impl Geometric {
 }
 
 #[macro_export]
-/// 幾何分布のインスタンスを生成するマクロ
+/// 幾何分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1

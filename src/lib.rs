@@ -51,7 +51,7 @@ pub fn create_seeds() -> (u32, u32) {
 
 // 連続型確率変数
 
-/// 一様乱数を計算する構造体
+/// 一様乱数
 /// # 使用例
 /// ```
 /// let uniform = rand_simple::Uniform::new(1192u32);
@@ -71,7 +71,7 @@ pub struct Uniform {
     range: Cell<f64>, // 範囲
 }
 
-/// 正規分布を計算する構造体
+/// 正規分布
 /// # 使用例
 /// ```
 /// let normal = rand_simple::Normal::new(1192u32, 765u32);
@@ -94,7 +94,7 @@ pub struct Normal {
     std: Cell<f64>, // 標準偏差
 }
 
-/// 半正規分布を計算する構造体
+/// 半正規分布
 /// # 使用例
 /// ```
 /// let half_normal = rand_simple::HalfNormal::new(1192u32, 765u32);
@@ -115,7 +115,7 @@ pub struct HalfNormal {
     std: Cell<f64>, // 標準偏差
 }
 
-// 対数正規分布を計算する構造体
+/// 対数正規分布
 /// # 使用例
 /// ```
 /// let log_normal = rand_simple::LogNormal::new(1192u32, 765u32);
@@ -138,7 +138,7 @@ pub struct LogNormal {
     std: Cell<f64>, // 標準偏差
 }
 
-/// コーシー分布を計算する構造体
+/// コーシー分布
 /// # 使用例
 /// ```
 /// let cauchy = rand_simple::Cauchy::new(1192u32, 765u32);
@@ -159,7 +159,7 @@ pub struct Cauchy {
     scale: Cell<f64>, // 尺度母数
 }
 
-/// 半コーシー分布を計算する構造体
+/// 半コーシー分布
 /// # 使用例
 /// ```
 /// let half_cauchy = rand_simple::HalfCauchy::new(1192u32, 765u32);
@@ -178,7 +178,7 @@ pub struct HalfCauchy {
     scale: Cell<f64>, // 尺度母数
 }
 
-/// レヴィ分布を計算する構造体
+/// レヴィ分布
 /// # 使用例
 /// ```
 /// let levy = rand_simple::Levy::new(1192u32, 765u32);
@@ -201,7 +201,7 @@ pub struct Levy {
     scale: Cell<f64>, // 尺度母数
 }
 
-/// 指数分布を計算する構造体
+/// 指数分布
 /// # 使用例
 /// ```
 /// let exponential = rand_simple::Exponential::new(1192u32);
@@ -219,7 +219,7 @@ pub struct Exponential {
     scale: Cell<f64>, // 尺度母数
 }
 
-/// ラプラス分布を計算する構造体
+/// ラプラス分布
 /// # 使用例
 /// ```
 /// let laplace = rand_simple::Laplace::new(1192u32);
@@ -239,7 +239,7 @@ pub struct Laplace {
     scale: Cell<f64>, // 尺度母数
 }
 
-/// レイリー分布を計算する構造体
+/// レイリー分布
 /// # 使用例
 /// ```
 /// let rayleigh = rand_simple::Rayleigh::new(1192u32);
@@ -257,7 +257,7 @@ pub struct Rayleigh {
     scale: Cell<f64>, // 尺度母数
 }
 
-// ワイブル分布を計算する構造体
+/// ワイブル分布
 /// # 使用例
 /// ```
 /// let weibull = rand_simple::Weibull::new(1192u32);
@@ -299,88 +299,88 @@ pub struct ReflectedWeibull {
     scale: Cell<f64>, // 尺度母数
 }
 
-// ガンベル分布を計算する構造体
+// ガンベル分布
 //pub struct Gunbel {}
 
-// ガンマ分布を計算する構造体
+// ガンマ分布
 //pub struct Gamma {}
 
-// ベータ分布を計算する構造体
+// ベータ分布
 //pub struct Beta {}
 
-// ディリクレ分布を計算する構造体
+// ディリクレ分布
 //pub struct Dirichlet {}
 
-// べき関数分布を計算する構造体
+// べき関数分布
 //pub struct PowerFunction {}
 
-// 指数べき分布を計算する構造体
+// 指数べき分布
 //pub struct ExponentialPower {}
 
-// アーラン分布を計算する構造体
+// アーラン分布
 //pub struct Erlang {}
 
-// ガンマ二乗分布を計算する構造体
+// ガンマ二乗分布
 //pub struct ChiSquare {}
 
-// ガンマ分布を計算する構造体
+// ガンマ分布
 //pub struct Chi {}
 
-// F分布を計算する構造体
+// F分布
 //pub struct FDistribution {}
 
-// t分布を計算する構造体
+// t分布
 //pub struct TDistribution {}
 
-// 逆ガウス分布を計算する構造体
+// 逆ガウス分布
 //pub struct InverseGaussian {}
 
-// 三角分布を計算する構造体
+// 三角分布
 //pub struct Triangular {}
 
-// パレート分布を計算する構造体
+// パレート分布
 //pub struct Pareto {}
 
-// ロジスティック分布を計算する構造体
+// ロジスティック分布
 //pub struct Logistic {}
 
-// 双曲線正割分布を計算する構造体
+// 双曲線正割分布
 //pub struct HeyperbolicSecant {}
 
-// 余弦分布を計算する構造体
+// 余弦分布
 //pub struct RaisedCosine {}
 
-// 逆正弦分布を計算する構造体
+// 逆正弦分布
 //pub struct Arcsine {}
 
-// フォン・ミーゼス分布を計算する構造体
+// フォン・ミーゼス分布
 //pub struct VonMises {}
 
-// 非心ガンマ分布を計算する構造体
+// 非心ガンマ分布
 //pub struct NonCentralGamma {}
 
-// 非心ベータ分布を計算する構造体
+// 非心ベータ分布
 //pub struct NonCentralBeta {}
 
-// 非心ガンマ二乗分布を計算する構造体
+// 非心ガンマ二乗分布
 //pub struct NonCentralChiSquare {}
 
-// 非心ガンマ分布を計算する構造体
+// 非心ガンマ分布
 //pub struct NonCentralChi {}
 
-// 非心F分布を計算する構造体
+// 非心F分布
 //pub struct NonCentralF {}
 
-// 非心t分布を計算する構造体
+// 非心t分布
 //pub struct NonCentralT {}
 
-// プランク分布を計算する構造体
+// プランク分布
 //pub struct Plank {}
 
 
 // 離散型確率変数
 
-/// ベルヌーイ分布を計算する構造体
+/// ベルヌーイ分布
 /// # 使用例
 /// ```
 /// let bernoulli = rand_simple::Bernoulli::new(1192u32);
@@ -401,7 +401,7 @@ pub struct Bernoulli {
 // 二項分布
 //pub  struct Binomial {}
 
-/// 幾何分布を計算する構造体
+/// 幾何分布
 /// # 使用例
 /// ```
 /// let geometric = rand_simple::Geometric::new(1192u32);
@@ -419,29 +419,29 @@ pub struct Geometric {
     probability: Cell<f64>, // 発生確率
 }
 
-// ポアソン分布を計算する構造体
+// ポアソン分布
 //pub struct Poisson {}
 
-// 超幾何分布を計算する構造体
+// 超幾何分布
 //pub struct HeyperGeometric {}
 
-// 多項分布を計算する構造体
+// 多項分布
 //pub struct Multinominal {}
 
-// 負の二項分布を計算する構造体
+// 負の二項分布
 //pub struct NegativeBinomial {}
 
-// 負の超幾何分布を計算する構造体
+// 負の超幾何分布
 //pub struct NegativeHeyperGeometric {}
 
-// 対数級数分布を計算する構造体
+// 対数級数分布
 //pub struct LogarithmicSeries {}
 
-// ユール・シモン分布を計算する構造体
+// ユール・シモン分布
 //pub struct YuleSimon {}
 
-// ジップ・マンデルブロート分布を計算する構造体
+// ジップ・マンデルブロート分布
 //pub struct ZipfMandelbrot {}
 
-// ゼータ分布を計算する構造体
+// ゼータ分布
 //pub struct Zeta {}
