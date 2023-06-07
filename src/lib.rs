@@ -299,6 +299,9 @@ pub struct ReflectedWeibull {
     scale: Cell<f64>, // 尺度母数
 }
 
+// フレシェ分布
+//pub struct Frechet {}
+
 // ガンベル分布
 //pub struct Gunbel {}
 
