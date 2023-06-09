@@ -1,8 +1,7 @@
 #![doc = include_str!("../README.md")]
 
-
 mod distributions; // 確率変数の詳細
-#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
+//#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)] mod sandbox; // 試行錯誤するためのテストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
 use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
@@ -24,7 +23,7 @@ pub(crate) fn update(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>)
     let calculate_t = |arg: u32| arg ^ (arg << 11);
     let t: u32 = calculate_t(x.replace( y.replace( z.replace(w.get()) ) ));
 
-    // w_ new = w ^ (w >> 19) ^ (t ^ (t >>8))
+    // w_ new = (w ^ (w >> 19)) ^ (t ^ (t >>8))
     let calculate_w = |arg: u32| (arg ^ (arg >> 19)) ^ (t ^ (t >> 8));
     w.set( calculate_w(w.take()) );
 
