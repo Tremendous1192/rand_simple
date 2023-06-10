@@ -115,23 +115,22 @@ fn next_u32_xorshiro_double_asterisk (x: &mut u32, y: &mut u32, z: &mut u32, w: 
 
 // 64ビットの乱数
 // https://prng.di.unimi.it/xorshift128plus.c
-/*
 fn next_u64 (x: &mut u64, y: &mut u64) -> u64 {
     let mut s1: u64 = *x;
     let s0: u64 = *y;
-    let result: u64 = s0 + s1;
+    let result: u64 = s0.wrapping_add(s1);
     *x = s0;
-    s1 =s1 ^ (s1 << 23); // a
-    *y = s1 ^ s0 ^ (s1 >> 18) ^ (s0 >> 5); // b, c
+    s1 = s1 ^ s1.wrapping_shl(23u32); // s1 ^ (s1 << 23); // a
+    *y = s1 ^ s0 ^ s1.wrapping_shr(18u32) ^ s0.wrapping_shr(5u32); // s1 ^ s0 ^ (s1 >> 18) ^ (s0 >> 5); // b, c
     result
 }
-*/
+
 
 
 // Xorshiro 128++
 // https://prng.di.unimi.it/xoshiro128plusplus.c
 // オーバーフローするのでwrappingをかませたら、遅くなった。
-// release版だと問題ないように思えるが、ちょっと微妙
+// release版だと速度は問題ないだろうが、ちょっと微妙
 fn rotl (x: u32, k: u32) -> u32 {
     //(x << k) | x >> (32 - k)
     x.wrapping_shl(k) | x.wrapping_shr(32u32 - k)
@@ -152,7 +151,18 @@ fn next_u32_xorshiro128plusplus (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut 
     result
 }
 
-
+// 引用
+// http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
+// ビットシフトは[2,1,4][7,13,6][1,1,20]のいずれかとのこと
+fn test_xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
+    let t = *x ^ (*x << 7u32);
+    *x = *y;
+    *y = *z;
+    *z = *u;
+    *u = *v;
+    *v = (*v ^ (*v >> 6)) ^ (t ^ (t >> 13));
+    *v
+}
 
 
 #[test]
@@ -325,7 +335,6 @@ fn compare_time() {
     
     // xorshift128++
     // オーバーフローする
-    /*
     let mut _span_mut_xorshft128pp: u128 = 0;
     let mut _next64: u64 = 1192u64;
     {
@@ -338,9 +347,7 @@ fn compare_time() {
         let finish = SystemTime::now();
         _span_mut_xorshft128pp = finish.duration_since(initial).expect("Time went backwards").as_millis();
     }
-    */
 
-    // オーバーフローする
 
     let mut _span_mut_xorshiro128_pp: u128 = 0;
     {
@@ -356,14 +363,29 @@ fn compare_time() {
         _span_mut_xorshiro128_pp = finish.duration_since(initial).expect("Time went backwards").as_millis();
     }
 
+    let mut _span_mut_xorshiro160: u128 = 0;
+    {
+        let mut x: u32 = 123456789u32;
+        let mut y: u32 = 362436069u32;
+        let mut z: u32 = 521288629u32;
+        let mut u: u32 = 88675123u32;
+        let mut v: u32 = 1192u32;
+        let initial = SystemTime::now();
+        for _i in 0..REPEAT {
+            _next = test_xorshift160(&mut x, &mut y, &mut z, &mut u, &mut v);
+        }
+        let finish = SystemTime::now();
+        _span_mut_xorshiro160 = finish.duration_since(initial).expect("Time went backwards").as_millis();
+    }
     
-    
-    // opt-level = 0 の場合、百万個生成したときの計算時間[milli sec]
-    // (52, 48, 48, 54, 51, 17, 26, 67)
+    // opt-level = 0 の場合、1千万個生成したときの計算時間[milli sec]
+    // (530, 483, 467, 518, 517, 172, 261, 734, 465, 186)
     // シンプルな可変参照が早かった。
     assert_eq!((_span_educational, _span_closure, _span_closure_2,
         _span_inline, _span_inline2,
         _span_mut_educational, _span_mut_mem,
-        _span_mut_xorshiro128_pp),
-    (0, 0, 0, 0, 0, 0, 0, 0));
+        _span_mut_xorshiro128_pp,
+        _span_mut_xorshft128pp,
+        _span_mut_xorshiro160),
+    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 }
