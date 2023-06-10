@@ -1,7 +1,7 @@
 #![doc = include_str!("../README.md")]
 
 mod distributions; // 確率変数の詳細
-//#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
+#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)] mod sandbox; // 試行錯誤するためのテストモジュール
 use std::cell::Cell; // 書き換え可能なメンバー変数
 use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
