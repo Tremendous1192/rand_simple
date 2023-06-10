@@ -3,7 +3,7 @@
 // Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1?6. https://doi.org/10.18637/jss.v008.i14
 // 参考コード
 // http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
-pub(crate) fn xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
+pub fn xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
     let t = *x ^ (*x << 7u32);
     *x = *y;
     *y = *z;
@@ -27,7 +27,7 @@ const Q_NORMAL: f64 = -0.12127385907_f64; // ln(s)
 const HALF_BIT_NORMAL: u32 = 65535_u32; // 2^(m/2) - 1
 // 標準正規分布
 // アルゴリズム 3.5: onty Python法
-pub(crate) fn standard_normal (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mut u32, v0: &mut u32,
+pub fn standard_normal (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mut u32, v0: &mut u32,
     x1: &mut u32, y1: &mut u32, z1: &mut u32, u1: &mut u32, v1: &mut u32) -> f64 {
     // step 1: m bit符号無整数型の一様乱数の生成
     let u_mbit_integer: u32 = xorshift160(x0, y0, z0, u0, v0);
