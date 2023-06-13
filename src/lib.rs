@@ -1,38 +1,17 @@
 #![doc = include_str!("../README.md")]
 
 mod distributions; // 確率変数の詳細
-pub mod standard_distributions; // 標準分布を計算するモジュール
+mod standard_distributions; // 標準分布を計算するモジュール
 //#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)] mod sandbox; // 試行錯誤するためのテストモジュール
-use std::cell::Cell; // 書き換え可能なメンバー変数
 use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
-// 共通処理
-// 状態変数(x, y, z, w)を設定する
+// 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
 // https://www.researchgate.net/publication/5142825_Xorshift_RNGs
-pub(crate) fn initialize(_seed: u32) -> (u32, u32, u32, u32) {
-    (123456789, 362436069, 521288629, _seed)
+pub(crate) fn create_state(_seed: u32) -> (u32, u32, u32, u32, u32) {
+    (123456789, 362436069, 521288629, 88675123, _seed)
 }
-
-// 共通処理
-// 閉区間[0, 1]の一様乱数を計算して、状態変数を更新する
-// Wikipediaが分かりやすい
-// https://ja.wikipedia.org/wiki/Xorshift
-pub(crate) fn update(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> f64 {
-    // t = x ^ (x << 11), x_new = y, y_new = z, z_new = w
-    let calculate_t = |arg: u32| arg ^ (arg << 11);
-    let t: u32 = calculate_t(x.replace( y.replace( z.replace(w.get()) ) ));
-
-    // w_ new = (w ^ (w >> 19)) ^ (t ^ (t >>8))
-    let calculate_w = |arg: u32| (arg ^ (arg >> 19)) ^ (t ^ (t >> 8));
-    w.set( calculate_w(w.take()) );
-
-    (w.get() as f64) / MAX_U32_AS_F64
-}
-
-// 一様乱数を計算するための分母
-const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 
 // 共通処理
 /// 現在時刻から乱数の種を計算する関数
@@ -54,249 +33,241 @@ pub fn create_seeds() -> (u32, u32) {
 /// 一様乱数
 /// # 使用例
 /// ```
-/// let uniform = rand_simple::Uniform::new(1192u32);
-/// 
-/// // 初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す
-/// assert_eq!(uniform.sample(), 0.8512317447111084f64);
+/// let mut uniform = rand_simple::Uniform::new(1192u32);
+/// println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let min: f64 = -1f64;
 /// let max: f64 = 1f64;
 /// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
-/// assert_eq!(uniform.sample(), -0.7648924006533093f64);
+/// println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, uniform.sample());
 /// ```
 pub struct Uniform {
-	x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    min: Cell<f64>, // 最小値
-    range: Cell<f64>, // 範囲
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    min: f64, // 最小値
+    range: f64, // 範囲
 }
 
 /// 正規分布
 /// # 使用例
 /// ```
-/// let normal = rand_simple::Normal::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、平均値 0, 標準偏差 1 の標準正規分布に従う乱数を返す
-/// assert_eq!(normal.sample(), 0.11478775584530312f64);
+/// let mut normal = rand_simple::Normal::new(1192u32, 765u32);
+/// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準正規分布乱数を生成する -> {}", normal.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let mean: f64 = -3f64;
 /// let variance: f64 = 2f64;
 /// let result: Result<(f64, f64), &str> = normal.try_set_params(mean, variance);
-/// assert_eq!(normal.sample(), 0.11478778909773256f64);
+/// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, normal.sample());
 /// ```
 pub struct Normal {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
-    even_result: Cell<f64>, // 偶数回目の計算結果
-    mean: Cell<f64>, // 平均
-    std: Cell<f64>, // 標準偏差
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    mean: f64, // 平均
+    std: f64, // 標準偏差
 }
 
 /// 半正規分布
 /// # 使用例
 /// ```
-/// let half_normal = rand_simple::HalfNormal::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、標準偏差 1 の標準半正規分布に従う乱数を返す
-/// assert_eq!(half_normal.sample(), 1.8943489630074781f64);
+/// let mut half_normal = rand_simple::HalfNormal::new(1192u32, 765u32);
+/// println!("分散 σ^2 = 1 の標準半正規分布乱数を生成する -> {}", half_normal.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let variance: f64 = 2f64;
 /// let result: Result<f64, &str> = half_normal.try_set_params(variance);
-/// assert_eq!(half_normal.sample(), 1.8943544071672804f64);
+/// println!("分散 σ^2 = {} の半正規分布乱数を生成する -> {}", variance, half_normal.sample());
 /// ```
 pub struct HalfNormal {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
-    even_result: Cell<f64>, // 偶数回目の計算結果
-    std: Cell<f64>, // 標準偏差
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    std: f64, // 標準偏差
 }
 
 /// 対数正規分布
 /// # 使用例
 /// ```
-/// let log_normal = rand_simple::LogNormal::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、平均値 0, 標準偏差 1 の標準対数正規分布に従う乱数を返す
-/// assert_eq!(log_normal.sample(), 1.1216353517595588f64);
+/// let mut log_normal = rand_simple::LogNormal::new(1192u32, 765u32);
+/// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準対数正規分布乱数を生成する -> {}", log_normal.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let mean: f64 = -3f64;
 /// let variance: f64 = 2f64;
 /// let result: Result<(f64, f64), &str> = log_normal.try_set_params(mean, variance);
-/// assert_eq!(log_normal.sample(), 1.1216353890566597f64);
+/// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, log_normal.sample());
 /// ```
 pub struct LogNormal {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
-    even_result: Cell<f64>, // 偶数回目の計算結果
-    mean: Cell<f64>, // 平均
-    std: Cell<f64>, // 標準偏差
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    mean: f64, // 平均
+    std: f64, // 標準偏差
 }
 
 /// コーシー分布
 /// # 使用例
 /// ```
-/// let cauchy = rand_simple::Cauchy::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布に従う乱数を返す
-/// assert_eq!(cauchy.sample(), 0.9999997103138784f64);
+/// let mut cauchy = rand_simple::Cauchy::new(1192u32, 765u32);
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let location: f64 = -2f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64), &str> = cauchy.try_set_params(location, scale);
-/// assert_eq!(cauchy.sample(), -0.49999188999688693f64);
+/// println!("位置母数 μ = {}, 尺度母数 θ = {} のコーシー分布に従う乱数を生成する -> {}", location, scale, cauchy.sample());
 /// ```
 pub struct Cauchy {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    location: Cell<f64>, // 位置母数
-    scale: Cell<f64>, // 尺度母数
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
 }
 
 /// 半コーシー分布
 /// # 使用例
 /// ```
-/// let half_cauchy = rand_simple::HalfCauchy::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、尺度母数 θ = 1の標準半コーシー分布に従う乱数を返す
-/// assert_eq!(half_cauchy.sample(), 0.9999971261133705f64);
+/// let mut half_cauchy = rand_simple::HalfCauchy::new(1192u32, 765u32);
+/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let scale: f64 = 1.5f64;
 /// let result: Result<f64, &str> = half_cauchy.try_set_params(scale);
-/// assert_eq!(half_cauchy.sample(), 1.500000918541327f64);
+/// println!("尺度母数 θ = {} の半コーシー分布に従う乱数を生成する -> {}", scale, half_cauchy.sample());
 /// ```
 pub struct HalfCauchy {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    scale: Cell<f64>, // 尺度母数
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    scale: f64, // 尺度母数
 }
 
 /// レヴィ分布
 /// # 使用例
 /// ```
-/// let levy = rand_simple::Levy::new(1192u32, 765u32);
-/// 
-/// // 初期設定の場合、位置母数 μ = 0, 尺度母数 θ = 1の標準レヴィ分布に従う乱数を返す
-/// assert_eq!(levy.sample(), 0.27866346364478645f64);
+/// let mut levy = rand_simple::Levy::new(1192u32, 765u32);
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準レヴィ分布に従う乱数を生成する -> {}", levy.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let location: f64 = -2f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64), &str> = levy.try_set_params(location, scale);
-/// assert_eq!(levy.sample(), 0.2786618619526834f64);
+/// println!("位置母数 μ = {}, 尺度母数 θ = {} のレヴィ分布に従う乱数を生成する -> {}", location, scale, levy.sample());
 /// ```
 pub struct Levy {
-    x0: Cell<u32>, y0: Cell<u32>, z0: Cell<u32>, w0: Cell<u32>, // 状態変数
-	x1: Cell<u32>, y1: Cell<u32>, z1: Cell<u32>, w1: Cell<u32>, // 状態変数
-    even_flag: Cell<bool>, // 乱数計算が偶数回目かどうかのフラグ
-    even_result: Cell<f64>, // 偶数回目の計算結果
-    location: Cell<f64>, // 位置母数
-    scale: Cell<f64>, // 尺度母数
+    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
+	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
 }
 
 /// 指数分布
 /// # 使用例
 /// ```
-/// let exponential = rand_simple::Exponential::new(1192u32);
-/// 
-/// // 初期設定の場合、尺度母数 θ = 1の標準指数分布に従う乱数を返す
-/// assert_eq!(exponential.sample(), 1.9053655174552453f64);
+/// let mut exponential = rand_simple::Exponential::new(1192u32);
+/// println!("尺度母数 θ = 1の標準指数分布に従う乱数を生成する -> {}", exponential.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let scale: f64 = 1.5f64;
 /// let result: Result<f64, &str> = exponential.try_set_params(scale);
-/// assert_eq!(exponential.sample(), 0.187586182253475f64);
+/// println!("尺度母数 θ = {} の指数分布に従う乱数を生成する -> {}", scale, exponential.sample());
 /// ```
 pub struct Exponential {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    scale: Cell<f64>, // 尺度母数
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    scale: f64, // 尺度母数
 }
 
 /// ラプラス分布
 /// # 使用例
 /// ```
-/// let laplace = rand_simple::Laplace::new(1192u32);
-/// 
-/// // 初期設定の場合、位置母数 μ = 0, 尺度母数 θ = 1の標準ラプラス分布に従う乱数を返す
-/// assert_eq!(laplace.sample(), -0.824946373682539f64);
+/// let mut laplace = rand_simple::Laplace::new(1192u32);
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準ラプラス分布に従う乱数を生成する -> {}", laplace.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let location: f64 = -2f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64), &str> = laplace.try_set_params(location, scale);
-/// assert_eq!(laplace.sample(), -1.4491717380062097f64);
+/// println!("位置母数 μ = {}, 尺度母数 θ = {} のラプラス分布に従う乱数を生成する -> {}", location, scale, laplace.sample());
 /// ```
 pub struct Laplace {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    location: Cell<f64>, // 位置母数
-    scale: Cell<f64>, // 尺度母数
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
+}
+
+/// 対数ラプラス分布
+/// # 使用例
+/// ```
+/// let mut log_laplace = rand_simple::Laplace::new(1192u32);
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let location: f64 = -2f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64), &str> = log_laplace.try_set_params(location, scale);
+/// println!("位置母数 μ = {}, 尺度母数 θ = {} の対数ラプラス分布に従う乱数を生成する -> {}", location, scale, log_laplace.sample());
+/// ```
+pub struct LogLaplace {
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
 }
 
 /// レイリー分布
 /// # 使用例
 /// ```
-/// let rayleigh = rand_simple::Rayleigh::new(1192u32);
-/// 
-/// // 初期設定の場合、尺度母数 σ = 1の標準指数分布に従う乱数を返す
-/// assert_eq!(rayleigh.sample(), 1.742465812716269f64);
+/// let mut rayleigh = rand_simple::Rayleigh::new(1192u32);
+/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let scale: f64 = 1.5f64;
 /// let result: Result<f64, &str> = rayleigh.try_set_params(scale);
-/// assert_eq!(rayleigh.sample(), 1.5446111320492815f64);
+/// println!("尺度母数 θ = {} の標準レイリー分布に従う乱数を生成する -> {}", scale, rayleigh.sample());
 /// ```
 pub struct Rayleigh {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    scale: Cell<f64>, // 尺度母数
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    scale: f64, // 尺度母数
 }
 
 /// ワイブル分布
 /// # 使用例
 /// ```
-/// let weibull = rand_simple::Weibull::new(1192u32);
-/// 
-/// // 初期設定の場合、形状母数 γ = 1, 尺度母数 η = 1の標準ワイブル分布に従う乱数を返す
-/// assert_eq!(weibull.sample(), 1.9053655174552453f64);
+/// let mut weibull = rand_simple::Weibull::new(1192u32);
+/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let shape: f64 = 2f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64), &str> = weibull.try_set_params(shape, scale);
-/// assert_eq!(weibull.sample(), 0.530451951999625f64);
+/// println!("形状母数 γ = {}, 尺度母数 η = {} の標準ワイブル分布に従う乱数を生成する -> {}", shape, scale, weibull.sample());
 /// ```
 pub struct Weibull {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    shape_inv: Cell<f64>, // 形状母数の逆数
-    scale: Cell<f64>, // 尺度母数
+	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    shape_inv: f64, // 形状母数の逆数
+    scale: f64, // 尺度母数
 }
 
 /// 反射ワイブル分布
 /// # 使用例
 /// ```
-/// let reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
-/// 
-/// // 初期設定の場合、形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1の標準ワイブル分布に従う乱数を返す
-/// assert_eq!(reflected_weibull.sample(), 1.2122183368953001f64);
+/// let mut reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
+/// println!("形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1 の反射ワイブル分布に従う乱数を生成する -> {}", reflected_weibull.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let shape: f64 = 2f64;
 /// let location: f64 = 3f64;
 /// let scale: f64 = 1.5f64;
 /// let result: Result<(f64, f64, f64), &str> = reflected_weibull.try_set_params(shape, location, scale);
-/// assert_eq!(reflected_weibull.sample(), 1.1951864361788733f64);
+/// println!("形状母数 γ = {}, 位置母数 μ = {}, 尺度母数 η = {} の反射ワイブル分布に従う乱数を生成する -> {}", shape, location, scale, reflected_weibull.sample());
 /// ```
 pub struct ReflectedWeibull {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    shape_inv: Cell<f64>, // 形状母数の逆数
-    location: Cell<f64>, // 位置母数
-    scale: Cell<f64>, // 尺度母数
+    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    shape_inv: f64, // 形状母数の逆数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
 }
 
 // フレシェ分布
@@ -386,19 +357,17 @@ pub struct ReflectedWeibull {
 /// ベルヌーイ分布
 /// # 使用例
 /// ```
-/// let bernoulli = rand_simple::Bernoulli::new(1192u32);
-/// 
-/// // 初期設定の場合、発生確率 0.5の事象が生じたか(1u64)、否か(0u64)を返す
-/// assert_eq!(bernoulli.sample(), 0u64);
+/// let mut bernoulli = rand_simple::Bernoulli::new(1192u32);
+/// println!("発生確率 θ = 0.5 の事象が生じたか(1)、否か(0)の判定 -> {}", bernoulli.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let probability: f64 = 0.8f64;
 /// let result: Result<f64, &str> = bernoulli.try_set_params(probability);
-/// assert_eq!(bernoulli.sample(), 1u64);
+/// println!("発生確率 θ = {} の事象が生じたか(1)、否か(0)の判定 -> {}", probability, bernoulli.sample());
 /// ```
 pub struct Bernoulli {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    probability: Cell<f64>, // 発生確率
+    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    probability: f64, // 発生確率
 }
 
 // 二項分布
@@ -407,19 +376,17 @@ pub struct Bernoulli {
 /// 幾何分布
 /// # 使用例
 /// ```
-/// let geometric = rand_simple::Geometric::new(1192u32);
-/// 
-/// // 初期設定の場合、発生確率 0.5の事象が初めて生じた試行回数を返す
-/// assert_eq!(geometric.sample(), 2u64);
+/// let mut geometric = rand_simple::Geometric::new(1192u32);
+/// println!("発生確率 θ = 0.5 の事象が生じるまでの試行回数 -> {}", geometric.sample());
 /// 
 /// // 確率変数のパラメータを変更する場合
 /// let probability: f64 = 0.8f64;
 /// let result: Result<f64, &str> = geometric.try_set_params(probability);
-/// assert_eq!(geometric.sample(), 1u64);
+/// println!("発生確率 θ = {} の事象が生じるまでの試行回数 -> {}", probability, geometric.sample());
 /// ```
 pub struct Geometric {
-    x: Cell<u32>, y: Cell<u32>, z: Cell<u32>, w: Cell<u32>, // 状態変数
-    probability: Cell<f64>, // 発生確率
+    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    probability: f64, // 発生確率
 }
 
 // ポアソン分布

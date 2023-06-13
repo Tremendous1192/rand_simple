@@ -1,62 +1,36 @@
-use crate::{Rayleigh, initialize, update};
-use std::cell::Cell;
+use crate::{Rayleigh, create_state};
+use crate::standard_distributions::{xorshift160_0_1, standard_exponential};
 
 impl Rayleigh {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
+        let mut xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
+        let mut u_1: f64 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
+        while u_1 == 1f64 {
+            u_1 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
+        }
         Self {
-            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
-            scale: Cell::new(1f64),
+            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            previous_uniform_1: u_1,
+            scale: 1f64,
         }
     }
 
-    /// 指数分布に従う乱数を返す
-    pub fn sample(&self) -> f64 {
-        // アルゴリズム 3.51
-        // 標準指数分布に従う乱数z≧0を生成する
-        loop {
-            // Exp step 1: [0, 1)の一様乱数を生成する
-            let u = update(&self.x, &self.y, &self.z, &self.w);
-            if u < 1f64 {
-                let mut u_dash: f64 = 1f64 - u;
-
-                // Exp step 2:
-                let mut a: f64 =0f64;
-
-                loop {
-                    // Exp step 3: u" = 2u'
-                    let u_dash_dash = 2f64 * u_dash;
-
-                    // Exp step 4
-                    if u_dash_dash < 1f64 {
-                        a += std::f64::consts::LN_2;
-                        u_dash = u_dash_dash;
-                    }
-                    else {
-                        // Exp step 5
-                        let z = a + std::f64::consts::LN_2 * (u_dash_dash - 1f64);
-
-                        // step 1: 標準指数分布に従う乱数z≧0を生成する
-                        if z < 0f64 { break; }
-                        // step 2: 戻り値を計算する
-                        return (2f64 * z).sqrt() * self.scale.get();
-                    }
-                }
-            }
-        }        
+    /// レイリー分布に従う乱数を返す
+    pub fn sample(&mut self) -> f64 {
+        (2f64 * standard_exponential(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1)).sqrt() * self.scale
     }
 
     /// 確率変数のパラメータを変更する
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&self, scale: f64) -> Result<f64, &str> {
+    pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
-            self.scale.set(scale);
-            Ok( self.scale.get() )
+            self.scale = scale;
+            Ok( self.scale )
         }
     }
 }
@@ -68,13 +42,13 @@ impl Rayleigh {
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let rayleigh = rand_simple::create_rayleigh!(1192u32);
-/// assert_eq!(rayleigh.sample(), 1.742465812716269f64);
+/// let mut rayleigh = rand_simple::create_rayleigh!(1192u32);
+/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
 /// ```
 /// # 使用例 2
 /// ```
-/// let rayleigh = rand_simple::create_rayleigh!();
-/// println!("乱数: {}", rayleigh.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// let mut rayleigh = rand_simple::create_rayleigh!();
+/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
 /// ```
 macro_rules! create_rayleigh {
     () => {{
@@ -92,7 +66,7 @@ impl std::fmt::Display for Rayleigh {
     /// * 尺度母数
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        writeln!(f, "尺度母数: {}", self.scale)?;
         Ok(())
     }
 }

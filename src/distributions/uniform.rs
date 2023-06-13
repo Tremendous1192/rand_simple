@@ -1,34 +1,34 @@
-use crate::{Uniform, initialize, update};
-use std::cell::Cell;
+use crate::{Uniform, create_state};
+use crate::standard_distributions::xorshift160_0_1;
 
 impl Uniform {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
+        let xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
         Self {
-            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
-            min: Cell::new(0f64),
-            range: Cell::new(1f64),
+            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            min: 0f64,
+            range: 1f64,
         }
     }
 
     /// 一様分布に従う乱数を返す
-    pub fn sample(&self) -> f64 {
-        update(&self.x, &self.y, &self.z, &self.w) * self.range.get() + self.min.get()
+    pub fn sample(&mut self) -> f64 {
+        xorshift160_0_1(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v) * self.range + self.min
     }
 
     /// 確率変数のパラメータを変更する
     /// * `min` - 最小値
     /// * `max` - 最大値
-    pub fn try_set_params(&self, min: f64, max: f64) -> Result<(f64, f64), &str> {
+    pub fn try_set_params(&mut self, min: f64, max: f64) -> Result<(f64, f64), &str> {
         if min >= max {
             Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
-            self.min.set(min);
-            self.range.set(max - min);
-            Ok( (self.min.get(), self.min.get() + self.range.get()) )
+            self.min = min;
+            self.range = max - min;
+            Ok( (self.min, self.min + self.range) )
         }
     }
 }
@@ -40,12 +40,12 @@ impl Uniform {
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let uniform = rand_simple::create_uniform!(1192u32);
-/// assert_eq!(uniform.sample(), 0.8512317447111084f64);
+/// let mut uniform = rand_simple::create_uniform!(1192u32);
+/// assert_eq!(uniform.sample(), 0.66687147451259f64);
 /// ```
 /// # 使用例 2
 /// ```
-/// let uniform = rand_simple::create_uniform!();
+/// let mut uniform = rand_simple::create_uniform!();
 /// println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
 /// ```
 macro_rules! create_uniform {
@@ -64,7 +64,7 @@ impl std::fmt::Display for Uniform {
     /// * 範囲(閉区間)
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "範囲: [{}, {}]", self.min.get(), (self.min.get() + self.range.get()))?;
+        writeln!(f, "範囲: [{}, {}]", self.min, (self.min + self.range))?;
         Ok(())
     }
 }

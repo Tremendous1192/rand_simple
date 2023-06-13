@@ -1,45 +1,44 @@
-use crate::{Weibull, initialize, update};
-use std::cell::Cell;
+use crate::{Weibull, create_state};
+use crate::standard_distributions::{xorshift160_0_1, standard_exponential};
 
 impl Weibull {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzw: (u32, u32, u32, u32) = initialize(_seed);
+        let mut xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
+        let mut u_1: f64 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
+        while u_1 == 1f64 {
+            u_1 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
+        }
         Self {
-            x: Cell::new(xyzw.0), y: Cell::new(xyzw.1), z: Cell::new(xyzw.2), w: Cell::new(xyzw.3),
-            shape_inv: Cell::new(1f64),
-            scale: Cell::new(1f64),
+            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            previous_uniform_1: u_1,
+            shape_inv: 1f64,
+            scale: 1f64,
         }
     }
 
     /// ワイブル分布に従う乱数を返す
-    pub fn sample(&self) -> f64 {
-        // アルゴリズム 3.52
-        // step 1: 標準指数分布に従う乱数Zをz > 0の範囲で生成する
-
-        // 指数分布 step 1: U ~ (0, 1) (z > 0のため開区間に修正)
-        let mut u: f64 = update(&self.x, &self.y, &self.z, &self.w);
-        while u == 1f64 || u == 0f64 {u = update(&self.x, &self.y, &self.z, &self.w);}
-        // 指数分布 step 2: Z = -ln(1-U) (標準指数分布のため、step 2で終了)
-        let z: f64 = - (1f64 - u).ln();
-
-        // step 2: Y = Z^γ_inve
-        // step 3: Z = ηY
-        self.scale.get() * z.powf(self.shape_inv.get())
+    pub fn sample(&mut self) -> f64 {
+        loop {
+            let z = standard_exponential(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1);
+            if z > 0f64 {
+                return z.powf(self.shape_inv) * self.scale;
+            }
+        }
     }
 
     /// 確率変数のパラメータを変更する
     /// * `shape` - 形状母数
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
+    pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         if shape <= 0f64 || scale <= 0f64 {
             Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
-            self.shape_inv.set(shape.powi(-1));
-            self.scale.set(scale);
-            Ok( (self.shape_inv.get().powi(-1), self.scale.get()) )
+            self.shape_inv = shape.powi(-1);
+            self.scale = scale;
+            Ok( (shape, scale) )
         }
     }
 }
@@ -51,12 +50,13 @@ impl Weibull {
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let weibull = rand_simple::create_weibull!(1192u32);
-/// assert_eq!(weibull.sample(), 1.9053655174552453f64);
+/// let mut weibull = rand_simple::create_weibull!(1192u32);
+/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
 /// ```
 /// # 使用例 2
-/// ```/// let weibull = rand_simple::create_weibull!();
-/// println!("乱数: {}", weibull.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// ```
+/// let mut weibull = rand_simple::create_weibull!();
+/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
 /// ```
 macro_rules! create_weibull {
     () => {{
@@ -75,8 +75,8 @@ impl std::fmt::Display for Weibull {
     /// * 尺度母数
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "形状母数: {}", self.shape_inv.get())?;
-        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        writeln!(f, "形状母数: {}", self.shape_inv)?;
+        writeln!(f, "尺度母数: {}", self.scale)?;
         Ok(())
     }
 }

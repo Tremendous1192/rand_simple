@@ -1,7 +1,7 @@
-use crate::{Laplace, create_state};
+use crate::{LogLaplace, create_state};
 use crate::standard_distributions::{xorshift160_0_1, standard_laplace};
 
-impl Laplace {
+impl LogLaplace {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
@@ -18,9 +18,9 @@ impl Laplace {
         }
     }
 
-    /// ラプラス分布に従う乱数を返す
+    /// 対数ラプラス分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        standard_laplace(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1) * self.scale + self.location      
+        (standard_laplace(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1) * self.scale + self.location).exp()     
     }
 
     /// 確率変数のパラメータを変更する
@@ -40,32 +40,32 @@ impl Laplace {
 
 
 #[macro_export]
-/// ラプラス分布
+/// 対数ラプラス分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let mut laplace = rand_simple::create_laplace!(1192u32);
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準ラプラス分布に従う乱数を生成する -> {}", laplace.sample());
+/// let mut log_laplace = rand_simple::create_laplace!(1192u32);
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
 /// ```
 /// # 使用例 2
 /// ```
-/// let mut laplace = rand_simple::create_laplace!();
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準ラプラス分布に従う乱数を生成する -> {}", laplace.sample());
+/// let mut log_laplace = rand_simple::create_laplace!();
+/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
 /// ```
-macro_rules! create_laplace {
+macro_rules! create_log_laplace {
     // 引数無し
     () => {{
-        $crate::Laplace::new($crate::create_seed())
+        $crate::LogLaplace::new($crate::create_seed())
     }};
     // 引数有り
     ($seed: expr) => {
-        $crate::Laplace::new($seed as u32)
+        $crate::LogLaplace::new($seed as u32)
     };
 }
 
 
-impl std::fmt::Display for Laplace {
+impl std::fmt::Display for LogLaplace {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 位置母数

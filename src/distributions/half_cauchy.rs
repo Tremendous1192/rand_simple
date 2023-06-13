@@ -1,5 +1,5 @@
-use crate::{HalfCauchy, initialize, update};
-use std::cell::Cell;
+use crate::{HalfCauchy, create_state};
+use crate::standard_distributions::standard_cauchy;
 
 impl HalfCauchy {
     /// コンストラクタ
@@ -7,43 +7,30 @@ impl HalfCauchy {
     /// * `_seed_2` - 乱数の種。`_seed_1`と同じ値の場合、コンストラクタ側で変更する。
     pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
         let _seed_other = if _seed_1 != _seed_2 { _seed_2 } else { (_seed_1 as u64 + 1192u64) as u32};
-        let xyzw0: (u32, u32, u32, u32) = initialize(_seed_1);
-        let xyzw1: (u32, u32, u32, u32) = initialize(_seed_other);
+        let xyzuv0: (u32, u32, u32, u32, u32) = create_state(_seed_1);
+        let xyzuv1: (u32, u32, u32, u32, u32) = create_state(_seed_other);
         Self {
-            x0: Cell::new(xyzw0.0), y0: Cell::new(xyzw0.1), z0: Cell::new(xyzw0.2), w0: Cell::new(xyzw0.3),
-            x1: Cell::new(xyzw1.0), y1: Cell::new(xyzw1.1), z1: Cell::new(xyzw1.2), w1: Cell::new(xyzw1.3),
-            scale: Cell::new(1f64),
+            x0: xyzuv0.0, y0: xyzuv0.1, z0: xyzuv0.2, u0: xyzuv0.3, v0: xyzuv0.4,
+            x1: xyzuv1.0, y1: xyzuv1.1, z1: xyzuv1.2, u1: xyzuv1.3, v1: xyzuv1.4,
+            scale: 1f64,
         }
     }
 
     /// 半コーシー分布に従う乱数を返す
-    pub fn sample(&self) -> f64 {
-        // アルゴリズム 3.34
-        loop {
-            // step 1: 区間(0, 1) の一様乱数u1, 区間(0, 1)のu2を独立に発生させる。
-            let u1: f64 = update(&self.x0, &self.y0, &self.z0, &self.w0);
-            let u2: f64 = update(&self.x1, &self.y1, &self.z1, &self.w1);
-            if u1 == 1f64 || u2 == 0f64 || u2 == 1f64 { continue; }
-
-            // step 2: 中間変数を生成する
-            let w = u1.powi(2) + u2.powi(2);
-
-            // step 3: w < 1のとき、戻り値計算に移る
-            if w < 1f64 {
-                return u1 / u2 * self.scale.get();
-            }
-        }
+    pub fn sample(&mut self) -> f64 {
+        standard_cauchy(&mut self.x0, &mut self.y0, &mut self.z0, &mut self.u0, &mut self.v0,
+            &mut self.x1, &mut self.y1, &mut self.z1, &mut self.u1, &mut self.v1).abs() * self.scale
     }
 
     /// 確率変数のパラメータを変更する
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&self, scale: f64) -> Result<f64, &str> {
+    pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         }
         else {
-            self.scale.set(scale);
-            Ok( self.scale.get() )
+            self.scale = scale;
+            Ok( scale )
         }
     }
 }
@@ -54,13 +41,13 @@ impl HalfCauchy {
 /// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let half_cauchy = rand_simple::create_half_cauchy!(1192u32, 765u32);
-/// assert_eq!(half_cauchy.sample(), 0.9999971261133705f64);
+/// let mut half_cauchy = rand_simple::create_half_cauchy!(1192u32, 765u32);
+/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
 /// ```
 /// # 使用例 2
 /// ```
-/// let half_cauchy = rand_simple::create_half_cauchy!();
-/// println!("乱数: {}", half_cauchy.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+/// let mut half_cauchy = rand_simple::create_half_cauchy!();
+/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
 /// ```
 macro_rules! create_half_cauchy {
     () => {{
@@ -79,7 +66,7 @@ impl std::fmt::Display for HalfCauchy {
     /// * 尺度母数
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "尺度母数: {}", self.scale.get())?;
+        writeln!(f, "尺度母数: {}", self.scale)?;
         Ok(())
     }
 }
