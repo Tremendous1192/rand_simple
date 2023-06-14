@@ -4,6 +4,7 @@
 // 参考コード
 // http://www.6809.net/tenk/?%e9%9b%91%e8%a8%98%2f2010
 // http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
+#[inline]
 pub(crate) fn xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
     let t = *x ^ (*x << 7u32);
     *x = *y;
@@ -15,15 +16,33 @@ pub(crate) fn xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v
 }
 
 // 閉区間[0, 1]の一様乱数
+#[inline]
 pub(crate) fn xorshift160_0_1 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> f64 {
-    let t = *x ^ (*x << 7u32);
-    *x = *y;
-    *y = *z;
-    *z = *u;
-    *u = *v;
-    *v = (*v ^ (*v >> 6u32)) ^ (t ^ (t >> 13u32));
-    *v as f64 / MAX_U32_AS_F64
+    xorshift160(x, y, z, u, v) as f64 / MAX_U32_AS_F64
 }
+
+// 区間[0, 1)の一様乱数
+#[inline]
+pub(crate) fn xorshift160_0_1_open (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> f64 {
+    loop {
+        xorshift160(x, y, z, u, v);
+        if *v != std::u32::MAX {
+            return *v as f64 / MAX_U32_AS_F64;
+        }
+    }
+}
+
+// 開区間(0, 1)の一様乱数
+#[inline]
+pub(crate) fn xorshift160_0_open_1_open (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> f64 {
+    loop {
+        xorshift160(x, y, z, u, v);
+        if *v != 0u32 && *v != std::u32::MAX {
+            return *v as f64 / MAX_U32_AS_F64;
+        }
+    }
+}
+
 // 一様乱数を計算するための分母
 const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 
@@ -134,11 +153,7 @@ pub(crate) fn standard_cauchy (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mu
             if std::f64::consts::PI * (1f64 + y.powi(2)) * (Q_CAUCHY - P_CAUCHY * u_y) < 1f64 {y}
             else {
                 // step 10: 裾野?
-                let mut u_step10: u32 = xorshift160(x1, y1, z1, u1, v1);
-                while u_step10 == 0 || u_step10 == std::u32::MAX {
-                    u_step10 = xorshift160(x1, y1, z1, u1, v1);
-                }
-                sign * (T_CAUCHY + V_CAUCHY * u_step10 as f64 / MAX_U32_AS_F64)
+                sign * (T_CAUCHY + V_CAUCHY * xorshift160_0_open_1_open(x1, y1, z1, u1, v1))
             }
         }
     }
@@ -168,8 +183,7 @@ pub(crate) fn standard_exponential (x: &mut u32, y: &mut u32, z: &mut u32, u: &m
     let mut k: u128 = 1u128;
     loop {
         // step 6: 区間[0, 1)の一様乱数 u_2 を生成する
-        let mut u_2 = xorshift160_0_1 (x, y, z, u, v);
-        while u_2 == 1f64 {u_2 = xorshift160_0_1 (x, y, z, u, v);}
+        let mut u_2 = xorshift160_0_1_open (x, y, z, u, v);
         // step 7: u_2 < wのときは、w = u_2としてkの値を1増やして、step 6に戻る
         // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
         if u_2 < w {
@@ -220,8 +234,7 @@ pub(crate) fn standard_laplace (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u
     let mut k: u128 = 1u128;
     loop {
         // step 7: 区間[0, 1)の一様乱数 u_2 を生成する
-        let mut u_2 = xorshift160_0_1 (x, y, z, u, v);
-        while u_2 == 1f64 {u_2 = xorshift160_0_1 (x, y, z, u, v);}
+        let mut u_2 = xorshift160_0_1_open (x, y, z, u, v);
         // step 8: u_2 < wのときは、w = u_2としてkの値を1増やして、step 7に戻る
         // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
         if u_2 < w {

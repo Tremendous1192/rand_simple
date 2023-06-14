@@ -1,15 +1,12 @@
 use crate::{ReflectedWeibull, create_state};
-use crate::standard_distributions::{xorshift160_0_1, standard_laplace};
+use crate::standard_distributions::{xorshift160_0_1_open, standard_laplace};
 
 impl ReflectedWeibull {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
         let mut xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
-        let mut u_1: f64 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
-        while u_1 == 1f64 {
-            u_1 = xorshift160_0_1(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
-        }
+        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
         Self {
             x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
             previous_uniform_1: u_1,
@@ -23,10 +20,10 @@ impl ReflectedWeibull {
     pub fn sample(&mut self) -> f64 {
         let z: f64 = standard_laplace(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1);
         if z >= 0f64 {
-            return z.powf(self.shape_inv) * self.scale + self. location;
+            z.powf(self.shape_inv) * self.scale + self. location
         }
         else {
-            return (-z).powf(self.shape_inv) * self.scale + self. location;
+            (-z).powf(self.shape_inv) * self.scale + self. location
         }
     }
 
