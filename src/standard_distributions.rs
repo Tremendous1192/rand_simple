@@ -58,6 +58,7 @@ const Q_NORMAL: f64 = -0.12127385907_f64; // ln(s)
 const HALF_BIT_NORMAL: u32 = 65535_u32; // 2^(m/2) - 1
 // 標準正規分布
 // アルゴリズム 3.5: Monty Python法
+#[inline]
 pub(crate) fn standard_normal (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mut u32, v0: &mut u32,
     x1: &mut u32, y1: &mut u32, z1: &mut u32, u1: &mut u32, v1: &mut u32) -> f64 {
     // step 1: m bit符号無整数型の一様乱数の生成
@@ -95,6 +96,7 @@ pub(crate) fn standard_normal (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mu
 const D_NORMAL: f64 = std::f64::consts::TAU; // b^2 = 2π
 // 標準正規分布の裾野
 // アルゴリズム 3.13
+#[inline]
 fn standard_normal_foot (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mut u32, v0: &mut u32,
     x1: &mut u32, y1: &mut u32, z1: &mut u32, u1: &mut u32, v1: &mut u32) -> f64 {
     loop {
@@ -126,6 +128,7 @@ const V_CAUCHY: f64 = 0.20681936679_f64; // arctan(b)
 const HALF_BIT_CAUCHY: u32 = 65535_u32; // 2^(m/2) - 1
 // 標準正規分布
 // アルゴリズム 3.30: Monty Python法
+#[inline]
 pub(crate) fn standard_cauchy (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mut u32, v0: &mut u32,
     x1: &mut u32, y1: &mut u32, z1: &mut u32, u1: &mut u32, v1: &mut u32) -> f64 {
     // step 1: m bit符号無整数型の一様乱数の生成
@@ -164,6 +167,7 @@ pub(crate) fn standard_cauchy (x0: &mut u32, y0: &mut u32, z0: &mut u32, u0: &mu
 const D_EXPONENTIAL: f64 = std::f64::consts::LN_2; // ln2
 // 標準指数分布
 // アルゴリズム 3.42
+#[inline]
 pub(crate) fn standard_exponential (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32, u_1:&mut f64) -> f64 {
     // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
     let u_dash: f64 = 1f64 - *u_1;
@@ -183,7 +187,7 @@ pub(crate) fn standard_exponential (x: &mut u32, y: &mut u32, z: &mut u32, u: &m
     let mut k: u128 = 1u128;
     loop {
         // step 6: 区間[0, 1)の一様乱数 u_2 を生成する
-        let mut u_2 = xorshift160_0_1_open (x, y, z, u, v);
+        let u_2 = xorshift160_0_1_open (x, y, z, u, v);
         // step 7: u_2 < wのときは、w = u_2としてkの値を1増やして、step 6に戻る
         // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
         if u_2 < w {
@@ -212,6 +216,7 @@ pub(crate) fn standard_exponential (x: &mut u32, y: &mut u32, z: &mut u32, u: &m
 const D_LAPLACE: f64 = std::f64::consts::LN_2; // ln2
 // 標準ラプラス分布
 // アルゴリズム 3.42
+#[inline]
 pub(crate) fn standard_laplace (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32, u_1:&mut f64) -> f64 {
     // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
     let u_dash: f64 = 1f64 - *u_1;
@@ -234,7 +239,7 @@ pub(crate) fn standard_laplace (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u
     let mut k: u128 = 1u128;
     loop {
         // step 7: 区間[0, 1)の一様乱数 u_2 を生成する
-        let mut u_2 = xorshift160_0_1_open (x, y, z, u, v);
+        let u_2 = xorshift160_0_1_open (x, y, z, u, v);
         // step 8: u_2 < wのときは、w = u_2としてkの値を1増やして、step 7に戻る
         // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
         if u_2 < w {
