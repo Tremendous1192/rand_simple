@@ -7,11 +7,11 @@ impl LogNormal {
     /// * `_seed_2` - 乱数の種。`_seed_1`と同じ値の場合、コンストラクタ側で変更する。
     pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
         let _seed_other = if _seed_1 != _seed_2 { _seed_2 } else { (_seed_1 as u64 + 1192u64) as u32};
-        let xyzuv0: (u32, u32, u32, u32, u32) = create_state(_seed_1);
-        let xyzuv1: (u32, u32, u32, u32, u32) = create_state(_seed_other);
+        let xyzuv0: [u32; 5] = create_state(_seed_1);
+        let xyzuv1: [u32; 5] = create_state(_seed_other);
         Self {
-            x0: xyzuv0.0, y0: xyzuv0.1, z0: xyzuv0.2, u0: xyzuv0.3, v0: xyzuv0.4,
-            x1: xyzuv1.0, y1: xyzuv1.1, z1: xyzuv1.2, u1: xyzuv1.3, v1: xyzuv1.4,
+            xyzuv0,
+            xyzuv1,
             mean: 0f64,
             std: 1f64,
         }
@@ -19,8 +19,7 @@ impl LogNormal {
 
     /// 対数正規分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        (standard_normal(&mut self.x0, &mut self.y0, &mut self.z0, &mut self.u0, &mut self.v0,
-            &mut self.x1, &mut self.y1, &mut self.z1, &mut self.u1, &mut self.v1) * self.std + self.mean).exp()
+        (standard_normal(&mut self.xyzuv0, &mut self.xyzuv1) * self.std + self.mean).exp()
     }
 
     /// 確率変数のパラメータを変更する

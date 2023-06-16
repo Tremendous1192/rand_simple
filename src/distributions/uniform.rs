@@ -5,9 +5,9 @@ impl Uniform {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
+        let xyzuv: [u32; 5] = create_state(_seed);
         Self {
-            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            xyzuv,
             min: 0f64,
             range: 1f64,
         }
@@ -15,7 +15,7 @@ impl Uniform {
 
     /// 一様分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        xorshift160_0_1(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v) * self.range + self.min
+        xorshift160_0_1(&mut self.xyzuv) * self.range + self.min
     }
 
     /// 確率変数のパラメータを変更する

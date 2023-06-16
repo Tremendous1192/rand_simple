@@ -9,8 +9,8 @@ use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
 // https://www.researchgate.net/publication/5142825_Xorshift_RNGs
-pub(crate) fn create_state(_seed: u32) -> (u32, u32, u32, u32, u32) {
-    (123456789, 362436069, 521288629, 88675123, _seed)
+pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
+    [123456789, 362436069, 521288629, 88675123, _seed]
 }
 
 // 共通処理
@@ -43,7 +43,7 @@ pub fn create_seeds() -> (u32, u32) {
 /// println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, uniform.sample());
 /// ```
 pub struct Uniform {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     min: f64, // 最小値
     range: f64, // 範囲
 }
@@ -61,8 +61,8 @@ pub struct Uniform {
 /// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, normal.sample());
 /// ```
 pub struct Normal {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     mean: f64, // 平均
     std: f64, // 標準偏差
 }
@@ -79,8 +79,8 @@ pub struct Normal {
 /// println!("分散 σ^2 = {} の半正規分布乱数を生成する -> {}", variance, half_normal.sample());
 /// ```
 pub struct HalfNormal {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     std: f64, // 標準偏差
 }
 
@@ -97,8 +97,8 @@ pub struct HalfNormal {
 /// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, log_normal.sample());
 /// ```
 pub struct LogNormal {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     mean: f64, // 平均
     std: f64, // 標準偏差
 }
@@ -116,8 +116,8 @@ pub struct LogNormal {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} のコーシー分布に従う乱数を生成する -> {}", location, scale, cauchy.sample());
 /// ```
 pub struct Cauchy {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     location: f64, // 位置母数
     scale: f64, // 尺度母数
 }
@@ -134,8 +134,8 @@ pub struct Cauchy {
 /// println!("尺度母数 θ = {} の半コーシー分布に従う乱数を生成する -> {}", scale, half_cauchy.sample());
 /// ```
 pub struct HalfCauchy {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     scale: f64, // 尺度母数
 }
 
@@ -152,8 +152,8 @@ pub struct HalfCauchy {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} のレヴィ分布に従う乱数を生成する -> {}", location, scale, levy.sample());
 /// ```
 pub struct Levy {
-    x0: u32, y0: u32, z0: u32, u0: u32, v0: u32, // 状態変数
-	x1: u32, y1: u32, z1: u32, u1: u32, v1: u32, // 状態変数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
     location: f64, // 位置母数
     scale: f64, // 尺度母数
 }
@@ -170,7 +170,7 @@ pub struct Levy {
 /// println!("尺度母数 θ = {} の指数分布に従う乱数を生成する -> {}", scale, exponential.sample());
 /// ```
 pub struct Exponential {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     scale: f64, // 尺度母数
 }
@@ -188,7 +188,7 @@ pub struct Exponential {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} のラプラス分布に従う乱数を生成する -> {}", location, scale, laplace.sample());
 /// ```
 pub struct Laplace {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     location: f64, // 位置母数
     scale: f64, // 尺度母数
@@ -207,7 +207,7 @@ pub struct Laplace {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} の対数ラプラス分布に従う乱数を生成する -> {}", location, scale, log_laplace.sample());
 /// ```
 pub struct LogLaplace {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     location: f64, // 位置母数
     scale: f64, // 尺度母数
@@ -225,7 +225,7 @@ pub struct LogLaplace {
 /// println!("尺度母数 θ = {} の標準レイリー分布に従う乱数を生成する -> {}", scale, rayleigh.sample());
 /// ```
 pub struct Rayleigh {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     scale: f64, // 尺度母数
 }
@@ -243,7 +243,7 @@ pub struct Rayleigh {
 /// println!("形状母数 γ = {}, 尺度母数 η = {} の標準ワイブル分布に従う乱数を生成する -> {}", shape, scale, weibull.sample());
 /// ```
 pub struct Weibull {
-	x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     shape_inv: f64, // 形状母数の逆数
     scale: f64, // 尺度母数
@@ -263,7 +263,7 @@ pub struct Weibull {
 /// println!("形状母数 γ = {}, 位置母数 μ = {}, 尺度母数 η = {} の反射ワイブル分布に従う乱数を生成する -> {}", shape, location, scale, reflected_weibull.sample());
 /// ```
 pub struct ReflectedWeibull {
-    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     previous_uniform_1: f64, // 前回使用した一様乱数
     shape_inv: f64, // 形状母数の逆数
     location: f64, // 位置母数
@@ -366,7 +366,7 @@ pub struct ReflectedWeibull {
 /// println!("発生確率 θ = {} の事象が生じたか(1)、否か(0)の判定 -> {}", probability, bernoulli.sample());
 /// ```
 pub struct Bernoulli {
-    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     probability: f64, // 発生確率
 }
 
@@ -385,7 +385,7 @@ pub struct Bernoulli {
 /// println!("発生確率 θ = {} の事象が生じるまでの試行回数 -> {}", probability, geometric.sample());
 /// ```
 pub struct Geometric {
-    x: u32, y: u32, z: u32, u: u32, v: u32, // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     probability: f64, // 発生確率
 }
 

@@ -5,10 +5,10 @@ impl ReflectedWeibull {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let mut xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
-        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv.0, &mut xyzuv.1, &mut xyzuv.2, &mut xyzuv.3, &mut xyzuv.4);
+        let mut xyzuv: [u32; 5] = create_state(_seed);
+        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
-            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            xyzuv,
             previous_uniform_1: u_1,
             shape_inv: 1f64,
             location: 0f64,
@@ -18,7 +18,7 @@ impl ReflectedWeibull {
 
     /// ワイブル分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        let z: f64 = standard_laplace(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v, &mut self.previous_uniform_1);
+        let z: f64 = standard_laplace(&mut self.xyzuv, &mut self.previous_uniform_1);
         if z >= 0f64 {
             z.powf(self.shape_inv) * self.scale + self. location
         }

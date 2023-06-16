@@ -5,9 +5,9 @@ impl Geometric {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzuv: (u32, u32, u32, u32, u32) = create_state(_seed);
+        let xyzuv: [u32; 5] = create_state(_seed);
         Self {
-            x: xyzuv.0, y: xyzuv.1, z: xyzuv.2, u: xyzuv.3, v: xyzuv.4,
+            xyzuv,
             probability: 0.5f64,
         }
     }
@@ -15,7 +15,7 @@ impl Geometric {
     /// ある確率の事象が初めて生じるまでの試行回数を返す
     pub fn sample(&mut self) -> u64 {
         let mut x: u64 = 1;
-        while xorshift160_0_1(&mut self.x, &mut self.y, &mut self.z, &mut self.u, &mut self.v) > self.probability { x += 1u64; }        
+        while xorshift160_0_1(&mut self.xyzuv) > self.probability { x += 1u64; }        
         x
     }
 
