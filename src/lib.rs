@@ -289,8 +289,24 @@ pub struct Frechet {
     scale: f64, // 尺度母数
 }
 
-// ガンベル分布
-//pub struct Gunbel {}
+/// ガンベル分布
+/// # 使用例
+/// ```
+/// let mut gunbel = rand_simple::Gunbel::new(1192u32);
+/// println!("位置母数 μ = 0, 尺度母数 η = 1 の標準反射ワイブル分布に従う乱数を生成する -> {}", gunbel.sample());
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let location: f64 = 3f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64), &str> = gunbel.try_set_params(location, scale);
+/// println!("位置母数 μ = {}, 尺度母数 η = {} の反射ワイブル分布に従う乱数を生成する -> {}", location, scale, gunbel.sample());
+/// ```
+pub struct Gunbel {
+    xyzuv: [u32; 5], // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    location: f64, // 位置母数
+    scale: f64, // 尺度母数
+}
 
 // ガンマ分布
 //pub struct Gamma {}
