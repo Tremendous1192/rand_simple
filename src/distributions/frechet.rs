@@ -1,7 +1,7 @@
-use crate::{Weibull, create_state};
+use crate::{Frechet, create_state};
 use crate::standard_distributions::{xorshift160_0_1_open, standard_exponential};
 
-impl Weibull {
+impl Frechet {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
@@ -15,12 +15,12 @@ impl Weibull {
         }
     }
 
-    /// ワイブル分布に従う乱数を返す
+    /// フレシェ分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
         loop {
             let z = standard_exponential(&mut self.xyzuv, &mut self.previous_uniform_1);
             if z > 0f64 {
-                return z.powf(self.shape_inv) * self.scale;
+                return z.powf(-self.shape_inv) * self.scale;
             }
         }
     }
@@ -42,30 +42,30 @@ impl Weibull {
 
 
 #[macro_export]
-/// ワイブル分布
+/// フレシェ分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
-/// let mut weibull = rand_simple::create_weibull!(1192u32);
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
+/// let mut frechet = rand_simple::create_frechet!(1192u32);
+/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準フレシェ分布に従う乱数を生成する -> {}", frechet.sample());
 /// ```
 /// # 使用例 2
 /// ```
-/// let mut weibull = rand_simple::create_weibull!();
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
+/// let mut frechet = rand_simple::create_frechet!();
+/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準フレシェ分布に従う乱数を生成する -> {}", frechet.sample());
 /// ```
-macro_rules! create_weibull {
+macro_rules! create_frechet {
     () => {{
-        $crate::Weibull::new($crate::create_seed())
+        $crate::Frechet::new($crate::create_seed())
     }};
     ($seed: expr) => {
-        $crate::Weibull::new($seed as u32)
+        $crate::Frechet::new($seed as u32)
     };
 }
 
 
-impl std::fmt::Display for Weibull {
+impl std::fmt::Display for Frechet {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 形状母数

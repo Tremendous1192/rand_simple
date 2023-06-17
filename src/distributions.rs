@@ -13,7 +13,7 @@ mod log_laplace; // 対数ラプラス分布
 mod rayleigh; // レイリー分布
 mod weibull; // ワイブル分布
 mod reflected_weibull; // 反射ワイブル分布
-//mod frechet; // フレシェ分布
+mod frechet; // フレシェ分布
 //mod gunbel; // ガンベル分布
 //mod gamma; // ガンマ分布
 //mod beta; // ベータ分布
