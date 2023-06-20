@@ -261,4 +261,37 @@ pub(crate) fn standard_laplace (xyzuv: &mut [u32; 5], u_1:&mut f64) -> f64 {
 }
 
 
-
+// 標準ガンマ分布
+// アルゴリズム 3.59
+#[inline]
+pub(crate) fn standard_gmma (xyzuv: &mut [u32; 5], u_1:&mut f64, xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5], alpha: &f64) -> f64 {
+    // α = 1 のとき指数分布を返す
+    if *alpha == 1f64 {
+        return standard_exponential(xyzuv, u_1);
+    }
+    // α < 1 のときは回帰関数で計算する
+    else if *alpha < 1f64 {
+        return standard_gmma (xyzuv, u_1, xyzuv0, xyzuv1, &(alpha + 1f64)) * xorshift160_0_open_1_open(xyzuv0).powf(1f64/ *alpha);
+    }
+    // 前処理
+    let d = *alpha - 1f64 / 3f64;
+    let c = (9f64 * d).powf(-0.5);
+    loop {
+        // step 1
+        let z = standard_normal(xyzuv0, xyzuv1);
+        // step 2
+        let v = 1f64 + c * z;
+        if v > 0f64 {
+            let e = standard_exponential(xyzuv, u_1);
+            if e > 0f64 {
+                // step 2 の計算はここで行っても良いと考える
+                let w = v.powi(3);
+                let y = d * w;
+                // step 3
+                if e + z.powi(2) / 2f64 + d * w.ln() - y + d >= 0f64 {
+                    return y;
+                }
+            }
+        }
+    }
+}
