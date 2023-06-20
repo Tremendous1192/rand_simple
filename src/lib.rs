@@ -28,6 +28,13 @@ pub fn create_seeds() -> (u32, u32) {
     (duration.as_millis() as u32, std::u32::MAX - duration.as_nanos() as u32)
 }
 
+/// ガンマ分布等3つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
+pub fn create_seeds_trio() -> (u32, u32, u32) {
+    let duration = SystemTime::now().duration_since(UNIX_EPOCH).expect("Time went backwards");
+    // 49.7日周期と136年周期と4秒周期の組み合わせ
+    (duration.as_millis() as u32, duration.as_secs() as u32, std::u32::MAX - duration.as_nanos() as u32)
+}
+
 // 連続型確率変数
 
 /// 一様乱数
