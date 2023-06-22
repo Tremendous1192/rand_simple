@@ -315,8 +315,26 @@ pub struct Gunbel {
     scale: f64, // 尺度母数
 }
 
-// ガンマ分布
-//pub struct Gamma {}
+/// ガンマ分布
+/// # 使用例
+/// ```
+/// let mut gamma = rand_simple::Gamma::new(1192u32, 765u32, 1543u32);
+/// println!("形状母数 α = 1, 尺度母数 β = 1 の標準ガンマ分布に従う乱数を生成する -> {}", gamma.sample());
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let shape: f64 = 2f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64), &str> = gamma.try_set_params(shape, scale);
+/// println!("形状母数 α = {}, 尺度母数 β = {} のガンマ分布に従う乱数を生成する -> {}", shape, scale, gamma.sample());
+/// ```
+pub struct Gamma {
+    xyzuv: [u32; 5], // 状態変数
+    previous_uniform_1: f64, // 前回使用した一様乱数
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
+    shape: f64,
+    scale: f64,
+}
 
 // ベータ分布
 //pub struct Beta {}
