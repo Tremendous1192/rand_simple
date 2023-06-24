@@ -336,8 +336,31 @@ pub struct Gamma {
     scale: f64,
 }
 
-// ベータ分布
-//pub struct Beta {}
+/// ベータ分布
+/// # 使用例
+/// ```
+/// let mut beta = rand_simple::Beta::new(1192u32, 765u32, 1543u32, 2003u32, 1867u32, 1688u32);
+/// println!("形状母数 α = 1, 形状母数 β = 1 の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
+/// 
+/// // 確率変数のパラメータを変更する場合
+/// let shape_alpha: f64 = 2f64;
+/// let shape_beta: f64 = 1.5f64;
+/// let result: Result<(f64, f64), &str> = beta.try_set_params(shape_alpha, shape_beta);
+/// println!("形状母数 α = {}, 形状母数 β = {} のベータ分布に従う乱数を生成する -> {}", shape_alpha, shape_beta, beta.sample());
+/// ```
+pub struct Beta {
+    xyzuv_alpha: [u32; 5], // 状態変数
+    previous_uniform_1_alpha: f64, // 前回使用した一様乱数
+    xyzuv0_alpha: [u32; 5], // 状態変数
+    xyzuv1_alpha: [u32; 5], // 状態変数
+    shape_alpha: f64,
+
+    xyzuv_beta: [u32; 5], // 状態変数
+    previous_uniform_1_beta: f64, // 前回使用した一様乱数
+    xyzuv0_beta: [u32; 5], // 状態変数
+    xyzuv1_beta: [u32; 5], // 状態変数
+    shape_beta: f64,
+}
 
 // ディリクレ分布
 //pub struct Dirichlet {}
