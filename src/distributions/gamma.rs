@@ -22,7 +22,7 @@ impl Gamma {
 
     /// ガンマ分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        standard_gamma(&mut self.xyzuv, &mut self.previous_uniform_1, &mut self.xyzuv0, &mut self.xyzuv1, &mut self.shape) * self.scale
+        standard_gamma(&mut self.xyzuv, &mut self.previous_uniform_1, &mut self.xyzuv0, &mut self.xyzuv1, &self.shape) * self.scale
     }
 
     /// 確率変数のパラメータを変更する

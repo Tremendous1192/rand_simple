@@ -24,6 +24,7 @@ impl Beta {
             xyzuv0_alpha,
             xyzuv1_alpha,
             shape_alpha: 1f64,
+
             xyzuv_beta,
             previous_uniform_1_beta,
             xyzuv0_beta,
@@ -34,8 +35,8 @@ impl Beta {
 
     /// ベータ分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        let y1 = standard_gamma(&mut self.xyzuv_alpha, &mut self.previous_uniform_1_alpha, &mut self.xyzuv0_alpha, &mut self.xyzuv1_alpha, &mut self.shape_alpha);
-        let y2 = standard_gamma(&mut self.xyzuv_beta, &mut self.previous_uniform_1_beta, &mut self.xyzuv0_beta, &mut self.xyzuv1_beta, &mut self.shape_beta);
+        let y1 = standard_gamma(&mut self.xyzuv_alpha, &mut self.previous_uniform_1_alpha, &mut self.xyzuv0_alpha, &mut self.xyzuv1_alpha, &self.shape_alpha);
+        let y2 = standard_gamma(&mut self.xyzuv_beta, &mut self.previous_uniform_1_beta, &mut self.xyzuv0_beta, &mut self.xyzuv1_beta, &self.shape_beta);
         y1 / (y1 + y2)
     }
 
@@ -65,18 +66,18 @@ impl Beta {
 
 
 #[macro_export]
-/// ガンマ分布
+/// ベータ分布
 /// * `() =>` - 乱数の種は自動生成
 /// * `($seed_0: expr, $seed_1: expr, $seed_2: expr, $seed_3: expr, $seed_4: expr, $seed_5: expr) =>` - 乱数の種を指定する
 /// # 使用例 1
 /// ```
 /// let mut beta = rand_simple::create_beta!(1192u32, 765u32, 1543u32, 2003u32, 1867u32, 1688u32);
-/// println!("形状母数 α = 1, 形状母数 β = 1の標準ガンマ分布に従う乱数を生成する -> {}", beta.sample());
+/// println!("形状母数 α = 1, 形状母数 β = 1の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
 /// ```
 /// # 使用例 2
 /// ```
 /// let mut beta = rand_simple::create_beta!();
-/// println!("形状母数 α = 1, 形状母数 β = 1の標準ガンマ分布に従う乱数を生成する -> {}", beta.sample());
+/// println!("形状母数 α = 1, 形状母数 β = 1の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
 /// ```
 macro_rules! create_beta {
     () => {{
