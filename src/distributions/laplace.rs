@@ -1,5 +1,5 @@
-use crate::{Laplace, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_laplace};
+use crate::standard_distributions::{standard_laplace, xorshift160_0_1_open};
+use crate::{create_state, Laplace};
 
 impl Laplace {
     /// コンストラクタ
@@ -17,7 +17,7 @@ impl Laplace {
 
     /// ラプラス分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        standard_laplace(&mut self.xyzuv, &mut self.previous_uniform_1) * self.scale + self.location      
+        standard_laplace(&mut self.xyzuv, &mut self.previous_uniform_1) * self.scale + self.location
     }
 
     /// 確率変数のパラメータを変更する
@@ -26,15 +26,13 @@ impl Laplace {
     pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.location = location;
             self.scale = scale;
-            Ok( (location, scale) )
+            Ok((location, scale))
         }
     }
 }
-
 
 #[macro_export]
 /// ラプラス分布
@@ -60,7 +58,6 @@ macro_rules! create_laplace {
         $crate::Laplace::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Laplace {
     /// println!マクロなどで表示するためのフォーマッタ

@@ -8,9 +8,7 @@ struct TestMutableField {
 impl TestMutableField {
     // コンストラクタ
     fn new() -> Self {
-        Self {
-            member_mut: 0u32,
-        }
+        Self { member_mut: 0u32 }
     }
 
     // メンバー変数の変更

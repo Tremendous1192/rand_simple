@@ -1,18 +1,17 @@
 use std::cell::Cell;
-use std::time::{SystemTime};
 use std::mem;
+use std::time::SystemTime;
 
 // Xorshiftのおおもとの引用
 // Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1?6. https://doi.org/10.18637/jss.v008.i14
 
-
 // Xorshift 128 の分かりやすい実装
-fn next_u32_educational (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
+fn next_u32_educational(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
     let t: u32 = x.get() ^ (x.get() << 11);
     let x_new: u32 = y.get();
     let y_new: u32 = z.get();
     let z_new: u32 = w.get();
-    let w_new: u32 = (w.get() ^ (w.get() >> 19)) ^ (t ^ (t >>8));
+    let w_new: u32 = (w.get() ^ (w.get() >> 19)) ^ (t ^ (t >> 8));
 
     x.set(x_new);
     y.set(y_new);
@@ -23,53 +22,59 @@ fn next_u32_educational (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u
 }
 
 // Xorshift 128 をクロージャーを用いて短く書き直した実装
-fn next_u32_closure (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
+fn next_u32_closure(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
     // t = x ^ (x << 11), x_new = y, y_new = z, z_new = w
     let calculate_t = |arg: u32| arg ^ (arg << 11);
-    let t: u32 = calculate_t(x.replace( y.replace( z.replace(w.get()) ) ));
+    let t: u32 = calculate_t(x.replace(y.replace(z.replace(w.get()))));
 
     // w_ new = w ^ (w >> 19) ^ (t ^ (t >>8))
     let calculate_w = |arg: u32| (arg ^ (arg >> 19)) ^ (t ^ (t >> 8));
-    w.set( calculate_w(w.take()) );
+    w.set(calculate_w(w.take()));
     w.get()
 }
 
-fn next_u32_closure_2 (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
+fn next_u32_closure_2(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
     // t = x ^ (x << 11), x_new = y, y_new = z, z_new = w
     let calculate_t = |arg: u32| arg ^ (arg << 11);
     //let t: u32 = calculate_t(x.replace( y.replace( z.replace(w.get()) ) ));
 
     // w_ new = w ^ (w >> 19) ^ (t ^ (t >>8))
     let calculate_w = |arg_t: u32, arg_w: u32| (arg_w ^ (arg_w >> 19)) ^ (arg_t ^ (arg_t >> 8));
-    w.set( calculate_w(calculate_t(x.replace( y.replace( z.replace(w.get()) ) )), w.take()) );
+    w.set(calculate_w(
+        calculate_t(x.replace(y.replace(z.replace(w.get())))),
+        w.take(),
+    ));
     w.get()
 }
 
 #[inline]
-fn next_t (x: u32) -> u32 {
+fn next_t(x: u32) -> u32 {
     x ^ (x << 11)
 }
 
 #[inline]
-fn next_w (t: u32, w: u32) -> u32 {
+fn next_w(t: u32, w: u32) -> u32 {
     (w ^ (w >> 19)) ^ (t ^ (t >> 8))
 }
 
 // Xorshift 128 をinline関数を用いて実装した。オーバーヘッドというのが減ると嬉しい
-fn next_u32_inline (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
-    w.set(next_w(next_t(x.replace(y.replace(z.replace(w.get())))), w.take()));
+fn next_u32_inline(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
+    w.set(next_w(
+        next_t(x.replace(y.replace(z.replace(w.get())))),
+        w.take(),
+    ));
     w.get()
 }
 
 // Xorshift 128 をinline関数を用いて実装した。オーバーヘッドというのが減ると嬉しい
-fn next_u32_inline_2 (x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
+fn next_u32_inline_2(x: &Cell<u32>, y: &Cell<u32>, z: &Cell<u32>, w: &Cell<u32>) -> u32 {
     let t = next_t(x.replace(y.replace(z.replace(w.get()))));
     w.set(next_w(t, w.take()));
     w.get()
 }
 
 // 可変参照
-fn next_u32_mut_educational (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
+fn next_u32_mut_educational(x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
     let t: u32 = *x ^ (*x << 11);
     *x = *y;
     *y = *z;
@@ -79,12 +84,11 @@ fn next_u32_mut_educational (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32)
 }
 
 // 可変参照 + mem
-fn next_u32_mut_mem (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
+fn next_u32_mut_mem(x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
     let t: u32 = mem::replace(x, mem::replace(y, mem::replace(z, *w)));
     *w = (*w ^ (*w >> 19)) ^ (t ^ (t >> 8));
     *w
 }
-
 
 // オーバーフローを解決できなかった
 /*
@@ -115,7 +119,7 @@ fn next_u32_xorshiro_double_asterisk (x: &mut u32, y: &mut u32, z: &mut u32, w: 
 
 // 64ビットの乱数
 // https://prng.di.unimi.it/xorshift128plus.c
-fn next_u64 (x: &mut u64, y: &mut u64) -> u64 {
+fn next_u64(x: &mut u64, y: &mut u64) -> u64 {
     let mut s1: u64 = *x;
     let s0: u64 = *y;
     let result: u64 = s0.wrapping_add(s1);
@@ -125,17 +129,15 @@ fn next_u64 (x: &mut u64, y: &mut u64) -> u64 {
     result
 }
 
-
-
 // Xorshiro 128++
 // https://prng.di.unimi.it/xoshiro128plusplus.c
 // オーバーフローするのでwrappingをかませたら、遅くなった。
 // release版だと速度は問題ないだろうが、ちょっと微妙
-fn rotl (x: u32, k: u32) -> u32 {
+fn rotl(x: u32, k: u32) -> u32 {
     //(x << k) | x >> (32 - k)
     x.wrapping_shl(k) | x.wrapping_shr(32u32 - k)
 }
-fn next_u32_xorshiro128plusplus (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
+fn next_u32_xorshiro128plusplus(x: &mut u32, y: &mut u32, z: &mut u32, w: &mut u32) -> u32 {
     let result: u32 = rotl((*x).wrapping_add(*w), 7u32).wrapping_add(*x);
 
     let t: u32 = (*y).wrapping_shl(9u32); // *y << 9u32
@@ -154,7 +156,7 @@ fn next_u32_xorshiro128plusplus (x: &mut u32, y: &mut u32, z: &mut u32, w: &mut 
 // 引用
 // http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
 // ビットシフトは[2,1,4][7,13,6][1,1,20]のいずれかとのこと
-fn test_xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
+fn test_xorshift160(x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut u32) -> u32 {
     let t = *x ^ (*x << 7u32);
     *x = *y;
     *y = *z;
@@ -163,7 +165,6 @@ fn test_xorshift160 (x: &mut u32, y: &mut u32, z: &mut u32, u: &mut u32, v: &mut
     *v = (*v ^ (*v >> 6)) ^ (t ^ (t >> 13));
     *v
 }
-
 
 #[test]
 fn check_same_results() {
@@ -180,7 +181,10 @@ fn check_same_results() {
     let w0: Cell<u32> = Cell::new(88675123u32);
 
     for _i in 0..100 {
-        assert_eq!(next_u32_educational(&x, &y, &z, &w), next_u32_closure(&x0, &y0, &z0, &w0));
+        assert_eq!(
+            next_u32_educational(&x, &y, &z, &w),
+            next_u32_closure(&x0, &y0, &z0, &w0)
+        );
     }
 
     // クロージャーの種
@@ -196,7 +200,10 @@ fn check_same_results() {
     let w1: Cell<u32> = Cell::new(88675123u32);
 
     for _i in 0..100 {
-        assert_eq!(next_u32_closure(&x0, &y0, &z0, &w0), next_u32_inline(&x1, &y1, &z1, &w1));
+        assert_eq!(
+            next_u32_closure(&x0, &y0, &z0, &w0),
+            next_u32_inline(&x1, &y1, &z1, &w1)
+        );
     }
 }
 
@@ -221,9 +228,12 @@ fn compare_time() {
             _next = next_u32_educational(&x, &y, &z, &w);
         }
         let finish = SystemTime::now();
-        _span_educational = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_educational = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
-    
+
     // クロージャー
     let mut _span_closure: u128 = 0;
     {
@@ -236,10 +246,12 @@ fn compare_time() {
             _next = next_u32_closure(&x, &y, &z, &w);
         }
         let finish = SystemTime::now();
-        _span_closure = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_closure = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
-    
-    
+
     // クロージャー その2
     let mut _span_closure_2: u128 = 0;
     {
@@ -252,9 +264,12 @@ fn compare_time() {
             _next = next_u32_closure_2(&x, &y, &z, &w);
         }
         let finish = SystemTime::now();
-        _span_closure_2 = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_closure_2 = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
-    
+
     // インライン展開
     let mut _span_inline: u128 = 0;
     {
@@ -267,7 +282,10 @@ fn compare_time() {
             _next = next_u32_inline(&x, &y, &z, &w);
         }
         let finish = SystemTime::now();
-        _span_inline = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_inline = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
 
     // インライン展開
@@ -282,7 +300,10 @@ fn compare_time() {
             _next = next_u32_inline_2(&x, &y, &z, &w);
         }
         let finish = SystemTime::now();
-        _span_inline2 = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_inline2 = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
 
     // 可変参照
@@ -297,7 +318,10 @@ fn compare_time() {
             _next = next_u32_mut_educational(&mut x, &mut y, &mut z, &mut w);
         }
         let finish = SystemTime::now();
-        _span_mut_educational = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_mut_educational = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
 
     // 可変参照 + mem
@@ -312,7 +336,10 @@ fn compare_time() {
             _next = next_u32_mut_mem(&mut x, &mut y, &mut z, &mut w);
         }
         let finish = SystemTime::now();
-        _span_mut_mem = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_mut_mem = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
 
     // 可変参照 6 Xoroshiro
@@ -332,7 +359,7 @@ fn compare_time() {
         _span_mut_xorshiro = finish.duration_since(initial).expect("Time went backwards").as_millis();
     }
     */
-    
+
     // xorshift128++
     // オーバーフローする
     let mut _span_mut_xorshft128pp: u128 = 0;
@@ -345,9 +372,11 @@ fn compare_time() {
             _next64 = next_u64(&mut x, &mut y);
         }
         let finish = SystemTime::now();
-        _span_mut_xorshft128pp = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_mut_xorshft128pp = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
-
 
     let mut _span_mut_xorshiro128_pp: u128 = 0;
     {
@@ -360,7 +389,10 @@ fn compare_time() {
             _next = next_u32_xorshiro128plusplus(&mut x, &mut y, &mut z, &mut w);
         }
         let finish = SystemTime::now();
-        _span_mut_xorshiro128_pp = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_mut_xorshiro128_pp = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
 
     let mut _span_mut_xorshiro160: u128 = 0;
@@ -375,17 +407,28 @@ fn compare_time() {
             _next = test_xorshift160(&mut x, &mut y, &mut z, &mut u, &mut v);
         }
         let finish = SystemTime::now();
-        _span_mut_xorshiro160 = finish.duration_since(initial).expect("Time went backwards").as_millis();
+        _span_mut_xorshiro160 = finish
+            .duration_since(initial)
+            .expect("Time went backwards")
+            .as_millis();
     }
-    
+
     // opt-level = 0 の場合、1千万個生成したときの計算時間[milli sec]
     // (530, 483, 467, 518, 517, 172, 261, 734, 465, 186)
     // シンプルな可変参照が早かった。
-    assert_eq!((_span_educational, _span_closure, _span_closure_2,
-        _span_inline, _span_inline2,
-        _span_mut_educational, _span_mut_mem,
-        _span_mut_xorshiro128_pp,
-        _span_mut_xorshft128pp,
-        _span_mut_xorshiro160),
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+    assert_eq!(
+        (
+            _span_educational,
+            _span_closure,
+            _span_closure_2,
+            _span_inline,
+            _span_inline2,
+            _span_mut_educational,
+            _span_mut_mem,
+            _span_mut_xorshiro128_pp,
+            _span_mut_xorshft128pp,
+            _span_mut_xorshiro160
+        ),
+        (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    );
 }

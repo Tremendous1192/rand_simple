@@ -1,5 +1,5 @@
-use crate::{Weibull, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_exponential};
+use crate::standard_distributions::{standard_exponential, xorshift160_0_1_open};
+use crate::{create_state, Weibull};
 
 impl Weibull {
     /// コンストラクタ
@@ -31,15 +31,13 @@ impl Weibull {
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         if shape <= 0f64 || scale <= 0f64 {
             Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.shape_inv = shape.powi(-1);
             self.scale = scale;
-            Ok( (shape, scale) )
+            Ok((shape, scale))
         }
     }
 }
-
 
 #[macro_export]
 /// ワイブル分布
@@ -63,7 +61,6 @@ macro_rules! create_weibull {
         $crate::Weibull::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Weibull {
     /// println!マクロなどで表示するためのフォーマッタ

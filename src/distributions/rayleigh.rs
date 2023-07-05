@@ -1,5 +1,5 @@
-use crate::{Rayleigh, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_exponential};
+use crate::standard_distributions::{standard_exponential, xorshift160_0_1_open};
+use crate::{create_state, Rayleigh};
 
 impl Rayleigh {
     /// コンストラクタ
@@ -16,7 +16,8 @@ impl Rayleigh {
 
     /// レイリー分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        (2f64 * standard_exponential(&mut self.xyzuv, &mut self.previous_uniform_1)).sqrt() * self.scale
+        (2f64 * standard_exponential(&mut self.xyzuv, &mut self.previous_uniform_1)).sqrt()
+            * self.scale
     }
 
     /// 確率変数のパラメータを変更する
@@ -24,14 +25,12 @@ impl Rayleigh {
     pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.scale = scale;
-            Ok( self.scale )
+            Ok(self.scale)
         }
     }
 }
-
 
 #[macro_export]
 /// レイリー分布
@@ -55,7 +54,6 @@ macro_rules! create_rayleigh {
         $crate::Rayleigh::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Rayleigh {
     /// println!マクロなどで表示するためのフォーマッタ

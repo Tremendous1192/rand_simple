@@ -1,5 +1,5 @@
-use crate::{Gunbel, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_exponential};
+use crate::standard_distributions::{standard_exponential, xorshift160_0_1_open};
+use crate::{create_state, Gunbel};
 
 impl Gunbel {
     /// コンストラクタ
@@ -31,15 +31,13 @@ impl Gunbel {
     pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.location = location;
             self.scale = scale;
-            Ok( (location, scale) )
+            Ok((location, scale))
         }
     }
 }
-
 
 #[macro_export]
 /// ガンベル分布
@@ -63,7 +61,6 @@ macro_rules! create_gunbel {
         $crate::Gunbel::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Gunbel {
     /// println!マクロなどで表示するためのフォーマッタ

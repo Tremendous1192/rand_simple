@@ -1,5 +1,5 @@
-use crate::{ReflectedWeibull, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_laplace};
+use crate::standard_distributions::{standard_laplace, xorshift160_0_1_open};
+use crate::{create_state, ReflectedWeibull};
 
 impl ReflectedWeibull {
     /// コンストラクタ
@@ -20,10 +20,9 @@ impl ReflectedWeibull {
     pub fn sample(&mut self) -> f64 {
         let z: f64 = standard_laplace(&mut self.xyzuv, &mut self.previous_uniform_1);
         if z >= 0f64 {
-            z.powf(self.shape_inv) * self.scale + self. location
-        }
-        else {
-            (-z).powf(self.shape_inv) * self.scale + self. location
+            z.powf(self.shape_inv) * self.scale + self.location
+        } else {
+            (-z).powf(self.shape_inv) * self.scale + self.location
         }
     }
 
@@ -31,19 +30,22 @@ impl ReflectedWeibull {
     /// * `shape` - 形状母数
     /// * `location` - 位置母数
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&mut self, shape: f64, location: f64, scale: f64) -> Result<(f64, f64, f64), &str> {
+    pub fn try_set_params(
+        &mut self,
+        shape: f64,
+        location: f64,
+        scale: f64,
+    ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0f64 || scale <= 0f64 {
             Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.shape_inv = shape.powi(-1);
             self.location = location;
             self.scale = scale;
-            Ok( (shape, location, scale) )
+            Ok((shape, location, scale))
         }
     }
 }
-
 
 #[macro_export]
 /// 反射ワイブル分布
@@ -67,7 +69,6 @@ macro_rules! create_reflected_weibull {
         $crate::ReflectedWeibull::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for ReflectedWeibull {
     /// println!マクロなどで表示するためのフォーマッタ

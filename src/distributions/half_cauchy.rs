@@ -1,12 +1,16 @@
-use crate::{HalfCauchy, create_state};
 use crate::standard_distributions::standard_cauchy;
+use crate::{create_state, HalfCauchy};
 
 impl HalfCauchy {
     /// コンストラクタ
     /// * `_seed_1` - 乱数の種
     /// * `_seed_2` - 乱数の種。`_seed_1`と同じ値の場合、コンストラクタ側で変更する。
     pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
-        let _seed_other = if _seed_1 != _seed_2 { _seed_2 } else { (_seed_1 as u64 + 1192u64) as u32};
+        let _seed_other = if _seed_1 != _seed_2 {
+            _seed_2
+        } else {
+            (_seed_1 as u64 + 1192u64) as u32
+        };
         let xyzuv0: [u32; 5] = create_state(_seed_1);
         let xyzuv1: [u32; 5] = create_state(_seed_other);
         Self {
@@ -26,10 +30,9 @@ impl HalfCauchy {
     pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.scale = scale;
-            Ok( scale )
+            Ok(scale)
         }
     }
 }
@@ -57,7 +60,6 @@ macro_rules! create_half_cauchy {
         $crate::HalfCauchy::new($seed_1 as u32, $seed_2 as u32)
     };
 }
-
 
 impl std::fmt::Display for HalfCauchy {
     /// println!マクロなどで表示するためのフォーマッタ

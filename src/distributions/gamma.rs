@@ -1,5 +1,5 @@
-use crate::{Gamma, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_gamma};
+use crate::standard_distributions::{standard_gamma, xorshift160_0_1_open};
+use crate::{create_state, Gamma};
 
 impl Gamma {
     /// コンストラクタ
@@ -7,7 +7,11 @@ impl Gamma {
     pub fn new(_seed_1: u32, _seed_2: u32, _seed_3: u32) -> Self {
         let mut xyzuv: [u32; 5] = create_state(_seed_1);
         let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
-        let _seed_other = if _seed_2 != _seed_3 { _seed_3 } else { (_seed_2 as u64 + 1192u64) as u32};
+        let _seed_other = if _seed_2 != _seed_3 {
+            _seed_3
+        } else {
+            (_seed_2 as u64 + 1192u64) as u32
+        };
         let xyzuv0: [u32; 5] = create_state(_seed_2);
         let xyzuv1: [u32; 5] = create_state(_seed_other);
         Self {
@@ -22,7 +26,13 @@ impl Gamma {
 
     /// ガンマ分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        standard_gamma(&mut self.xyzuv, &mut self.previous_uniform_1, &mut self.xyzuv0, &mut self.xyzuv1, &self.shape) * self.scale
+        standard_gamma(
+            &mut self.xyzuv,
+            &mut self.previous_uniform_1,
+            &mut self.xyzuv0,
+            &mut self.xyzuv1,
+            &self.shape,
+        ) * self.scale
     }
 
     /// 確率変数のパラメータを変更する
@@ -31,21 +41,17 @@ impl Gamma {
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         if shape <= 0f64 {
             Err("形状母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else if shape == 1f64 / 3f64 {
+        } else if shape == 1f64 / 3f64 {
             Err("形状母数が1/3です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else if scale <= 0f64 {
+        } else if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.shape = shape;
             self.scale = scale;
-            Ok( (shape, scale) )
+            Ok((shape, scale))
         }
     }
 }
-
 
 #[macro_export]
 /// ガンマ分布
@@ -70,7 +76,6 @@ macro_rules! create_gamma {
         $crate::Gamma::new($seed_0 as u32, $seed_1 as u32, $seed_2 as u32)
     };
 }
-
 
 impl std::fmt::Display for Gamma {
     /// println!マクロなどで表示するためのフォーマッタ

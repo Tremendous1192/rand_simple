@@ -1,5 +1,5 @@
-use crate::{Geometric, create_state};
 use crate::standard_distributions::xorshift160_0_1;
+use crate::{create_state, Geometric};
 
 impl Geometric {
     /// コンストラクタ
@@ -15,7 +15,9 @@ impl Geometric {
     /// ある確率の事象が初めて生じるまでの試行回数を返す
     pub fn sample(&mut self) -> u64 {
         let mut x: u64 = 1;
-        while xorshift160_0_1(&mut self.xyzuv) > self.probability { x += 1u64; }        
+        while xorshift160_0_1(&mut self.xyzuv) > self.probability {
+            x += 1u64;
+        }
         x
     }
 
@@ -24,10 +26,9 @@ impl Geometric {
     pub fn try_set_params(&mut self, probability: f64) -> Result<f64, &str> {
         if !(0f64..=1f64).contains(&probability) {
             Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.probability = probability;
-            Ok( probability )
+            Ok(probability)
         }
     }
 }
@@ -54,7 +55,6 @@ macro_rules! create_geometric {
         $crate::Geometric::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Geometric {
     /// println!マクロなどで表示するためのフォーマッタ

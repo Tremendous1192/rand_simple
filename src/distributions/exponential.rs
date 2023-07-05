@@ -1,5 +1,5 @@
-use crate::{Exponential, create_state};
-use crate::standard_distributions::{xorshift160_0_1_open, standard_exponential};
+use crate::standard_distributions::{standard_exponential, xorshift160_0_1_open};
+use crate::{create_state, Exponential};
 
 impl Exponential {
     /// コンストラクタ
@@ -24,14 +24,12 @@ impl Exponential {
     pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
         if scale <= 0f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        }
-        else {
+        } else {
             self.scale = scale;
-            Ok( scale )
+            Ok(scale)
         }
     }
 }
-
 
 #[macro_export]
 /// 指数分布
@@ -55,7 +53,6 @@ macro_rules! create_exponential {
         $crate::Exponential::new($seed as u32)
     };
 }
-
 
 impl std::fmt::Display for Exponential {
     /// println!マクロなどで表示するためのフォーマッタ

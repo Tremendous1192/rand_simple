@@ -67,5 +67,3 @@ pub(super) mod child {
         assert_eq!(super::find_min!(5u64, 2u64 * 3u64, 4u64), 4u64);
     }
 }
-
-
