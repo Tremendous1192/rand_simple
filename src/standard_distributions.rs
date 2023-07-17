@@ -6,12 +6,12 @@
 // http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
 #[inline]
 pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
-    let t = xyzuv[0] ^ (xyzuv[0] << 7u32);
+    let t = xyzuv[0] ^ (xyzuv[0] << 7_u32);
     xyzuv[0] = xyzuv[1];
     xyzuv[1] = xyzuv[2];
     xyzuv[2] = xyzuv[3];
     xyzuv[3] = xyzuv[4];
-    xyzuv[4] = (xyzuv[4] ^ (xyzuv[4] >> 6u32)) ^ (t ^ (t >> 13u32));
+    xyzuv[4] = (xyzuv[4] ^ (xyzuv[4] >> 6_u32)) ^ (t ^ (t >> 13_u32));
     xyzuv[4]
 }
 
@@ -37,7 +37,7 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         xorshift160(xyzuv);
-        if xyzuv[4] != 0u32 && xyzuv[4] != std::u32::MAX {
+        if xyzuv[4] != 0_u32 && xyzuv[4] != std::u32::MAX {
             return xyzuv[4] as f64 / MAX_U32_AS_F64;
         }
     }

@@ -5,11 +5,10 @@ impl Uniform {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzuv: [u32; 5] = create_state(_seed);
         Self {
-            xyzuv,
-            min: 0f64,
-            range: 1f64,
+            xyzuv: create_state(_seed),
+            min: 0_f64,
+            range: 1_f64,
         }
     }
 
@@ -39,7 +38,7 @@ impl Uniform {
 /// # 使用例 1
 /// ```
 /// let mut uniform = rand_simple::create_uniform!(1192u32);
-/// assert_eq!(uniform.sample(), 0.66687147451259f64);
+/// assert_eq!(uniform.sample(), 0.66687147451259_f64);
 /// ```
 /// # 使用例 2
 /// ```
@@ -61,7 +60,7 @@ impl std::fmt::Display for Uniform {
     /// * 範囲(閉区間)
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "範囲: [{}, {}]", self.min, (self.min + self.range))?;
+        writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
         Ok(())
     }
 }

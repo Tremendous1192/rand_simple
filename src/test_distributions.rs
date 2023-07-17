@@ -1,17 +1,17 @@
 // 子モジュールに、各疑似乱数のテストを記述する
 // 連続型確率変数
-mod test_uniform; // 一様分布
-mod test_normal; // 正規分布
-mod test_half_normal; // 半正規分布
-mod test_log_normal; // 対数正規分布
-mod test_cauchy; // コーシー分布
-mod test_half_cauchy; // 半コーシー分布
-mod test_levy; // レヴィ分布
-mod test_exponential; // 指数分布
-mod test_laplace; // ラプラス分布
-mod test_rayleigh; // レイリー分布
-mod test_weibull; // ワイブル分布
-mod test_reflected_weibull; // 反射ワイブル分布
+//mod test_uniform; // 一様分布
+//mod test_normal; // 正規分布
+//mod test_half_normal; // 半正規分布
+//mod test_log_normal; // 対数正規分布
+//mod test_cauchy; // コーシー分布
+//mod test_half_cauchy; // 半コーシー分布
+//mod test_levy; // レヴィ分布
+//mod test_exponential; // 指数分布
+//mod test_laplace; // ラプラス分布
+//mod test_rayleigh; // レイリー分布
+//mod test_weibull; // ワイブル分布
+//mod test_reflected_weibull; // 反射ワイブル分布
 //mod test_frechet; // フレシェ分布
 //mod test_gunbel; // ガンベル分布
 //mod test_gamma; // ガンマ分布
@@ -41,9 +41,9 @@ mod test_reflected_weibull; // 反射ワイブル分布
 //mod test_plank; // プランク分布
 
 // 離散型確率変数
-mod test_bernoulli; // ベルヌーイ分布
+//mod test_bernoulli; // ベルヌーイ分布
 //mod Binomial // 二項分布
-mod test_geometric; // 幾何分布
+//mod test_geometric; // 幾何分布
 //mod test_Poisson // ポアソン分布
 //mod test_HeyperGeometric // 超幾何分布
 //mod test_Multinominal // 多項分布
