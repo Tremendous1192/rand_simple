@@ -3,19 +3,12 @@ use crate::{create_state, LogNormal};
 
 impl LogNormal {
     /// コンストラクタ
-    /// * `_seed_1` - 乱数の種
-    /// * `_seed_2` - 乱数の種。`_seed_1`と同じ値の場合、コンストラクタ側で変更する。
+    /// * `_seed_*` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
     pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
-        let _seed_other = if _seed_1 != _seed_2 {
-            _seed_2
-        } else {
-            (_seed_1 as u64 + 1192u64) as u32
-        };
-        let xyzuv0: [u32; 5] = create_state(_seed_1);
-        let xyzuv1: [u32; 5] = create_state(_seed_other);
+        let seeds = crate::adjust_values!(_seed_1, _seed_2);
         Self {
-            xyzuv0,
-            xyzuv1,
+            xyzuv0: create_state(seeds[0]),
+            xyzuv1: create_state(seeds[1]),
             mean: 0f64,
             std: 1f64,
         }
