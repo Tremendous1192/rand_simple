@@ -50,6 +50,25 @@ pub fn create_seeds_trio() -> (u32, u32, u32) {
     )
 }
 
+// 変数の値が重ならないように変更するマクロ
+macro_rules! adjust_values {
+    ($($value:expr),*) => {{
+        let mut values = [$($value),*];
+        for i in 0..(values.len()-1) {
+            for j in (i+1)..values.len() {
+                if values[i] == values[j] {
+                    values[j] = (values[j] << 3) ^ (values[i] >> 2);
+                    if values[j] == 0 {
+                        values[j] = 1192;
+                    }
+                }
+            }
+        }
+        values
+    }};
+}
+pub(crate) use adjust_values; // クレート内部でマクロを使用するトリック
+
 // 連続型確率変数
 
 /// 一様乱数
