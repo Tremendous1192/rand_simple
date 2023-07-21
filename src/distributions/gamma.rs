@@ -5,20 +5,14 @@ impl Gamma {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed_1: u32, _seed_2: u32, _seed_3: u32) -> Self {
-        let mut xyzuv: [u32; 5] = create_state(_seed_1);
+        let seeds = crate::adjust_values!(_seed_1, _seed_2, _seed_3);
+        let mut xyzuv: [u32; 5] = create_state(seeds[0]);
         let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
-        let _seed_other = if _seed_2 != _seed_3 {
-            _seed_3
-        } else {
-            (_seed_2 as u64 + 1192u64) as u32
-        };
-        let xyzuv0: [u32; 5] = create_state(_seed_2);
-        let xyzuv1: [u32; 5] = create_state(_seed_other);
         Self {
             xyzuv,
             previous_uniform_1: u_1,
-            xyzuv0,
-            xyzuv1,
+            xyzuv0: create_state(seeds[1]),
+            xyzuv1: create_state(seeds[2]),
             shape: 1f64,
             scale: 1f64,
         }
