@@ -12,42 +12,25 @@ impl Beta {
         _seed_5: u32,
         _seed_6: u32,
     ) -> Self {
-        let mut xyzuv_alpha: [u32; 5] = create_state(_seed_1);
-        let previous_uniform_1_alpha: f64 = xorshift160_0_1_open(&mut xyzuv_alpha);
-        let _seed_other = if _seed_2 != _seed_3 {
-            _seed_3
-        } else {
-            (_seed_2 as u64 + 1192765u64) as u32
-        };
-        let xyzuv0_alpha: [u32; 5] = create_state(_seed_2);
-        let xyzuv1_alpha: [u32; 5] = create_state(_seed_other);
+        let seeds = crate::adjust_values!(_seed_1, _seed_2, _seed_3, _seed_4, _seed_5, _seed_6);
 
-        let _seed_other = if _seed_1 != _seed_4 {
-            _seed_4
-        } else {
-            (_seed_1 as u64 + 1192765u64) as u32
-        };
-        let mut xyzuv_beta: [u32; 5] = create_state(_seed_other);
+        let mut xyzuv_alpha: [u32; 5] = create_state(seeds[0]);
+        let previous_uniform_1_alpha: f64 = xorshift160_0_1_open(&mut xyzuv_alpha);
+
+        let mut xyzuv_beta: [u32; 5] = create_state(seeds[3]);
         let previous_uniform_1_beta: f64 = xorshift160_0_1_open(&mut xyzuv_beta);
-        let _seed_other = if _seed_5 != _seed_6 {
-            _seed_6
-        } else {
-            (_seed_5 as u64 + 1192765u64) as u32
-        };
-        let xyzuv0_beta: [u32; 5] = create_state(_seed_5);
-        let xyzuv1_beta: [u32; 5] = create_state(_seed_other);
 
         Self {
             xyzuv_alpha,
             previous_uniform_1_alpha,
-            xyzuv0_alpha,
-            xyzuv1_alpha,
+            xyzuv0_alpha: create_state(seeds[1]),
+            xyzuv1_alpha: create_state(seeds[2]),
             shape_alpha: 1f64,
 
             xyzuv_beta,
             previous_uniform_1_beta,
-            xyzuv0_beta,
-            xyzuv1_beta,
+            xyzuv0_beta: create_state(seeds[4]),
+            xyzuv1_beta: create_state(seeds[5]),
             shape_beta: 1f64,
         }
     }
