@@ -3,8 +3,8 @@ use crate::{create_state, Normal};
 
 impl Normal {
     /// コンストラクタ
-    /// * `_seed_*` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
-    pub fn new(_seed_1: u32, _seed_2: u32) -> Self {
+    /// * `_seed_i` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
+    pub fn new(_seed_0: u32, _seed_1: u32) -> Self {
         let seeds = crate::adjust_values!(_seed_1, _seed_2);
         Self {
             xyzuv0: create_state(seeds[0]),
