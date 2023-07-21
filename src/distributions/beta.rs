@@ -3,16 +3,16 @@ use crate::{create_state, Beta};
 
 impl Beta {
     /// コンストラクタ
-    /// * `_seed` - 乱数の種
+    /// * `_seed_i` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
     pub fn new(
+        _seed_0: u32,
         _seed_1: u32,
         _seed_2: u32,
         _seed_3: u32,
         _seed_4: u32,
         _seed_5: u32,
-        _seed_6: u32,
     ) -> Self {
-        let seeds = crate::adjust_values!(_seed_1, _seed_2, _seed_3, _seed_4, _seed_5, _seed_6);
+        let seeds = crate::adjust_values!(_seed_0, _seed_1, _seed_2, _seed_3, _seed_4, _seed_5);
 
         let mut xyzuv_alpha: [u32; 5] = create_state(seeds[0]);
         let previous_uniform_1_alpha: f64 = xorshift160_0_1_open(&mut xyzuv_alpha);
