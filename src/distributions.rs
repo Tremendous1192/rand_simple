@@ -20,26 +20,26 @@ mod weibull; // ワイブル分布
              //mod dirichlet; // ディリクレ分布
 mod power_function; // べき関数分布
                     //mod exponential_power; // 指数べき分布
-                    //mod erlang; // アーラン分布
-                    //mod chi_square; // ガンマ二乗分布
-                    //mod chi; // ガンマ分布
-                    //mod f; // F分布
-                    //mod t; // t分布
-                    //mod inverse_gaussian; // 逆ガウス分布
-                    //mod triangular; // 三角分布
-                    //mod pareto; // パレート分布
-                    //mod logistic; // ロジスティック分布
-                    //mod heyperbolic_secant; // 双曲線正割分布
-                    //mod raised_cosine; // 余弦分布
-                    //mod arcsine; // 逆正弦分布
-                    //mod von_mises; // フォン・ミーゼス分布
-                    //mod non_central_gamma; // 非心ガンマ分布
-                    //mod non_central_beta; // 非心ベータ分布
-                    //mod non_central_chi_square; // 非心ガンマ二乗分布
-                    //mod non_central_chi; // 非心ガンマ分布
-                    //mod non_central_f; // 非心F分布
-                    //mod non_central_t; // 非心t分布
-                    //mod plank; // プランク分布
+mod erlang; // アーラン分布
+            //mod chi_square; // ガンマ二乗分布
+            //mod chi; // ガンマ分布
+            //mod f; // F分布
+            //mod t; // t分布
+            //mod inverse_gaussian; // 逆ガウス分布
+            //mod triangular; // 三角分布
+            //mod pareto; // パレート分布
+            //mod logistic; // ロジスティック分布
+            //mod heyperbolic_secant; // 双曲線正割分布
+            //mod raised_cosine; // 余弦分布
+            //mod arcsine; // 逆正弦分布
+            //mod von_mises; // フォン・ミーゼス分布
+            //mod non_central_gamma; // 非心ガンマ分布
+            //mod non_central_beta; // 非心ベータ分布
+            //mod non_central_chi_square; // 非心ガンマ二乗分布
+            //mod non_central_chi; // 非心ガンマ分布
+            //mod non_central_f; // 非心F分布
+            //mod non_central_t; // 非心t分布
+            //mod plank; // プランク分布
 
 // 離散型確率変数
 mod bernoulli; // ベルヌーイ分布
