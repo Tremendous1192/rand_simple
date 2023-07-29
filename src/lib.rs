@@ -26,30 +26,46 @@ pub fn create_seed() -> u32 {
 
 // 共通処理
 /// 正規分布等2つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
-pub fn create_seeds() -> (u32, u32) {
+pub fn create_seeds_duo() -> [u32; 2] {
     let duration = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
     // 49.7日周期と4秒周期の組み合わせ
-    (
+    [
         duration.as_millis() as u32,
         std::u32::MAX - duration.as_nanos() as u32,
-    )
+    ]
 }
 
 /// ガンマ分布等3つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
-pub fn create_seeds_trio() -> (u32, u32, u32) {
+pub fn create_seeds_trio() -> [u32; 3] {
     let duration = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
     // 49.7日周期と136年周期と4秒周期の組み合わせ
-    (
+    [
         duration.as_millis() as u32,
         duration.as_secs() as u32,
         std::u32::MAX - duration.as_nanos() as u32,
-    )
+    ]
 }
 
+/// ベータ分布等6つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
+pub fn create_seeds_sextet() -> [u32; 6] {
+    let duration = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    [
+        duration.as_millis() as u32,
+        std::u32::MAX - duration.as_nanos() as u32,
+        duration.as_secs() as u32,
+        std::u32::MAX - duration.as_micros() as u32,
+        (duration.as_secs() as u32) / 60_u32,
+        (duration.as_millis() as u32) / 60_u32,
+    ]
+}
+
+/*
 // 変数の値が重ならないように変更するマクロ
 macro_rules! adjust_values {
     ($($value:expr),*) => {{
@@ -68,6 +84,28 @@ macro_rules! adjust_values {
     }};
 }
 pub(crate) use adjust_values; // クレート内部でマクロを使用するトリック
+*/
+
+// 配列の要素を全て異なる値に変更するマクロ
+macro_rules! adjust_seeds {
+    ($array:expr) => {{
+        let mut copy_array = $array;
+        for i in 0..copy_array.len() {
+            for j in 0..copy_array.len() {
+                if i < j {
+                    if copy_array[i] == copy_array[j] {
+                        copy_array[j] = (copy_array[j] << 3) ^ (copy_array[i] >> 2);
+                        if copy_array[j] == 0 {
+                            copy_array[j] = 1192;
+                        }
+                    }
+                }
+            }
+        }
+        copy_array
+    }};
+}
+pub(crate) use adjust_seeds;
 
 // 連続型確率変数
 
@@ -92,7 +130,7 @@ pub struct Uniform {
 /// 正規分布
 /// # 使用例
 /// ```
-/// let mut normal = rand_simple::Normal::new(1192u32, 765u32);
+/// let mut normal = rand_simple::Normal::new([1192u32, 765u32]);
 /// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準正規分布乱数を生成する -> {}", normal.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -111,7 +149,7 @@ pub struct Normal {
 /// 半正規分布
 /// # 使用例
 /// ```
-/// let mut half_normal = rand_simple::HalfNormal::new(1192u32, 765u32);
+/// let mut half_normal = rand_simple::HalfNormal::new([1192u32, 765u32]);
 /// println!("分散 σ^2 = 1 の標準半正規分布乱数を生成する -> {}", half_normal.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -128,7 +166,7 @@ pub struct HalfNormal {
 /// 対数正規分布
 /// # 使用例
 /// ```
-/// let mut log_normal = rand_simple::LogNormal::new(1192u32, 765u32);
+/// let mut log_normal = rand_simple::LogNormal::new([1192u32, 765u32]);
 /// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準対数正規分布乱数を生成する -> {}", log_normal.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -147,7 +185,7 @@ pub struct LogNormal {
 /// コーシー分布
 /// # 使用例
 /// ```
-/// let mut cauchy = rand_simple::Cauchy::new(1192u32, 765u32);
+/// let mut cauchy = rand_simple::Cauchy::new([1192u32, 765u32]);
 /// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -166,7 +204,7 @@ pub struct Cauchy {
 /// 半コーシー分布
 /// # 使用例
 /// ```
-/// let mut half_cauchy = rand_simple::HalfCauchy::new(1192u32, 765u32);
+/// let mut half_cauchy = rand_simple::HalfCauchy::new([1192u32, 765u32]);
 /// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -183,7 +221,7 @@ pub struct HalfCauchy {
 /// レヴィ分布
 /// # 使用例
 /// ```
-/// let mut levy = rand_simple::Levy::new(1192u32, 765u32);
+/// let mut levy = rand_simple::Levy::new([1192u32, 765u32]);
 /// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準レヴィ分布に従う乱数を生成する -> {}", levy.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -352,7 +390,7 @@ pub struct Gunbel {
 /// ガンマ分布
 /// # 使用例
 /// ```
-/// let mut gamma = rand_simple::Gamma::new(1192u32, 765u32, 1543u32);
+/// let mut gamma = rand_simple::Gamma::new([1192u32, 765u32, 1543u32]);
 /// println!("形状母数 α = 1, 尺度母数 β = 1 の標準ガンマ分布に従う乱数を生成する -> {}", gamma.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -373,7 +411,7 @@ pub struct Gamma {
 /// ベータ分布
 /// # 使用例
 /// ```
-/// let mut beta = rand_simple::Beta::new(1192u32, 765u32, 1543u32, 2003u32, 1867u32, 1688u32);
+/// let mut beta = rand_simple::Beta::new([1192u32, 765u32, 1543u32, 2003u32, 1867u32, 1688u32]);
 /// println!("形状母数 α = 1, 形状母数 β = 1 の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -425,7 +463,7 @@ pub struct PowerFunction {
 /// アーラン分布
 /// # 使用例
 /// ```
-/// let mut erlang = rand_simple::Erlang::new(1192u32, 765u32, 1543u32);
+/// let mut erlang = rand_simple::Erlang::new([1192u32, 765u32, 1543u32]);
 /// println!("形状母数 r = 1, 尺度母数 θ = 1 の標準アーラン分布に従う乱数を生成する -> {}", erlang.sample());
 ///
 /// // 確率変数のパラメータを変更する場合

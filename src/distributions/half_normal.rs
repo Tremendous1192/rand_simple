@@ -3,12 +3,12 @@ use crate::{create_state, HalfNormal};
 
 impl HalfNormal {
     /// コンストラクタ
-    /// * `_seed_i` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
-    pub fn new(_seed_0: u32, _seed_1: u32) -> Self {
-        let seeds = crate::adjust_values!(_seed_0, _seed_1);
+    /// * `seeds` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
+    pub fn new(seeds: [u32; 2]) -> Self {
+        let adjusted_seeds = crate::adjust_seeds!(seeds);
         Self {
-            xyzuv0: create_state(seeds[0]),
-            xyzuv1: create_state(seeds[1]),
+            xyzuv0: create_state(adjusted_seeds[0]),
+            xyzuv1: create_state(adjusted_seeds[1]),
             std: 1f64,
         }
     }

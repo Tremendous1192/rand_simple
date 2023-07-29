@@ -16,7 +16,7 @@
 
 ## 使用例
 ### 一様分布
-#### new()関数
+#### 乱数の種をユーザーが指定する場合
 ```rust
 let mut uniform = rand_simple::Uniform::new(1192u32);
 println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
@@ -27,11 +27,17 @@ let max: f64 = 1f64;
 let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
 println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, uniform.sample());
 ```
-#### インスタンス生成マクロ
+#### 時刻依存の乱数の種を用いる場合
 ```rust
-// 現在時刻を基にして乱数の種を設定する場合
-//let mut uniform = rand_simple::create_uniform!();
-//println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+let seed:u32 = rand_simple::create_seed();
+let mut uniform = rand_simple::Uniform::new(seed);
+println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
+
+// 確率変数のパラメータを変更する場合
+let min: f64 = -1f64;
+let max: f64 = 1f64;
+let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
+println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, uniform.sample());
 ```
 
 ## 実装状況
