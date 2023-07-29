@@ -5,7 +5,7 @@ mod standard_distributions; // 標準分布を計算するモジュール
                             //#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)]
 mod sandbox; // 試行錯誤するためのテストモジュール
-use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
+//use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
@@ -15,6 +15,7 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 }
 
 // 共通処理
+/*
 /// 現在時刻から乱数の種を計算する関数
 pub fn create_seed() -> u32 {
     // 4_294_967_295u32 / 24 * 60 * 60 * 1000ミリ秒/日 ≒ 49.7日周期
@@ -63,6 +64,32 @@ pub fn create_seeds_sextet() -> [u32; 6] {
         (duration.as_secs() as u32) / 60_u32,
         (duration.as_millis() as u32) / 60_u32,
     ]
+}
+*/
+
+
+#[macro_export]
+/// 乱数の種の配列を生成する
+/// * `$length: usize` - 配列の長さ
+macro_rules! generate_seeds {
+    ($length: expr)=>{{
+        let mut array = [0_u32; $length];
+        let duration = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("Time went backwards");
+        for i in 0..array.len() {
+          array[i]=  match i % 6_usize {
+                0_usize => duration.as_millis() as u32,
+                1_usize => std::u32::MAX - duration.as_nanos() as u32,
+                2_usize => (duration.as_secs() as u32) / 60_u32,
+                3_usize => std::u32::MAX - duration.as_micros() as u32,
+                4_usize => duration.as_secs() as u32,
+                5_usize => (duration.as_millis() as u32) / 60_u32,
+                _ => 1_192_765_u32,
+            };
+        }
+        array
+    }};
 }
 
 /*
