@@ -30,6 +30,7 @@ impl HalfNormal {
     }
 }
 
+/*
 #[macro_export]
 /// 半正規分布
 /// * `() =>` - 乱数の種は自動生成
@@ -53,6 +54,7 @@ macro_rules! create_half_normal {
         $crate::HalfNormal::new($seed_1 as u32, $seed_2 as u32)
     };
 }
+*/
 
 impl std::fmt::Display for HalfNormal {
     /// println!マクロなどで表示するためのフォーマッタ

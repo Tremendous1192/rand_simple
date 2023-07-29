@@ -33,6 +33,7 @@ impl Normal {
     }
 }
 
+/*
 #[macro_export]
 /// 正規分布
 /// * `() =>` - 乱数の種は自動生成
@@ -56,6 +57,7 @@ macro_rules! create_normal {
         $crate::Normal::new($seed_1 as u32, $seed_2 as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Normal {
     /// println!マクロなどで表示するためのフォーマッタ

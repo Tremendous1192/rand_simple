@@ -33,6 +33,7 @@ impl Bernoulli {
     }
 }
 
+/*
 #[macro_export]
 /// ベルヌーイ分布
 /// * `() =>` - 乱数の種は自動生成
@@ -55,6 +56,7 @@ macro_rules! create_bernoulli {
         $crate::Bernoulli::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Bernoulli {
     /// println!マクロなどで表示するためのフォーマッタ

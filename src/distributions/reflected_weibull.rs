@@ -47,6 +47,7 @@ impl ReflectedWeibull {
     }
 }
 
+/*
 #[macro_export]
 /// 反射ワイブル分布
 /// * `() =>` - 乱数の種は自動生成
@@ -69,6 +70,7 @@ macro_rules! create_reflected_weibull {
         $crate::ReflectedWeibull::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for ReflectedWeibull {
     /// println!マクロなどで表示するためのフォーマッタ

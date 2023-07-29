@@ -33,6 +33,7 @@ impl Geometric {
     }
 }
 
+/*
 #[macro_export]
 /// 幾何分布
 /// * `() =>` - 乱数の種は自動生成
@@ -55,6 +56,7 @@ macro_rules! create_geometric {
         $crate::Geometric::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Geometric {
     /// println!マクロなどで表示するためのフォーマッタ

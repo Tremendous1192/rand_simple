@@ -39,6 +39,7 @@ impl Weibull {
     }
 }
 
+/*
 #[macro_export]
 /// ワイブル分布
 /// * `() =>` - 乱数の種は自動生成
@@ -61,6 +62,7 @@ macro_rules! create_weibull {
         $crate::Weibull::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Weibull {
     /// println!マクロなどで表示するためのフォーマッタ

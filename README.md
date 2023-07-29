@@ -30,8 +30,8 @@ println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, unif
 #### インスタンス生成マクロ
 ```rust
 // 現在時刻を基にして乱数の種を設定する場合
-let mut uniform = rand_simple::create_uniform!();
-println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
+//let mut uniform = rand_simple::create_uniform!();
+//println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
 ```
 
 ## 実装状況

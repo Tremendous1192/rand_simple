@@ -34,6 +34,7 @@ impl Laplace {
     }
 }
 
+/*
 #[macro_export]
 /// ラプラス分布
 /// * `() =>` - 乱数の種は自動生成
@@ -58,6 +59,7 @@ macro_rules! create_laplace {
         $crate::Laplace::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Laplace {
     /// println!マクロなどで表示するためのフォーマッタ

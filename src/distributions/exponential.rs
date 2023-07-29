@@ -31,6 +31,7 @@ impl Exponential {
     }
 }
 
+/*
 #[macro_export]
 /// 指数分布
 /// * `() =>` - 乱数の種は自動生成
@@ -53,6 +54,7 @@ macro_rules! create_exponential {
         $crate::Exponential::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Exponential {
     /// println!マクロなどで表示するためのフォーマッタ

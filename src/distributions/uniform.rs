@@ -31,6 +31,7 @@ impl Uniform {
     }
 }
 
+/*
 #[macro_export]
 /// 一様分布
 /// * `() =>` - 乱数の種は自動生成
@@ -53,6 +54,7 @@ macro_rules! create_uniform {
         $crate::Uniform::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Uniform {
     /// println!マクロなどで表示するためのフォーマッタ

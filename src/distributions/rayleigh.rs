@@ -32,6 +32,7 @@ impl Rayleigh {
     }
 }
 
+/*
 #[macro_export]
 /// レイリー分布
 /// * `() =>` - 乱数の種は自動生成
@@ -54,6 +55,7 @@ macro_rules! create_rayleigh {
         $crate::Rayleigh::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Rayleigh {
     /// println!マクロなどで表示するためのフォーマッタ

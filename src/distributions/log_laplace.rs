@@ -36,6 +36,7 @@ impl LogLaplace {
     }
 }
 
+/*
 #[macro_export]
 /// 対数ラプラス分布
 /// * `() =>` - 乱数の種は自動生成
@@ -60,6 +61,7 @@ macro_rules! create_log_laplace {
         $crate::LogLaplace::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for LogLaplace {
     /// println!マクロなどで表示するためのフォーマッタ

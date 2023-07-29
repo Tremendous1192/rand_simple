@@ -39,6 +39,7 @@ impl Gunbel {
     }
 }
 
+/*
 #[macro_export]
 /// ガンベル分布
 /// * `() =>` - 乱数の種は自動生成
@@ -61,6 +62,7 @@ macro_rules! create_gunbel {
         $crate::Gunbel::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Gunbel {
     /// println!マクロなどで表示するためのフォーマッタ

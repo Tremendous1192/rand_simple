@@ -44,6 +44,7 @@ impl PowerFunction {
     }
 }
 
+/*
 #[macro_export]
 /// べき関数分布
 /// * `() =>` - 乱数の種は自動生成
@@ -66,6 +67,7 @@ macro_rules! create_power_function {
         $crate::PowerFunction::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for PowerFunction {
     /// println!マクロなどで表示するためのフォーマッタ

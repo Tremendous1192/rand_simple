@@ -39,6 +39,7 @@ impl Frechet {
     }
 }
 
+/*
 #[macro_export]
 /// フレシェ分布
 /// * `() =>` - 乱数の種は自動生成
@@ -61,6 +62,7 @@ macro_rules! create_frechet {
         $crate::Frechet::new($seed as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Frechet {
     /// println!マクロなどで表示するためのフォーマッタ

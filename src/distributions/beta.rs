@@ -78,6 +78,7 @@ impl Beta {
     }
 }
 
+/*
 #[macro_export]
 /// ベータ分布
 /// * `() =>` - 乱数の種は自動生成
@@ -109,6 +110,7 @@ macro_rules! create_beta {
         )
     };
 }
+*/
 
 impl std::fmt::Display for Beta {
     /// println!マクロなどで表示するためのフォーマッタ

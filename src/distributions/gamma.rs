@@ -47,6 +47,7 @@ impl Gamma {
     }
 }
 
+/*
 #[macro_export]
 /// ガンマ分布
 /// * `() =>` - 乱数の種は自動生成
@@ -70,6 +71,7 @@ macro_rules! create_gamma {
         $crate::Gamma::new($seed_0 as u32, $seed_1 as u32, $seed_2 as u32)
     };
 }
+*/
 
 impl std::fmt::Display for Gamma {
     /// println!マクロなどで表示するためのフォーマッタ
