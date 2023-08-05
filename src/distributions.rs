@@ -20,9 +20,9 @@ mod weibull; // ワイブル分布
              //mod dirichlet; // ディリクレ分布
 mod power_function; // べき関数分布
                     //mod exponential_power; // 指数べき分布
+mod chi_square; // χ二乗分布
 mod erlang; // アーラン分布
-            //mod chi_square; // ガンマ二乗分布
-            //mod chi; // ガンマ分布
+            //mod chi; // χ分布
             //mod f; // F分布
             //mod t; // t分布
             //mod inverse_gaussian; // 逆ガウス分布
