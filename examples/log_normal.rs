@@ -1,7 +1,7 @@
 use plotters::prelude::*;
 
-const FILE_NAME: &str = "examples/normal.png";
-const CAPTION: &str = "Normal distribution";
+const FILE_NAME: &str = "examples/log_normal.png";
+const CAPTION: &str = "Log Normal distribution";
 
 const QUANTITY: usize = 10_000_usize;
 
@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (-10_f64..5_f64).step(0.1_f64).use_round().into_segmented(),
+            (0_f64..25_f64).step(0.1_f64).use_round().into_segmented(),
             0u32..500u32,
         )?;
     // 軸の設定
@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::Normal::new([1192_u32, 765_u32]);
+    let mut generator = rand_simple::LogNormal::new([1192_u32, 765_u32]);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);
@@ -45,7 +45,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .draw_series(
             Histogram::vertical(&chart)
                 .style(RED.mix(0.3).filled())
-                .margin(1)
+                .margin(0)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
         .unwrap()
@@ -66,7 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .draw_series(
             Histogram::vertical(&chart)
                 .style(BLUE.mix(0.3).filled())
-                .margin(1)
+                .margin(0)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
         .unwrap()

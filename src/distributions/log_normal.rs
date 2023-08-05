@@ -9,12 +9,12 @@ impl LogNormal {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            mean: 0f64,
-            std: 1f64,
+            mean: 0_f64,
+            std: 1_f64,
         }
     }
 
-    /// 対数正規分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         (standard_normal(&mut self.xyzuv0, &mut self.xyzuv1) * self.std + self.mean).exp()
     }
