@@ -13,7 +13,7 @@ impl HalfNormal {
         }
     }
 
-    /// 標準半正規分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_normal(&mut self.xyzuv0, &mut self.xyzuv1).abs() * self.std
     }
