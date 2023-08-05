@@ -1,24 +1,46 @@
-use crate::standard_distributions::xorshift160_0_1_open;
+use crate::standard_distributions::{standard_exponential, standard_gamma, xorshift160_0_1_open};
 use crate::{create_state, PowerFunction};
 
 impl PowerFunction {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
-    pub fn new(seed: u32) -> Self {
-        let xyzuv: [u32; 5] = create_state(seed);
+    pub fn new(seeds: [u32; 4]) -> Self {
+        let adjusted_seeds = crate::adjust_seeds!(seeds);
+
+        let mut xyzuv_alpha: [u32; 5] = create_state(adjusted_seeds[0]);
+        let previous_uniform_1_alpha: f64 = xorshift160_0_1_open(&mut xyzuv_alpha);
+
+        let mut xyzuv_beta: [u32; 5] = create_state(adjusted_seeds[3]);
+        let previous_uniform_1_beta: f64 = xorshift160_0_1_open(&mut xyzuv_beta);
+
         Self {
-            xyzuv,
+            xyzuv_alpha,
+            previous_uniform_1_alpha,
+            xyzuv0_alpha: create_state(adjusted_seeds[1]),
+            xyzuv1_alpha: create_state(adjusted_seeds[2]),
+            shape_alpha: 1f64,
+
+            xyzuv_beta,
+            previous_uniform_1_beta,
+
             shape_gamma: 1_f64,
             min_a: 0_f64,
-            max_b: 1_f64,
+            range_s: 1_f64,
         }
     }
 
     /// べき関数分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
-        // アルゴリズム3.67: 逆関数法
-        xorshift160_0_1_open(&mut self.xyzuv).powf(-self.shape_gamma) * (self.max_b - self.min_a)
-            + self.min_a
+        // アルゴリズム 3.68:
+        let y1 = standard_gamma(
+            &mut self.xyzuv_alpha,
+            &mut self.previous_uniform_1_alpha,
+            &mut self.xyzuv0_alpha,
+            &mut self.xyzuv1_alpha,
+            &self.shape_alpha,
+        );
+        let y2 = standard_exponential(&mut self.xyzuv_beta, &mut self.previous_uniform_1_beta);
+        y1 / (y1 * y2) * self.range_s + self.min_a
     }
 
     /// 確率変数のパラメータを変更する
@@ -38,7 +60,7 @@ impl PowerFunction {
         } else {
             self.shape_gamma = shape_gamma;
             self.min_a = min_a;
-            self.max_b = max_b;
+            self.range_s = max_b - min_a;
             Ok((shape_gamma, min_a, max_b))
         }
     }
@@ -52,7 +74,7 @@ impl std::fmt::Display for PowerFunction {
         writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
         writeln!(f, "形状母数 γ: {}", self.shape_gamma)?;
         writeln!(f, "境界母数(小範) a: {}", self.min_a)?;
-        writeln!(f, "境界母数(大範) b: {}", self.max_b)?;
+        writeln!(f, "境界母数(大範) b: {}", self.range_s + self.min_a)?;
         Ok(())
     }
 }

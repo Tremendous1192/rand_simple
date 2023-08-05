@@ -394,7 +394,7 @@ pub struct Beta {
 /// べき関数分布
 /// # 使用例
 /// ```
-/// let mut power_function = rand_simple::PowerFunction::new(1192u32);
+/// let mut power_function = rand_simple::PowerFunction::new([1192u32, 765u32, 1543u32, 2003u32]);
 /// println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", power_function.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -405,10 +405,18 @@ pub struct Beta {
 /// println!("形状母数 {}, 閉区間[{}, {}]の一様乱数を生成する -> {}", shape, min, max, power_function.sample());
 /// ```
 pub struct PowerFunction {
-    xyzuv: [u32; 5],  // 状態変数
+    xyzuv_alpha: [u32; 5],         // 状態変数
+    previous_uniform_1_alpha: f64, // 前回使用した一様乱数
+    xyzuv0_alpha: [u32; 5],        // 状態変数
+    xyzuv1_alpha: [u32; 5],        // 状態変数
+    shape_alpha: f64,
+
+    xyzuv_beta: [u32; 5],         // 状態変数
+    previous_uniform_1_beta: f64, // 前回使用した一様乱数
+
     shape_gamma: f64, // 形状母数
     min_a: f64,       // 境界母数(小範)
-    max_b: f64,       // 境界母数(大範)
+    range_s: f64,     // 境界母数の差
 }
 
 // 指数べき分布
