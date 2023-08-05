@@ -1,7 +1,7 @@
 use plotters::prelude::*;
 
-const FILE_NAME: &str = "examples/levy.png";
-const CAPTION: &str = "Levy distribution";
+const FILE_NAME: &str = "examples/exponential.png";
+const CAPTION: &str = "Exponential distribution";
 
 const QUANTITY: usize = 10_000_usize;
 
@@ -16,11 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (-10_f64..150_f64)
-                .step(0.1_f64)
-                .use_round()
-                .into_segmented(),
-            0u32..500u32,
+            (0_f64..25_f64).step(0.1_f64).use_round().into_segmented(),
+            0u32..1_000u32,
         )?;
     // 軸の設定
     chart
@@ -35,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::Levy::new([1192_u32, 765_u32]);
+    let mut generator = rand_simple::Exponential::new(1192_u32);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);
@@ -56,9 +53,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED.mix(0.3)));
 
     // パラメータ変更
-    let location: f64 = -2_f64;
     let scale: f64 = 1.5_f64;
-    let _: Result<(f64, f64), &str> = generator.try_set_params(location, scale);
+    let _: Result<f64, &str> = generator.try_set_params(scale);
     println!("Parameter change\n{}", generator);
     let mut vec = Vec::<f64>::new();
     for _ in 0..QUANTITY {
