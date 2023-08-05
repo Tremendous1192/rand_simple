@@ -13,6 +13,9 @@ keywords = ["rng", "random"]
 
 [dependencies]
 
+[dev-dependencies]
+plotters = "0.3.5" # グラフ https://plotters-rs.github.io/book/intro/introduction.html
+
 [profile.dev]
 opt-level = 0
 

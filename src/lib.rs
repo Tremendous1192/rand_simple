@@ -67,13 +67,13 @@ pub(crate) use adjust_seeds;
 /// # 使用例
 /// ```
 /// let mut uniform = rand_simple::Uniform::new(1192u32);
-/// println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
+/// println!("閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
 ///
-/// // 確率変数のパラメータを変更する場合
+/// // 確率変数のパラメータを変更する
 /// let min: f64 = -1f64;
 /// let max: f64 = 1f64;
 /// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
-/// println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, uniform.sample());
+/// println!("閉区間[{}, {}]の一様乱数に従う乱数を返す -> {}", min, max, uniform.sample());
 /// ```
 pub struct Uniform {
     xyzuv: [u32; 5], // 状態変数
