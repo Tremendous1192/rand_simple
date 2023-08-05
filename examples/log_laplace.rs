@@ -1,7 +1,7 @@
 use plotters::prelude::*;
 
-const FILE_NAME: &str = "examples/laplace.png";
-const CAPTION: &str = "Laplace distribution";
+const FILE_NAME: &str = "examples/log_laplace.png";
+const CAPTION: &str = "Log Laplace distribution";
 
 const QUANTITY: usize = 10_000_usize;
 
@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (-10_f64..10_f64).step(0.1_f64).use_round().into_segmented(),
+            (0_f64..60_f64).step(0.1_f64).use_round().into_segmented(),
             0u32..600u32,
         )?;
     // 軸の設定
@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::Laplace::new(1192_u32);
+    let mut generator = rand_simple::LogLaplace::new(1192_u32);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);

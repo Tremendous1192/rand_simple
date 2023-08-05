@@ -1,4 +1,4 @@
-use crate::standard_distributions::{standard_laplace, xorshift160_0_1_open};
+use crate::standard_distributions::{standard_laplace, xorshift160_0_open_1_open};
 use crate::{create_state, Laplace};
 
 impl Laplace {
@@ -15,9 +15,16 @@ impl Laplace {
         }
     }
 
-    /// ラプラス分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
-        (-1_f64 * (1_f64 - xorshift160_0_1_open(&mut self.xyzuv)).ln()) * self.scale + self.location
+        // アルゴリズム 3.45
+        let u: f64 = xorshift160_0_open_1_open(&mut self.xyzuv);
+        let y = if u < 0.5_f64 {
+            (2_f64 * u).ln()
+        } else {
+            -(2_f64 * (1_f64 - u)).ln()
+        };
+        y * self.scale + self.location
     }
 
     /// 確率変数のパラメータを変更する

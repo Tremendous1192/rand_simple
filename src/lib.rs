@@ -221,10 +221,10 @@ pub struct Exponential {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} のラプラス分布に従う乱数を生成する -> {}", location, scale, laplace.sample());
 /// ```
 pub struct Laplace {
-    xyzuv: [u32; 5],         // 状態変数
+    xyzuv: [u32; 5], // 状態変数
     //previous_uniform_1: f64, // 前回使用した一様乱数
-    location: f64,           // 位置母数
-    scale: f64,              // 尺度母数
+    location: f64, // 位置母数
+    scale: f64,    // 尺度母数
 }
 
 /// 対数ラプラス分布
@@ -240,10 +240,10 @@ pub struct Laplace {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} の対数ラプラス分布に従う乱数を生成する -> {}", location, scale, log_laplace.sample());
 /// ```
 pub struct LogLaplace {
-    xyzuv: [u32; 5],         // 状態変数
-    previous_uniform_1: f64, // 前回使用した一様乱数
-    location: f64,           // 位置母数
-    scale: f64,              // 尺度母数
+    xyzuv: [u32; 5], // 状態変数
+    //previous_uniform_1: f64, // 前回使用した一様乱数
+    location: f64, // 位置母数
+    scale: f64,    // 尺度母数
 }
 
 /// レイリー分布
