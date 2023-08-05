@@ -9,11 +9,11 @@ impl HalfCauchy {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            scale: 1f64,
+            scale: 1_f64,
         }
     }
 
-    /// 半コーシー分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_cauchy(&mut self.xyzuv0, &mut self.xyzuv1).abs() * self.scale
     }
@@ -21,7 +21,7 @@ impl HalfCauchy {
     /// 確率変数のパラメータを変更する
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
-        if scale <= 0f64 {
+        if scale <= 0_f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.scale = scale;

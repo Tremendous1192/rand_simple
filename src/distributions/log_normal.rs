@@ -23,7 +23,7 @@ impl LogNormal {
     /// * `mean` - 平均
     /// * `variance` - 分散
     pub fn try_set_params(&mut self, mean: f64, variance: f64) -> Result<(f64, f64), &str> {
-        if variance <= 0f64 {
+        if variance <= 0_f64 {
             Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.mean = mean;

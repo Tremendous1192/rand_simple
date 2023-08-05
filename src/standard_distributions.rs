@@ -128,20 +128,20 @@ const Q_CAUCHY: f64 = 0.35057477942_f64; // (1 + p) / (2b)
 const T_CAUCHY: f64 = 1.36397696_f64; // arctan(b)
 const V_CAUCHY: f64 = 0.20681936679_f64; // arctan(b)
 const HALF_BIT_CAUCHY: u32 = 65535_u32; // 2^(m/2) - 1
-                                        // 標準正規分布
-                                        // アルゴリズム 3.30: Monty Python法
+/// 標準正コーシー分布
+/// アルゴリズム 3.30: Monty Python法
 #[inline]
 pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     // step 1: m bit符号無整数型の一様乱数の生成
     let u_mbit_integer: u32 = xorshift160(xyzuv0);
     // step 2: 乱数の符号を最下位ビットで計算する
-    let sign: f64 = if (u_mbit_integer & 1u32) == 1u32 {
-        1f64
+    let sign: f64 = if (u_mbit_integer & 1_u32) == 1_u32 {
+        1_f64
     } else {
-        -1f64
+        -1_f64
     };
     // 1ビット右シフトしたものを準備する
-    let u_m_1: u32 = u_mbit_integer >> 1u32;
+    let u_m_1: u32 = u_mbit_integer >> 1_u32;
     // step 3: (m/2) bitとの論理積を計算する
     let u_half_m_integer: u32 = u_m_1 & HALF_BIT_CAUCHY;
     // step 4: u_x = u_half_m_integer * W;
@@ -151,20 +151,20 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
         sign * u_x
     } else {
         // step 6: u_m_1 をさらに右に(m/2)ビットシフトする
-        let u_half_m_1 = u_m_1 >> 16u32;
+        let u_half_m_1 = u_m_1 >> 16_u32;
         // step 7: u_y
         let u_y: f64 = D_CAUCHY * u_half_m_1 as f64;
         // step 8: π(1 + u_x^2)u_y < 1 のとき、y = sign * u_x を返す
-        if std::f64::consts::PI * (1f64 + u_x.powi(2)) * u_y < 1f64 {
+        if std::f64::consts::PI * (1_f64 + u_x.powi(2)) * u_y < 1_f64 {
             sign * u_x
         } else {
             // step 9: yの計算と分岐
             let y: f64 = sign * S_CAUCHY * (B_CAUCHY - u_x);
-            if std::f64::consts::PI * (1f64 + y.powi(2)) * (Q_CAUCHY - P_CAUCHY * u_y) < 1f64 {
+            if std::f64::consts::PI * (1_f64 + y.powi(2)) * (Q_CAUCHY - P_CAUCHY * u_y) < 1_f64 {
                 y
             } else {
                 // step 10: 裾野?
-                sign * (T_CAUCHY + V_CAUCHY * xorshift160_0_open_1_open(xyzuv1))
+                sign * (T_CAUCHY + V_CAUCHY * xorshift160_0_open_1_open(xyzuv1)).tan()
             }
         }
     }
