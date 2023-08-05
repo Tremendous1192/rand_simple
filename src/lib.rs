@@ -5,7 +5,7 @@ mod standard_distributions; // 標準分布を計算するモジュール
                             //#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)]
 mod sandbox; // 試行錯誤するためのテストモジュール
-//use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
+             //use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
@@ -15,70 +15,18 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 }
 
 // 共通処理
-/*
-/// 現在時刻から乱数の種を計算する関数
-pub fn create_seed() -> u32 {
-    // 4_294_967_295u32 / 24 * 60 * 60 * 1000ミリ秒/日 ≒ 49.7日周期
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards")
-        .as_millis() as u32
-}
-
-// 共通処理
-/// 正規分布等2つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
-pub fn create_seeds_duo() -> [u32; 2] {
-    let duration = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    // 49.7日周期と4秒周期の組み合わせ
-    [
-        duration.as_millis() as u32,
-        std::u32::MAX - duration.as_nanos() as u32,
-    ]
-}
-
-/// ガンマ分布等3つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
-pub fn create_seeds_trio() -> [u32; 3] {
-    let duration = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    // 49.7日周期と136年周期と4秒周期の組み合わせ
-    [
-        duration.as_millis() as u32,
-        duration.as_secs() as u32,
-        std::u32::MAX - duration.as_nanos() as u32,
-    ]
-}
-
-/// ベータ分布等6つの乱数の種が必要な確率変数に対して、現在時刻から乱数の種を計算する
-pub fn create_seeds_sextet() -> [u32; 6] {
-    let duration = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    [
-        duration.as_millis() as u32,
-        std::u32::MAX - duration.as_nanos() as u32,
-        duration.as_secs() as u32,
-        std::u32::MAX - duration.as_micros() as u32,
-        (duration.as_secs() as u32) / 60_u32,
-        (duration.as_millis() as u32) / 60_u32,
-    ]
-}
-*/
-
 
 #[macro_export]
 /// 乱数の種の配列を生成する
 /// * `$length: usize` - 配列の長さ
 macro_rules! generate_seeds {
-    ($length: expr)=>{{
+    ($length: expr) => {{
         let mut array = [0_u32; $length];
         let duration = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .expect("Time went backwards");
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("Time went backwards");
         for i in 0..array.len() {
-          array[i]=  match i % 6_usize {
+            array[i] = match i % 6_usize {
                 0_usize => duration.as_millis() as u32,
                 1_usize => std::u32::MAX - duration.as_nanos() as u32,
                 2_usize => (duration.as_secs() as u32) / 60_u32,
@@ -91,27 +39,6 @@ macro_rules! generate_seeds {
         array
     }};
 }
-
-/*
-// 変数の値が重ならないように変更するマクロ
-macro_rules! adjust_values {
-    ($($value:expr),*) => {{
-        let mut values = [$($value),*];
-        for i in 0..(values.len()-1) {
-            for j in (i+1)..values.len() {
-                if values[i] == values[j] {
-                    values[j] = (values[j] << 3) ^ (values[i] >> 2);
-                    if values[j] == 0 {
-                        values[j] = 1192;
-                    }
-                }
-            }
-        }
-        values
-    }};
-}
-pub(crate) use adjust_values; // クレート内部でマクロを使用するトリック
-*/
 
 // 配列の要素を全て異なる値に変更するマクロ
 macro_rules! adjust_seeds {

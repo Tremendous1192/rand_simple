@@ -39,31 +39,6 @@ impl Gunbel {
     }
 }
 
-/*
-#[macro_export]
-/// ガンベル分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut gunbel = rand_simple::create_gunbel!(1192u32);
-/// println!("位置母数 μ = 0, 尺度母数 η = 1 の標準ガンベル分布に従う乱数を生成する -> {}", gunbel.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut gunbel = rand_simple::create_gunbel!();
-/// println!("位置母数 μ = 0, 尺度母数 η = 1 の標準ガンベル分布に従う乱数を生成する -> {}", gunbel.sample());
-/// ```
-macro_rules! create_gunbel {
-    () => {{
-        $crate::Gunbel::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::Gunbel::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Gunbel {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

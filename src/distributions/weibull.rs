@@ -39,31 +39,6 @@ impl Weibull {
     }
 }
 
-/*
-#[macro_export]
-/// ワイブル分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut weibull = rand_simple::create_weibull!(1192u32);
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut weibull = rand_simple::create_weibull!();
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
-/// ```
-macro_rules! create_weibull {
-    () => {{
-        $crate::Weibull::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::Weibull::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Weibull {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

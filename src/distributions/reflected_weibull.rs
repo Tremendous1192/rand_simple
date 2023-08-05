@@ -47,31 +47,6 @@ impl ReflectedWeibull {
     }
 }
 
-/*
-#[macro_export]
-/// 反射ワイブル分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut reflected_weibull = rand_simple::create_reflected_weibull!(1192u32);
-/// println!("形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1 の反射ワイブル分布に従う乱数を生成する -> {}", reflected_weibull.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut reflected_weibull = rand_simple::create_reflected_weibull!();
-/// println!("形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1 の反射ワイブル分布に従う乱数を生成する -> {}", reflected_weibull.sample());
-/// ```
-macro_rules! create_reflected_weibull {
-    () => {{
-        $crate::ReflectedWeibull::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::ReflectedWeibull::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for ReflectedWeibull {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

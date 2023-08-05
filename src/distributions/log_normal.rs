@@ -33,32 +33,6 @@ impl LogNormal {
     }
 }
 
-/*
-#[macro_export]
-/// 対数正規分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut log_normal = rand_simple::create_log_normal!(1192u32, 765u32);
-/// println!("平均値 0, 分散 1 の標準対数正規分布乱数を生成する -> {}", log_normal.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut log_normal = rand_simple::create_log_normal!();
-/// println!("平均値 0, 分散 1 の標準対数正規分布乱数を生成する -> {}", log_normal.sample());
-/// ```
-macro_rules! create_log_normal {
-    () => {{
-        let seeds: (u32, u32) = $crate::create_seeds();
-        $crate::LogNormal::new(seeds.0, seeds.1)
-    }};
-    ($seed_1: expr, $seed_2: expr) => {
-        $crate::LogNormal::new($seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for LogNormal {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

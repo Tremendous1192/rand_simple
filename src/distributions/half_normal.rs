@@ -30,32 +30,6 @@ impl HalfNormal {
     }
 }
 
-/*
-#[macro_export]
-/// 半正規分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut half_normal = rand_simple::create_half_normal!(1192u32, 765u32);
-/// println!("分散 1 の標準半正規分布乱数を生成する -> {}", half_normal.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut half_normal = rand_simple::create_half_normal!();
-/// println!("分散 1 の半正規分布乱数を生成する -> {}", half_normal.sample());
-/// ```
-macro_rules! create_half_normal {
-    () => {{
-        let seeds: (u32, u32) = $crate::create_seeds();
-        $crate::HalfNormal::new(seeds.0, seeds.1)
-    }};
-    ($seed_1: expr, $seed_2: expr) => {
-        $crate::HalfNormal::new($seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for HalfNormal {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

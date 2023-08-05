@@ -33,32 +33,6 @@ impl Cauchy {
     }
 }
 
-/*
-#[macro_export]
-/// コーシー分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut cauchy = rand_simple::create_cauchy!(1192u32, 765u32);
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut cauchy = rand_simple::create_cauchy!();
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
-/// ```
-macro_rules! create_cauchy {
-    () => {{
-        let seeds: (u32, u32) = $crate::create_seeds();
-        $crate::Cauchy::new(seeds.0, seeds.1)
-    }};
-    ($seed_1: expr, $seed_2: expr) => {
-        $crate::Cauchy::new($seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Cauchy {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

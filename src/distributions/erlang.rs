@@ -47,32 +47,6 @@ impl Erlang {
     }
 }
 
-/*
-#[macro_export]
-/// アーラン分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_0: expr, $seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut erlang = rand_simple::create_erlang!(1192u32, 765u32, 1543u32);
-/// println!("形状母数 r = 1, 尺度母数 θ = 1の標準アーラン分布に従う乱数を生成する -> {}", erlang.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut erlang = rand_simple::create_erlang!();
-/// println!("形状母数 r = 1, 尺度母数 θ = 1の標準アーラン分布に従う乱数を生成する -> {}", erlang.sample());
-/// ```
-macro_rules! create_erlang {
-    () => {{
-        let seeds: (u32, u32, u32) = $crate::create_seeds_trio();
-        $crate::Erlang::new(seeds.0, seeds.1, seeds.2)
-    }};
-    ($seed_0: expr, $seed_1: expr, $seed_2: expr) => {
-        $crate::Erlang::new($seed_0 as u32, $seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Erlang {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

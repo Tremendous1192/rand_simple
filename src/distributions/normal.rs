@@ -33,32 +33,6 @@ impl Normal {
     }
 }
 
-/*
-#[macro_export]
-/// 正規分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut normal = rand_simple::create_normal!(1192u32, 765u32);
-/// println!("平均値 0, 分散 1 の標準正規分布乱数を生成する -> {}", normal.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut normal = rand_simple::create_normal!();
-/// println!("平均値 0, 分散 1 の標準正規分布乱数を生成する -> {}", normal.sample());
-/// ```
-macro_rules! create_normal {
-    () => {{
-        let seeds: (u32, u32) = $crate::create_seeds();
-        $crate::Normal::new(seeds.0, seeds.1)
-    }};
-    ($seed_1: expr, $seed_2: expr) => {
-        $crate::Normal::new($seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Normal {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

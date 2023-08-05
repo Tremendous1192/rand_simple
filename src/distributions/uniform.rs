@@ -31,31 +31,6 @@ impl Uniform {
     }
 }
 
-/*
-#[macro_export]
-/// 一様分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut uniform = rand_simple::create_uniform!(1192u32);
-/// assert_eq!(uniform.sample(), 0.66687147451259_f64);
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut uniform = rand_simple::create_uniform!();
-/// println!("乱数: {}", uniform.sample()); // インスタンス生成時刻に依存するため、コンパイル時は値不明
-/// ```
-macro_rules! create_uniform {
-    () => {{
-        $crate::Uniform::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::Uniform::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Uniform {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

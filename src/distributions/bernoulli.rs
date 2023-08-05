@@ -33,31 +33,6 @@ impl Bernoulli {
     }
 }
 
-/*
-#[macro_export]
-/// ベルヌーイ分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut bernoulli = rand_simple::create_bernoulli!(1192u32);
-/// println!("発生確率 θ = 0.5 の事象が生じたか(1)、否か(0)の判定 -> {}", bernoulli.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut bernoulli = rand_simple::create_bernoulli!();
-/// println!("発生確率 θ = 0.5 の事象が生じたか(1)、否か(0)の判定 -> {}", bernoulli.sample());
-/// ```
-macro_rules! create_bernoulli {
-    () => {
-        $crate::Bernoulli::new($crate::create_seed())
-    };
-    ($seed: expr) => {
-        $crate::Bernoulli::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Bernoulli {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

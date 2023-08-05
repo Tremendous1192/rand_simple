@@ -71,40 +71,6 @@ impl Beta {
     }
 }
 
-/*
-#[macro_export]
-/// ベータ分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_0: expr, $seed_1: expr, $seed_2: expr, $seed_3: expr, $seed_4: expr, $seed_5: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut beta = rand_simple::create_beta!(1192u32, 765u32, 1543u32, 2003u32, 1867u32, 1688u32);
-/// println!("形状母数 α = 1, 形状母数 β = 1の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut beta = rand_simple::create_beta!();
-/// println!("形状母数 α = 1, 形状母数 β = 1の標準ベータ分布に従う乱数を生成する -> {}", beta.sample());
-/// ```
-macro_rules! create_beta {
-    () => {{
-        let seeds: (u32, u32, u32) = $crate::create_seeds_trio();
-        let seeds1 = (seeds.1 + 1192u32, seeds.2 + 765u32, seeds.0 + 1991u32);
-        $crate::Beta::new(seeds.0, seeds.1, seeds.2, seeds1.0, seeds1.1, seeds1.2)
-    }};
-    ($seed_0: expr, $seed_1: expr, $seed_2: expr, $seed_3: expr, $seed_4: expr, $seed_5: expr) => {
-        $crate::Beta::new(
-            $seed_0 as u32,
-            $seed_1 as u32,
-            $seed_2 as u32,
-            $seed_3 as u32,
-            $seed_4 as u32,
-            $seed_5 as u32,
-        )
-    };
-}
-*/
-
 impl std::fmt::Display for Beta {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

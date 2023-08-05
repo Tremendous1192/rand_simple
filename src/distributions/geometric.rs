@@ -33,31 +33,6 @@ impl Geometric {
     }
 }
 
-/*
-#[macro_export]
-/// 幾何分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut geometric = rand_simple::create_geometric!(1192u32);
-/// println!("発生確率 θ = 0.5 の事象が生じるまでの試行回数 -> {}", geometric.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut geometric = rand_simple::create_geometric!();
-/// println!("発生確率 θ = 0.5 の事象が生じるまでの試行回数 -> {}", geometric.sample());
-/// ```
-macro_rules! create_geometric {
-    () => {
-        $crate::Geometric::new($crate::create_seed())
-    };
-    ($seed: expr) => {
-        $crate::Geometric::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Geometric {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

@@ -30,32 +30,6 @@ impl HalfCauchy {
     }
 }
 
-/*
-#[macro_export]
-/// 半コーシー分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut half_cauchy = rand_simple::create_half_cauchy!(1192u32, 765u32);
-/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut half_cauchy = rand_simple::create_half_cauchy!();
-/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
-/// ```
-macro_rules! create_half_cauchy {
-    () => {{
-        let seeds: (u32, u32) = $crate::create_seeds();
-        $crate::HalfCauchy::new(seeds.0, seeds.1)
-    }};
-    ($seed_1: expr, $seed_2: expr) => {
-        $crate::HalfCauchy::new($seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for HalfCauchy {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

@@ -32,31 +32,6 @@ impl Rayleigh {
     }
 }
 
-/*
-#[macro_export]
-/// レイリー分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut rayleigh = rand_simple::create_rayleigh!(1192u32);
-/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut rayleigh = rand_simple::create_rayleigh!();
-/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
-/// ```
-macro_rules! create_rayleigh {
-    () => {{
-        $crate::Rayleigh::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::Rayleigh::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Rayleigh {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

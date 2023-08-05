@@ -47,32 +47,6 @@ impl Gamma {
     }
 }
 
-/*
-#[macro_export]
-/// ガンマ分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_0: expr, $seed_1: expr, $seed_2: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut gamma = rand_simple::create_gamma!(1192u32, 765u32, 1543u32);
-/// println!("形状母数 α = 1, 尺度母数 β = 1の標準ガンマ分布に従う乱数を生成する -> {}", gamma.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut gamma = rand_simple::create_gamma!();
-/// println!("形状母数 α = 1, 尺度母数 β = 1の標準ガンマ分布に従う乱数を生成する -> {}", gamma.sample());
-/// ```
-macro_rules! create_gamma {
-    () => {{
-        let seeds: (u32, u32, u32) = $crate::create_seeds_trio();
-        $crate::Gamma::new(seeds.0, seeds.1, seeds.2)
-    }};
-    ($seed_0: expr, $seed_1: expr, $seed_2: expr) => {
-        $crate::Gamma::new($seed_0 as u32, $seed_1 as u32, $seed_2 as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Gamma {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

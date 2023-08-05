@@ -44,31 +44,6 @@ impl PowerFunction {
     }
 }
 
-/*
-#[macro_export]
-/// べき関数分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed_0: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut power_function = rand_simple::create_power_function!(1192u32);
-/// println!("形状母数 γ = 1, 境界母数(小範) a = 0, 境界母数(大範) b = 1の標準べき関数分布に従う乱数を生成する -> {}", power_function.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut power_function = rand_simple::create_power_function!();
-/// println!("形状母数 γ = 1, 境界母数(小範) a = 0, 境界母数(大範) b = 1の標準べき関数分布に従う乱数を生成する -> {}", power_function.sample());
-/// ```
-macro_rules! create_power_function {
-    () => {{
-        $crate::PowerFunction::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::PowerFunction::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for PowerFunction {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

@@ -39,31 +39,6 @@ impl Frechet {
     }
 }
 
-/*
-#[macro_export]
-/// フレシェ分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut frechet = rand_simple::create_frechet!(1192u32);
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準フレシェ分布に従う乱数を生成する -> {}", frechet.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut frechet = rand_simple::create_frechet!();
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準フレシェ分布に従う乱数を生成する -> {}", frechet.sample());
-/// ```
-macro_rules! create_frechet {
-    () => {{
-        $crate::Frechet::new($crate::create_seed())
-    }};
-    ($seed: expr) => {
-        $crate::Frechet::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for Frechet {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型

@@ -36,33 +36,6 @@ impl LogLaplace {
     }
 }
 
-/*
-#[macro_export]
-/// 対数ラプラス分布
-/// * `() =>` - 乱数の種は自動生成
-/// * `($seed: expr) =>` - 乱数の種を指定する
-/// # 使用例 1
-/// ```
-/// let mut log_laplace = rand_simple::create_laplace!(1192u32);
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
-/// ```
-/// # 使用例 2
-/// ```
-/// let mut log_laplace = rand_simple::create_laplace!();
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
-/// ```
-macro_rules! create_log_laplace {
-    // 引数無し
-    () => {{
-        $crate::LogLaplace::new($crate::create_seed())
-    }};
-    // 引数有り
-    ($seed: expr) => {
-        $crate::LogLaplace::new($seed as u32)
-    };
-}
-*/
-
 impl std::fmt::Display for LogLaplace {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
