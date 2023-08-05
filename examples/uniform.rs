@@ -35,6 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut generator = rand_simple::Uniform::new(1192_u32);
 
     // 標準分布
+    println!("Initial state\n{}\n", generator);
     let mut vec = Vec::<f64>::new();
     for _ in 0..QUANTITY {
         vec.push(generator.sample());
@@ -47,12 +48,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .margin(1)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
-        .unwrap();
+        .unwrap()
+        .label("Standard distribution")
+        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED.mix(0.3)));
 
     // パラメータ変更
     let min: f64 = -1_f64;
     let max: f64 = 1_f64;
     let _: Result<(f64, f64), &str> = generator.try_set_params(min, max);
+    println!("Parameter change\n{}", generator);
     let mut vec = Vec::<f64>::new();
     for _ in 0..QUANTITY {
         vec.push(generator.sample());
@@ -61,10 +65,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     chart
         .draw_series(
             Histogram::vertical(&chart)
-                .style(BLUE.mix(0.5).filled())
+                .style(BLUE.mix(0.3).filled())
                 .margin(1)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
+        .unwrap()
+        .label("Parameter change")
+        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &BLUE.mix(0.3)));
+
+    // 凡例の描画
+    chart
+        .configure_series_labels()
+        .border_style(&BLACK)
+        .background_style(&WHITE.mix(0.8))
+        .draw()
         .unwrap();
 
     Ok(())

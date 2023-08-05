@@ -66,12 +66,12 @@ pub(crate) use adjust_seeds;
 /// 一様乱数
 /// # 使用例
 /// ```
-/// let mut uniform = rand_simple::Uniform::new(1192u32);
+/// let mut uniform = rand_simple::Uniform::new(1192_u32);
 /// println!("閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
 ///
 /// // 確率変数のパラメータを変更する
-/// let min: f64 = -1f64;
-/// let max: f64 = 1f64;
+/// let min: f64 = -1_f64;
+/// let max: f64 = 1_f64;
 /// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
 /// println!("閉区間[{}, {}]の一様乱数に従う乱数を返す -> {}", min, max, uniform.sample());
 /// ```
@@ -84,12 +84,12 @@ pub struct Uniform {
 /// 正規分布
 /// # 使用例
 /// ```
-/// let mut normal = rand_simple::Normal::new([1192u32, 765u32]);
+/// let mut normal = rand_simple::Normal::new([1192_u32, 765_u32]);
 /// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準正規分布乱数を生成する -> {}", normal.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
-/// let mean: f64 = -3f64;
-/// let variance: f64 = 2f64;
+/// let mean: f64 = -3_f64;
+/// let variance: f64 = 2_f64;
 /// let result: Result<(f64, f64), &str> = normal.try_set_params(mean, variance);
 /// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, normal.sample());
 /// ```
