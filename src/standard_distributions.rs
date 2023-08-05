@@ -55,20 +55,20 @@ const W_NORMAL: f64 = 0.00003824869_f64; // b / (2^(m/2) - 1)
 const P_NORMAL: f64 = 0.94289567219_f64; // (s + 1) / 2
 const Q_NORMAL: f64 = -0.12127385907_f64; // ln(s)
 const HALF_BIT_NORMAL: u32 = 65535_u32; // 2^(m/2) - 1
-                                        // 標準正規分布
-                                        // アルゴリズム 3.5: Monty Python法
+/// 標準正規分布
+/// アルゴリズム 3.5: Monty Python法
 #[inline]
 pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     // step 1: m bit符号無整数型の一様乱数の生成
     let u_mbit_integer: u32 = xorshift160(xyzuv0);
     // step 2: 乱数の符号を最下位ビットで計算する
-    let sign: f64 = if (u_mbit_integer & 1u32) == 1u32 {
-        1f64
+    let sign: f64 = if (u_mbit_integer & 1_u32) == 1_u32 {
+        1_f64
     } else {
-        -1f64
+        -1_f64
     };
     // 1ビット右シフトしたものを準備する
-    let u_m_1: u32 = u_mbit_integer >> 1u32;
+    let u_m_1: u32 = u_mbit_integer >> 1_u32;
     // step 3: (m/2) bitとの論理積を計算する
     let u_half_m_integer: u32 = u_m_1 & HALF_BIT_NORMAL;
     // step 4: u_x = u_half_m_integer * W;
@@ -78,16 +78,16 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
         sign * u_x
     } else {
         // step 6: u_m_1 をさらに右に(m/2)ビットシフトする
-        let u_half_m_1 = u_m_1 >> 16u32;
+        let u_half_m_1 = u_m_1 >> 16_u32;
         // step 7: u_dash = (u_half_m_1 as f64 + 0.5f64) / (2^(m/2) - 2)
-        let u_dash: f64 = (u_half_m_1 as f64 + 0.5f64) / 65534_f64;
+        let u_dash: f64 = (u_half_m_1 as f64 + 0.5_f64) / 65534_f64;
         // step 8: ln(u_dash) < - u_x^2 / 2 のとき、y = sign * ux を返す
-        if u_dash.ln() < -u_x.powi(2i32) / 2f64 {
+        if u_dash.ln() * 2_f64 < -u_x.powi(2_i32) {
             sign * u_x
         } else {
             // step 9: yを計算して、最後の分岐
             let y: f64 = sign * S_NORMAL * (B_NORMAL - u_x);
-            if (P_NORMAL - u_dash).ln() < Q_NORMAL - y.powi(2i32) / 2f64 {
+            if (P_NORMAL - u_dash).ln() < Q_NORMAL - y.powi(2_i32) / 2_f64 {
                 y
             } else {
                 // step 10: アルゴリズム 3.1*の裾野の計算
@@ -98,20 +98,19 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
 }
 
 const D_NORMAL: f64 = std::f64::consts::TAU; // b^2 = 2π
-                                             // 標準正規分布の裾野
-                                             // アルゴリズム 3.13
+/// 標準正規分布の裾野
+/// アルゴリズム 3.13
 #[inline]
 fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     loop {
         // step 2: (0, 1) と [0, 1] の一様乱数を生成する
-        let u_1: u32 = xorshift160(xyzuv0);
+        let u_1: f64 = xorshift160_0_open_1_open(xyzuv0);
         let u_2: f64 = xorshift160_0_1(xyzuv1);
-        if u_1 != 0 && u_1 != std::u32::MAX {
-            // step 3: 条件分岐
-            let x: f64 = (D_NORMAL - 2f64 * (1f64 - u_1 as f64 / MAX_U32_AS_F64).ln()).sqrt();
-            if x * u_2 <= B_NORMAL {
-                return x;
-            }
+        // 乱数 x を計算する
+        let x: f64 = (D_NORMAL - 2_f64 * (1_f64 - u_1).ln()).sqrt();
+        // step 3: 条件分岐
+        if x * u_2 <= B_NORMAL {
+            return x;
         }
     }
 }

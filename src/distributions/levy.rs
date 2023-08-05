@@ -9,16 +9,16 @@ impl Levy {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            location: 0f64,
-            scale: 1f64,
+            location: 0_f64,
+            scale: 1_f64,
         }
     }
 
-    /// レヴィ分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         loop {
             let z = standard_normal(&mut self.xyzuv0, &mut self.xyzuv1).abs();
-            if z > 0f64 {
+            if z > 0_f64 {
                 return z.powi(-2) * self.scale + self.location;
             }
         }
@@ -28,7 +28,7 @@ impl Levy {
     /// * `location` - 位置母数
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
-        if scale <= 0f64 {
+        if scale <= 0_f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.location = location;
