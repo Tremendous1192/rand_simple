@@ -9,8 +9,8 @@ impl Normal {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            mean: 0f64,
-            std: 1f64,
+            mean: 0_f64,
+            std: 1_f64,
         }
     }
 

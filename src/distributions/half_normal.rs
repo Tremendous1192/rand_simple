@@ -9,7 +9,7 @@ impl HalfNormal {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            std: 1f64,
+            std: 1_f64,
         }
     }
 

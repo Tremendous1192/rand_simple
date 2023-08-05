@@ -9,12 +9,12 @@ impl Cauchy {
         Self {
             xyzuv0: create_state(adjusted_seeds[0]),
             xyzuv1: create_state(adjusted_seeds[1]),
-            location: 0f64,
-            scale: 1f64,
+            location: 0_f64,
+            scale: 1_f64,
         }
     }
 
-    /// コーシー分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_cauchy(&mut self.xyzuv0, &mut self.xyzuv1) * self.scale + self.location
     }
