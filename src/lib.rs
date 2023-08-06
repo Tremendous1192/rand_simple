@@ -395,9 +395,9 @@ pub struct Beta {
 /// ```
 pub struct PowerFunction {
     xyzuv: [u32; 5], // 状態変数
-    shape_inv: f64, // 形状母数
-    min_a: f64,     // 境界母数(小範)
-    range_s: f64,   // 境界母数の差
+    shape_inv: f64,  // 形状母数
+    min_a: f64,      // 境界母数(小範)
+    range_s: f64,    // 境界母数の差
 }
 
 // 指数べき分布
@@ -410,8 +410,8 @@ pub struct PowerFunction {
 /// println!("形状母数 r = 1, 尺度母数 θ = 1 の標準アーラン分布に従う乱数を生成する -> {}", erlang.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
-/// let shape: i64 = 2i64;
-/// let scale: f64 = 1.5f64;
+/// let shape: i64 = 2_i64;
+/// let scale: f64 = 1.5_f64;
 /// let result: Result<(i64, f64), &str> = erlang.try_set_params(shape, scale);
 /// println!("形状母数 r = {}, 尺度母数 θ = {} のアーラン分布に従う乱数を生成する -> {}", shape, scale, erlang.sample());
 /// ```
