@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::Cauchy::new([1192_u32, 765_u32]);
+    let mut generator = rand_simple::Cauchy::new(1192_u32);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);

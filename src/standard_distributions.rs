@@ -131,7 +131,7 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
 pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> f64 {
     // step 1: [0, 1) の一様乱数を生成する
     // step 2: y = -ln(1 - u) を計算する
-    -1_f64 * (1_f64 - xorshift160_0_1_open(xyzuv)).ln()
+    -(1_f64 - xorshift160_0_1_open(xyzuv)).ln()
 }
 
 /// 標準ラプラス分布

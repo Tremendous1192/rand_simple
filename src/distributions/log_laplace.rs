@@ -16,17 +16,6 @@ impl LogLaplace {
     pub fn sample(&mut self) -> f64 {
         // アルゴリズム 3.49
         (standard_laplace(&mut self.xyzuv) * self.scale + self.location).exp()
-        /*
-        // step 1: 標準ラプラス分布
-        // アルゴリズム 3.45
-        let u: f64 = xorshift160_0_open_1_open(&mut self.xyzuv);
-        let y = if u < 0.5_f64 {
-            (2_f64 * u).ln()
-        } else {
-            -(2_f64 * (1_f64 - u)).ln()
-        };
-        (y * self.scale + self.location).exp()
-        */
     }
 
     /// 確率変数のパラメータを変更する

@@ -5,11 +5,8 @@ impl Laplace {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        //let mut xyzuv: [u32; 5] = create_state(_seed);
-        //let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
             xyzuv: create_state(_seed),
-            //previous_uniform_1: u_1,
             location: 0f64,
             scale: 1f64,
         }
@@ -18,16 +15,6 @@ impl Laplace {
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_laplace(&mut self.xyzuv) * self.scale + self.location
-        /*
-        // アルゴリズム 3.45
-        let u: f64 = xorshift160_0_open_1_open(&mut self.xyzuv);
-        let y = if u < 0.5_f64 {
-            (2_f64 * u).ln()
-        } else {
-            -(2_f64 * (1_f64 - u)).ln()
-        };
-        y * self.scale + self.location
-        */
     }
 
     /// 確率変数のパラメータを変更する
