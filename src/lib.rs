@@ -426,7 +426,7 @@ pub struct Erlang {
 /// χ二乗分布
 /// # 使用例
 /// ```
-/// let mut chi_square = rand_simple::ChiSquare::new([1192u32, 765u32, 1543u32, 2003u32]);
+/// let mut chi_square = rand_simple::ChiSquare::new([1192_u32, 765_u32, 1543_u32, 2003_u32]);
 /// println!("初期設定の場合、自由度 1のχ二乗分布に従う乱数を返す -> {}", chi_square.sample());
 ///
 /// // 確率変数のパラメータを変更する場合

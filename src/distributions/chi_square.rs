@@ -11,7 +11,7 @@ impl ChiSquare {
             xyzuv_alpha: create_state(adjusted_seeds[0]),
             xyzuv0_alpha: create_state(adjusted_seeds[1]),
             xyzuv1_alpha: create_state(adjusted_seeds[2]),
-            shape_alpha: 1f64,
+            shape_alpha: 1_f64,
 
             xyzuv_beta: create_state(adjusted_seeds[3]),
 
