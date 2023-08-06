@@ -227,10 +227,20 @@ pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> 
 
 // ラプラス分布の定数
 const D_LAPLACE: f64 = std::f64::consts::LN_2; // ln2
-                                               // 標準ラプラス分布
-                                               // アルゴリズム 3.42
+/// 標準ラプラス分布
+/// アルゴリズム 3.45
 #[inline]
-pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5], u_1: &mut f64) -> f64 {
+pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5] /* , u_1: &mut f64*/) -> f64 {
+    // step 1: (0, 1) の一様乱数の生成
+    let u: f64 = xorshift160_0_open_1_open(xyzuv);
+    // step 2: 分岐
+    if u < 0.5_f64 {
+        (2_f64 * u).ln()
+    } else {
+        -(2_f64 * (1_f64 - u)).ln()
+    }
+    /*
+         y * self.scale + self.location
     // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
     let u_dash: f64 = 1f64 - *u_1;
     // step 2: 符号の決定
@@ -276,6 +286,7 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5], u_1: &mut f64) -> f64 {
     }
     // step 10: 所望の乱数を返す(y = sign * (a + w))
     sign * (a + w)
+        */
 }
 
 // 標準ガンマ分布

@@ -5,7 +5,7 @@ impl Exponential {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-\        Self {
+        Self {
             xyzuv: create_state(_seed),
             scale: 1_f64,
         }

@@ -17,6 +17,8 @@ impl Laplace {
 
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
+        standard_laplace(&mut self.xyzuv) * self.scale + self.location
+        /*
         // アルゴリズム 3.45
         let u: f64 = xorshift160_0_open_1_open(&mut self.xyzuv);
         let y = if u < 0.5_f64 {
@@ -25,6 +27,7 @@ impl Laplace {
             -(2_f64 * (1_f64 - u)).ln()
         };
         y * self.scale + self.location
+        */
     }
 
     /// 確率変数のパラメータを変更する
