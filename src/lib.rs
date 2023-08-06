@@ -259,7 +259,7 @@ pub struct LogLaplace {
 /// ```
 pub struct Rayleigh {
     xyzuv: [u32; 5],         // 状態変数
-    previous_uniform_1: f64, // 前回使用した一様乱数
+    //previous_uniform_1: f64, // 前回使用した一様乱数
     scale: f64,              // 尺度母数
 }
 
