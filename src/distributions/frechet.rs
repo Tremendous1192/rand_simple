@@ -5,20 +5,17 @@ impl Frechet {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let mut xyzuv: [u32; 5] = create_state(_seed);
-        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
-            xyzuv,
-            previous_uniform_1: u_1,
+            xyzuv: create_state(_seed),
             shape_inv: 1f64,
             scale: 1f64,
         }
     }
 
-    /// フレシェ分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         loop {
-            let z = standard_exponential(&mut self.xyzuv, &mut self.previous_uniform_1);
+            let z = standard_exponential(&mut self.xyzuv);
             if z > 0f64 {
                 return z.powf(-self.shape_inv) * self.scale;
             }

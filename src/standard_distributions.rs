@@ -172,9 +172,13 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
 // 指数関数の定数
 const D_EXPONENTIAL: f64 = std::f64::consts::LN_2; // ln2
 /// 標準指数分布
-/// アルゴリズム 3.42
+/// アルゴリズム 3.41: 逆関数法
 #[inline]
-pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5], u_1: &mut f64) -> f64 {
+pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> f64 {
+    // step 1: [0, 1) の一様乱数を生成する
+    // step 2: y = -ln(1 - u) を計算する
+    -1_f64 * (1_f64 - xorshift160_0_1_open(xyzuv)).ln()
+    /*
     // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
     let mut u_dash: f64 = 1_f64 - *u_1;
     // step 2: 重み a の初期化
@@ -218,6 +222,7 @@ pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5], u_1: &mut f64) -> f64 {
     }
     // step 9: 所望の乱数を返す(y = a + w)
     y
+    */
 }
 
 // ラプラス分布の定数
@@ -278,18 +283,18 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5], u_1: &mut f64) -> f64 {
 #[inline]
 pub(crate) fn standard_gamma(
     xyzuv: &mut [u32; 5],
-    u_1: &mut f64,
+    //u_1: &mut f64,
     xyzuv0: &mut [u32; 5],
     xyzuv1: &mut [u32; 5],
     alpha: &f64,
 ) -> f64 {
     // α = 1 のとき標準指数分布を返す
     if *alpha == 1f64 {
-        return standard_exponential(xyzuv, u_1);
+        return standard_exponential(xyzuv /*, u_1*/);
     }
     // α < 1 のときは回帰関数で計算する
     else if *alpha < 1f64 {
-        return standard_gamma(xyzuv, u_1, xyzuv0, xyzuv1, &(alpha + 1f64))
+        return standard_gamma(xyzuv, /* u_1,*/ xyzuv0, xyzuv1, &(alpha + 1f64))
             * xorshift160_0_open_1_open(xyzuv).powf(1f64 / *alpha);
     }
     // 前処理

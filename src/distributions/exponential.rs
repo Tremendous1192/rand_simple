@@ -5,10 +5,8 @@ impl Exponential {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        //let mut xyzuv: [u32; 5] = create_state(_seed);
-        Self {
+\        Self {
             xyzuv: create_state(_seed),
-            //previous_uniform_1: xorshift160_0_1_open(&mut xyzuv),
             scale: 1_f64,
         }
     }
@@ -16,7 +14,7 @@ impl Exponential {
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         // アルゴリズム 3.41: 逆関数法
-        (-1_f64 * (1_f64 - xorshift160_0_1_open(&mut self.xyzuv)).ln()) * self.scale
+        standard_exponential(&mut self.xyzuv) * self.scale
     }
 
     /// 確率変数のパラメータを変更する

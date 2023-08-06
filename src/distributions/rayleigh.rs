@@ -5,11 +5,8 @@ impl Rayleigh {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        //let mut xyzuv: [u32; 5] = create_state(_seed);
-        //let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
             xyzuv: create_state(_seed),
-            //previous_uniform_1: u_1,
             scale: 1f64,
         }
     }
@@ -17,8 +14,7 @@ impl Rayleigh {
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         // アルゴリズム 3.51
-        (2f64 * (-1_f64 * (1_f64 - xorshift160_0_1_open(&mut self.xyzuv)).ln())).sqrt()
-            * self.scale
+        (2f64 * standard_exponential(&mut self.xyzuv)).sqrt() * self.scale
     }
 
     /// 確率変数のパラメータを変更する

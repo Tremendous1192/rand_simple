@@ -6,11 +6,8 @@ impl Gamma {
     /// * `seeds` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
     pub fn new(seeds: [u32; 3]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
-        let mut xyzuv: [u32; 5] = create_state(adjusted_seeds[0]);
-        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
-            xyzuv,
-            previous_uniform_1: u_1,
+            xyzuv: create_state(adjusted_seeds[0]),
             xyzuv0: create_state(adjusted_seeds[1]),
             xyzuv1: create_state(adjusted_seeds[2]),
             shape: 1f64,
@@ -18,11 +15,10 @@ impl Gamma {
         }
     }
 
-    /// ガンマ分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_gamma(
             &mut self.xyzuv,
-            &mut self.previous_uniform_1,
             &mut self.xyzuv0,
             &mut self.xyzuv1,
             &self.shape,
@@ -33,11 +29,11 @@ impl Gamma {
     /// * `shape` - 形状母数
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
-        if shape <= 0f64 {
+        if shape <= 0_f64 {
             Err("形状母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        } else if shape == 1f64 / 3f64 {
+        } else if shape == 1_f64 / 3_f64 {
             Err("形状母数が1/3です。確率変数のパラメータは前回の設定を維持します。")
-        } else if scale <= 0f64 {
+        } else if scale <= 0_f64 {
             Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape = shape;

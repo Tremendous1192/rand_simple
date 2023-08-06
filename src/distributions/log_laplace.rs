@@ -1,15 +1,14 @@
-use crate::standard_distributions::{standard_laplace, xorshift160_0_1_open, xorshift160_0_open_1_open};
+use crate::standard_distributions::{
+    standard_laplace, xorshift160_0_1_open, xorshift160_0_open_1_open,
+};
 use crate::{create_state, LogLaplace};
 
 impl LogLaplace {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        //let mut xyzuv: [u32; 5] = create_state(_seed);
-        //let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
             xyzuv: create_state(_seed),
-            //previous_uniform_1: u_1,
             location: 0f64,
             scale: 1f64,
         }

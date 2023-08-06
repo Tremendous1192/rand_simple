@@ -1,28 +1,30 @@
-use crate::standard_distributions::{standard_laplace, xorshift160_0_1_open};
+use crate::standard_distributions::{
+    standard_laplace, xorshift160_0_1_open, xorshift160_0_open_1_open,
+};
 use crate::{create_state, ReflectedWeibull};
 
 impl ReflectedWeibull {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let mut xyzuv: [u32; 5] = create_state(_seed);
-        let u_1: f64 = xorshift160_0_1_open(&mut xyzuv);
         Self {
-            xyzuv,
-            previous_uniform_1: u_1,
-            shape_inv: 1f64,
-            location: 0f64,
-            scale: 1f64,
+            xyzuv: create_state(_seed),
+            shape_inv: 1_f64,
+            location: 0_f64,
+            scale: 1_f64,
         }
     }
 
-    /// ワイブル分布に従う乱数を返す
+    /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
-        let z: f64 = standard_laplace(&mut self.xyzuv, &mut self.previous_uniform_1);
-        if z >= 0f64 {
-            z.powf(self.shape_inv) * self.scale + self.location
+        // アルゴリズム 3.53: 逆関数法
+        // step 1: (0, 1) の一様乱数
+        let u = xorshift160_0_open_1_open(&mut self.xyzuv);
+        // step 2
+        if u < 0.5_f64 {
+            -(-(2_f64 * u).ln()).powf(self.shape_inv) * self.scale + self.location
         } else {
-            (-z).powf(self.shape_inv) * self.scale + self.location
+            -(-(2_f64 * (1_f64 - u)).ln()).powf(self.shape_inv) * self.scale + self.location
         }
     }
 
