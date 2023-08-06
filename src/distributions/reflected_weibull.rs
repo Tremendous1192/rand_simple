@@ -22,7 +22,7 @@ impl ReflectedWeibull {
         if u < 0.5_f64 {
             -(-(2_f64 * u).ln()).powf(self.shape_inv) * self.scale + self.location
         } else {
-            -(-(2_f64 * (1_f64 - u)).ln()).powf(self.shape_inv) * self.scale + self.location
+            (-(2_f64 * (1_f64 - u)).ln()).powf(self.shape_inv) * self.scale + self.location
         }
     }
 
@@ -36,7 +36,7 @@ impl ReflectedWeibull {
         location: f64,
         scale: f64,
     ) -> Result<(f64, f64, f64), &str> {
-        if shape <= 0f64 || scale <= 0f64 {
+        if shape <= 0_f64 || scale <= 0_f64 {
             Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_inv = shape.powi(-1);
