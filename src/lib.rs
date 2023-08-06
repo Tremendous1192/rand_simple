@@ -139,7 +139,7 @@ pub struct LogNormal {
 /// コーシー分布
 /// # 使用例
 /// ```
-/// let mut cauchy = rand_simple::Cauchy::new([1192u32, 765u32]);
+/// let mut cauchy = rand_simple::Cauchy::new(1192_u32);
 /// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -149,16 +149,15 @@ pub struct LogNormal {
 /// println!("位置母数 μ = {}, 尺度母数 θ = {} のコーシー分布に従う乱数を生成する -> {}", location, scale, cauchy.sample());
 /// ```
 pub struct Cauchy {
-    xyzuv0: [u32; 5], // 状態変数
-    xyzuv1: [u32; 5], // 状態変数
-    location: f64,    // 位置母数
-    scale: f64,       // 尺度母数
+    xyzuv: [u32; 5], // 状態変数
+    location: f64,   // 位置母数
+    scale: f64,      // 尺度母数
 }
 
 /// 半コーシー分布
 /// # 使用例
 /// ```
-/// let mut half_cauchy = rand_simple::HalfCauchy::new([1192u32, 765u32]);
+/// let mut half_cauchy = rand_simple::HalfCauchy::new(1192_u32);
 /// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
@@ -167,9 +166,8 @@ pub struct Cauchy {
 /// println!("尺度母数 θ = {} の半コーシー分布に従う乱数を生成する -> {}", scale, half_cauchy.sample());
 /// ```
 pub struct HalfCauchy {
-    xyzuv0: [u32; 5], // 状態変数
-    xyzuv1: [u32; 5], // 状態変数
-    scale: f64,       // 尺度母数
+    xyzuv: [u32; 5], // 状態変数
+    scale: f64,      // 尺度母数
 }
 
 /// レヴィ分布

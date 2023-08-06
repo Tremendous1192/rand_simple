@@ -4,18 +4,16 @@ use crate::{create_state, HalfCauchy};
 impl HalfCauchy {
     /// コンストラクタ
     /// * `seeds` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
-    pub fn new(seeds: [u32; 2]) -> Self {
-        let adjusted_seeds = crate::adjust_seeds!(seeds);
+    pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv0: create_state(adjusted_seeds[0]),
-            xyzuv1: create_state(adjusted_seeds[1]),
+            xyzuv: create_state(_seed),
             scale: 1_f64,
         }
     }
 
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
-        standard_cauchy(&mut self.xyzuv0, &mut self.xyzuv1).abs() * self.scale
+        standard_cauchy(&mut self.xyzuv).abs() * self.scale
     }
 
     /// 確率変数のパラメータを変更する

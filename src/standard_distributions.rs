@@ -115,58 +115,14 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     }
 }
 
-// コーシー分布の定数
-const B_CAUCHY: f64 = 4.766_f64;
-const D_CAUCHY: f64 = 0.00000320169_f64; // 1/ (b(2^(m/2) - 2))
-                                         //const A_CAUCHY: f64 = 1.42622923652_f64; // √(2b/π - 1)
-const K_CAUCHY: u32 = 30783_u32; // floor( (2^(m/2) - 1) * a / b )
-const W_CAUCHY: f64 = 0.00007272449_f64; // b / (2^(m/2) - 1)
-const S_CAUCHY: f64 = 0.42704405108_f64; // a / (b - a)
-const P_CAUCHY: f64 = 2.34167879747_f64; // 1 / s
-const Q_CAUCHY: f64 = 0.35057477942_f64; // (1 + p) / (2b)
-const T_CAUCHY: f64 = 1.36397696_f64; // arctan(b)
-const V_CAUCHY: f64 = 0.20681936679_f64; // arctan(b)
-const HALF_BIT_CAUCHY: u32 = 65535_u32; // 2^(m/2) - 1
 /// 標準正コーシー分布
-/// アルゴリズム 3.30: Monty Python法
+/// アルゴリズム　3.26: (逆関数法)
 #[inline]
-pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
-    // step 1: m bit符号無整数型の一様乱数の生成
-    let u_mbit_integer: u32 = xorshift160(xyzuv0);
-    // step 2: 乱数の符号を最下位ビットで計算する
-    let sign: f64 = if (u_mbit_integer & 1_u32) == 1_u32 {
-        1_f64
-    } else {
-        -1_f64
-    };
-    // 1ビット右シフトしたものを準備する
-    let u_m_1: u32 = u_mbit_integer >> 1_u32;
-    // step 3: (m/2) bitとの論理積を計算する
-    let u_half_m_integer: u32 = u_m_1 & HALF_BIT_CAUCHY;
-    // step 4: u_x = u_half_m_integer * W;
-    let u_x: f64 = u_half_m_integer as f64 * W_CAUCHY;
-    // step 5: u_half_m_integer < K の場合、y = sign * u_x を返す
-    if u_half_m_integer < K_CAUCHY {
-        sign * u_x
-    } else {
-        // step 6: u_m_1 をさらに右に(m/2)ビットシフトする
-        let u_half_m_1 = u_m_1 >> 16_u32;
-        // step 7: u_y
-        let u_y: f64 = D_CAUCHY * u_half_m_1 as f64;
-        // step 8: π(1 + u_x^2)u_y < 1 のとき、y = sign * u_x を返す
-        if std::f64::consts::PI * (1_f64 + u_x.powi(2)) * u_y < 1_f64 {
-            sign * u_x
-        } else {
-            // step 9: yの計算と分岐
-            let y: f64 = sign * S_CAUCHY * (B_CAUCHY - u_x);
-            if std::f64::consts::PI * (1_f64 + y.powi(2)) * (Q_CAUCHY - P_CAUCHY * u_y) < 1_f64 {
-                y
-            } else {
-                // step 10: 裾野?
-                sign * (T_CAUCHY + V_CAUCHY * xorshift160_0_open_1_open(xyzuv1)).tan()
-            }
-        }
-    }
+pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
+    // step 1: 開区間 (0, 1) の一様乱数
+    let u = xorshift160_0_open_1_open(xyzuv0);
+    // step 2: 標準分布を計算する
+    (std::f64::consts::PI * (u - 0.5_f64)).tan()
 }
 
 /// 標準指数分布

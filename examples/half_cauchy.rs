@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (0_f64..100_f64).step(0.1_f64).use_round().into_segmented(),
+            (0_f64..20_f64).step(0.1_f64).use_round().into_segmented(),
             0u32..700u32,
         )?;
     // 軸の設定
@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::HalfCauchy::new([1192_u32, 765_u32]);
+    let mut generator = rand_simple::HalfCauchy::new(1192_u32);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);
