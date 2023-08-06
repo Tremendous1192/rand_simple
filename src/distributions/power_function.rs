@@ -1,4 +1,4 @@
-use crate::standard_distributions::{standard_exponential, standard_gamma, xorshift160_0_1_open};
+use crate::standard_distributions::{standard_exponential, standard_gamma};
 use crate::{create_state, PowerFunction};
 
 impl PowerFunction {

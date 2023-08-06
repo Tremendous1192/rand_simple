@@ -1,4 +1,4 @@
-use crate::standard_distributions::{standard_gamma, xorshift160_0_1_open};
+use crate::standard_distributions::standard_gamma;
 use crate::{create_state, Gamma};
 
 impl Gamma {

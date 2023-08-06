@@ -1,4 +1,4 @@
-use crate::standard_distributions::{standard_exponential, xorshift160_0_1_open};
+use crate::standard_distributions::standard_exponential;
 use crate::{create_state, Gunbel};
 
 impl Gunbel {

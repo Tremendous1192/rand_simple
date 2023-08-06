@@ -169,8 +169,6 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
     }
 }
 
-// 指数関数の定数
-const D_EXPONENTIAL: f64 = std::f64::consts::LN_2; // ln2
 /// 標準指数分布
 /// アルゴリズム 3.41: 逆関数法
 #[inline]
@@ -178,55 +176,8 @@ pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> 
     // step 1: [0, 1) の一様乱数を生成する
     // step 2: y = -ln(1 - u) を計算する
     -1_f64 * (1_f64 - xorshift160_0_1_open(xyzuv)).ln()
-    /*
-    // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
-    let mut u_dash: f64 = 1_f64 - *u_1;
-    // step 2: 重み a の初期化
-    let mut a: f64 = 0_f64;
-    // step 3: u'' = 2u'
-    let mut u_dash_dash: f64 = 2_f64 * u_dash;
-    // step 4: u'' < 1 のとき a の値をd増やし、u' = u''としてstep 3に戻る
-    // u'' > 1のとき、u = u'' - 1とする
-    while u_dash_dash < 1_f64 {
-        a += D_EXPONENTIAL;
-        u_dash = u_dash_dash;
-        // step 3 に戻る
-        u_dash_dash *= 2f64 * u_dash;
-    }
-    *u_1 = u_dash_dash - 1f64;
-    // step 5: w = d u_1 及び y = a + w を計算して、 k = 1 と設定する
-    let mut w: f64 = D_EXPONENTIAL * *u_1;
-    let mut k: u128 = 1_u128;
-    let mut y: f64 = a + w;
-    loop {
-        // step 6: 区間[0, 1)の一様乱数 u_2 を生成する
-        let u_2 = xorshift160_0_1_open(xyzuv);
-        // step 7: u_2 < wのときは、w = u_2としてkの値を1増やして、step 6に戻る
-        // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
-        if u_2 < w {
-            w = u_2;
-            k += 1_u128;
-            continue;
-        } else {
-            *u_1 = (u_2 - w) / (1_f64 - w);
-        }
-        // step 8: kが偶数の時はstep 5に戻る
-        if k % 2_u128 == 0_u128 {
-            // step 5 に戻る
-            w = D_EXPONENTIAL * *u_1;
-            k = 1_u128;
-            y = a + w;
-        } else {
-            break;
-        }
-    }
-    // step 9: 所望の乱数を返す(y = a + w)
-    y
-    */
 }
 
-// ラプラス分布の定数
-const D_LAPLACE: f64 = std::f64::consts::LN_2; // ln2
 /// 標準ラプラス分布
 /// アルゴリズム 3.45
 #[inline]
@@ -239,54 +190,6 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5] /* , u_1: &mut f64*/) -> f64
     } else {
         -(2_f64 * (1_f64 - u)).ln()
     }
-    /*
-         y * self.scale + self.location
-    // step 1: 前回生成した区間[0, 1)の一様乱数uを基に、次の一様乱数u'を生成する
-    let u_dash: f64 = 1f64 - *u_1;
-    // step 2: 符号の決定
-    let sign: f64 = if u_dash < 1f64 { 1f64 } else { -1f64 };
-    let u_dash_dash: f64 = if u_dash < 1f64 {
-        1f64 - u_dash
-    } else {
-        u_dash - 1f64
-    };
-    // step 3: 重み a の初期化
-    let mut a: f64 = 0f64;
-    // step 4: u'' = 2u'
-    // step 5: u'' < 1 のとき a の値をd増やし、u' = u''としてstep 3に戻る
-    // u'' > 1のとき、u = u'' - 1とする
-    let mut u_dash_dash_dash: f64 = 2f64 * u_dash_dash;
-    while u_dash_dash_dash < 1f64 {
-        a += D_LAPLACE;
-        u_dash_dash_dash *= 2f64;
-    }
-    *u_1 = u_dash_dash_dash - 1f64;
-    // step 6: w = d u_1 及び y = a + w 計算して、 k = 1 と設定する
-    let mut w: f64 = D_LAPLACE * *u_1;
-    let mut k: u128 = 1u128;
-    loop {
-        // step 7: 区間[0, 1)の一様乱数 u_2 を生成する
-        let u_2 = xorshift160_0_1_open(xyzuv);
-        // step 8: u_2 < wのときは、w = u_2としてkの値を1増やして、step 7に戻る
-        // u_2 ≧ wのときは、u_1 = (u_2 - w)/(1 - w)を計算する
-        if u_2 < w {
-            w = u_2;
-            k += 1u128;
-            continue;
-        } else {
-            *u_1 = (u_2 - 1f64) / (1f64 - w);
-        }
-        // step 9: kが偶数の時はstep 6に戻る
-        if k % 2u128 == 0u128 {
-            w = D_LAPLACE * *u_1;
-            k = 1u128;
-        } else {
-            break;
-        }
-    }
-    // step 10: 所望の乱数を返す(y = sign * (a + w))
-    sign * (a + w)
-        */
 }
 
 // 標準ガンマ分布

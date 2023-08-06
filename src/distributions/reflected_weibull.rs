@@ -1,6 +1,4 @@
-use crate::standard_distributions::{
-    standard_laplace, xorshift160_0_1_open, xorshift160_0_open_1_open,
-};
+use crate::standard_distributions::xorshift160_0_open_1_open;
 use crate::{create_state, ReflectedWeibull};
 
 impl ReflectedWeibull {

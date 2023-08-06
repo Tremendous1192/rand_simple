@@ -1,4 +1,4 @@
-use crate::standard_distributions::{standard_laplace, xorshift160_0_open_1_open};
+use crate::standard_distributions::standard_laplace;
 use crate::{create_state, Laplace};
 
 impl Laplace {
