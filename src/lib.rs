@@ -383,27 +383,21 @@ pub struct Beta {
 /// べき関数分布
 /// # 使用例
 /// ```
-/// let mut power_function = rand_simple::PowerFunction::new([1192u32, 765u32, 1543u32, 2003u32]);
-/// println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", power_function.sample());
+/// let mut power_function = rand_simple::PowerFunction::new(1192u32);
+/// println!("形状母数 1, 開区間(0, 1)のべき関数分布を返す -> {}", power_function.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
 /// let shape: f64 = 2_f64;
 /// let min: f64 = -1f64;
 /// let max: f64 = 1f64;
 /// let result: Result<(f64, f64, f64), &str> = power_function.try_set_params(shape,min, max);
-/// println!("形状母数 {}, 閉区間[{}, {}]の一様乱数を生成する -> {}", shape, min, max, power_function.sample());
+/// println!("形状母数 {}, 開区間({}, {})のべき関数分布を生成する -> {}", shape, min, max, power_function.sample());
 /// ```
 pub struct PowerFunction {
-    xyzuv_alpha: [u32; 5],  // 状態変数
-    xyzuv0_alpha: [u32; 5], // 状態変数
-    xyzuv1_alpha: [u32; 5], // 状態変数
-    shape_alpha: f64,
-
-    xyzuv_beta: [u32; 5], // 状態変数
-
-    shape_gamma: f64, // 形状母数
-    min_a: f64,       // 境界母数(小範)
-    range_s: f64,     // 境界母数の差
+    xyzuv: [u32; 5], // 状態変数
+    shape_inv: f64, // 形状母数
+    min_a: f64,     // 境界母数(小範)
+    range_s: f64,   // 境界母数の差
 }
 
 // 指数べき分布
