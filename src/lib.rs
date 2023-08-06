@@ -304,8 +304,8 @@ pub struct ReflectedWeibull {
 /// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準フレシェ分布に従う乱数を生成する -> {}", frechet.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
-/// let shape: f64 = 2f64;
-/// let scale: f64 = 1.5f64;
+/// let shape: f64 = 2_f64;
+/// let scale: f64 = 1.5_f64;
 /// let result: Result<(f64, f64), &str> = frechet.try_set_params(shape, scale);
 /// println!("形状母数 γ = {}, 尺度母数 η = {} のフレシェ分布に従う乱数を生成する -> {}", shape, scale, frechet.sample());
 /// ```
@@ -322,8 +322,8 @@ pub struct Frechet {
 /// println!("位置母数 μ = 0, 尺度母数 η = 1 の標準反射ワイブル分布に従う乱数を生成する -> {}", gunbel.sample());
 ///
 /// // 確率変数のパラメータを変更する場合
-/// let location: f64 = 3f64;
-/// let scale: f64 = 1.5f64;
+/// let location: f64 = 3_f64;
+/// let scale: f64 = 1.5_f64;
 /// let result: Result<(f64, f64), &str> = gunbel.try_set_params(location, scale);
 /// println!("位置母数 μ = {}, 尺度母数 η = {} の反射ワイブル分布に従う乱数を生成する -> {}", location, scale, gunbel.sample());
 /// ```
