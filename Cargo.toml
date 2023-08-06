@@ -1,6 +1,7 @@
 [package]
 name = "rand_simple"
-version = "0.2.1"
+version = "0.2.2"
+resolver = "2" # dev-dependencies が通常コンパイルに引き継がれるバグ対応
 authors = ["Tremendous1192"]
 edition = "2021"
 description = "The simple random number generator that is independent from the other libraries and based on XOR shift."
