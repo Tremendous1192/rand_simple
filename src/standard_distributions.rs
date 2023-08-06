@@ -115,7 +115,7 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     }
 }
 
-/// 標準正コーシー分布
+/// 標準コーシー分布
 /// アルゴリズム　3.26: (逆関数法)
 #[inline]
 pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {

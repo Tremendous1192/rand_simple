@@ -1,4 +1,4 @@
-use crate::standard_distributions::standard_cauchy;
+use crate::standard_distributions::xorshift160_0_1_open; //standard_cauchy;
 use crate::{create_state, HalfCauchy};
 
 impl HalfCauchy {
@@ -13,7 +13,7 @@ impl HalfCauchy {
 
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
-        standard_cauchy(&mut self.xyzuv).abs() * self.scale
+        (std::f64::consts::PI * xorshift160_0_1_open(&mut self.xyzuv) / 2_f64).tan() * self.scale
     }
 
     /// 確率変数のパラメータを変更する
