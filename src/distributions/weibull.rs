@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_exponential;
 use crate::{create_state, Weibull};
+use core::result::Result::{Ok, Err};
 
 impl Weibull {
     /// コンストラクタ

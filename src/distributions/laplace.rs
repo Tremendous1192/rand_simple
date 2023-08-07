@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_laplace;
 use crate::{create_state, Laplace};
+use core::result::Result::{Ok, Err};
 
 impl Laplace {
     /// コンストラクタ

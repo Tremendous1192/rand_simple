@@ -1,5 +1,6 @@
 use crate::standard_distributions::{standard_gamma, xorshift160_0_1_open};
 use crate::{create_state, ChiSquare};
+use core::result::Result::{Ok, Err};
 
 impl ChiSquare {
     /// コンストラクタ

@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_normal;
 use crate::{create_state, Normal};
+use core::result::Result::{Ok, Err};
 
 impl Normal {
     /// コンストラクタ

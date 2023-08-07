@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_exponential;
 use crate::{create_state, Rayleigh};
+use core::result::Result::{Ok, Err};
 
 impl Rayleigh {
     /// コンストラクタ

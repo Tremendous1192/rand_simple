@@ -1,5 +1,6 @@
 use crate::standard_distributions::xorshift160_0_open_1_open;
 use crate::{create_state, PowerFunction};
+use core::result::Result::{Ok, Err};
 
 impl PowerFunction {
     /// コンストラクタ

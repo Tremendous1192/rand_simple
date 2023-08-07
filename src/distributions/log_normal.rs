@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_normal;
 use crate::{create_state, LogNormal};
+use core::result::Result::{Ok, Err};
 
 impl LogNormal {
     /// コンストラクタ

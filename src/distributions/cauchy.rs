@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_cauchy;
 use crate::{create_state, Cauchy};
+use core::result::Result::{Ok, Err};
 
 impl Cauchy {
     /// コンストラクタ

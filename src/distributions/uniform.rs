@@ -1,5 +1,6 @@
 use crate::standard_distributions::xorshift160_0_1;
 use crate::{create_state, Uniform};
+use core::result::Result::{Ok, Err};
 
 impl Uniform {
     /// コンストラクタ

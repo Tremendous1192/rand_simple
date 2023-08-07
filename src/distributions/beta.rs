@@ -1,5 +1,6 @@
 use crate::standard_distributions::standard_gamma;
 use crate::{create_state, Beta};
+use core::result::Result::{Ok, Err};
 
 impl Beta {
     /// コンストラクタ

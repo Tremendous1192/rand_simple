@@ -1,5 +1,6 @@
 use crate::standard_distributions::xorshift160_0_1_open; //standard_cauchy;
 use crate::{create_state, HalfCauchy};
+use core::result::Result::{Ok, Err};
 
 impl HalfCauchy {
     /// コンストラクタ

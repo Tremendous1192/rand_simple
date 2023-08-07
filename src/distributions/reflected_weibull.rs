@@ -1,5 +1,6 @@
 use crate::standard_distributions::xorshift160_0_open_1_open;
 use crate::{create_state, ReflectedWeibull};
+use core::result::Result::{Ok, Err};
 
 impl ReflectedWeibull {
     /// コンストラクタ
