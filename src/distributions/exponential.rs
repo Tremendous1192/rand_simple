@@ -29,13 +29,13 @@ impl Exponential {
     }
 }
 
-impl std::fmt::Display for Exponential {
+impl core::fmt::Display for Exponential {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "尺度母数: {}", self.scale)?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "尺度母数: {}", self.scale)?;
         Ok(())
     }
 }

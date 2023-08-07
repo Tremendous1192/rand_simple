@@ -33,15 +33,15 @@ impl LogNormal {
     }
 }
 
-impl std::fmt::Display for LogNormal {
+impl core::fmt::Display for LogNormal {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 平均
     /// * 分散
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "平均: {}", self.mean)?;
-        writeln!(f, "分散: {}", self.std.powi(2))?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "平均: {}", self.mean)?;
+        core::writeln!(f, "分散: {}", self.std.powi(2))?;
         Ok(())
     }
 }

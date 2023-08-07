@@ -53,12 +53,12 @@ impl ChiSquare {
     }
 }
 
-impl std::fmt::Display for ChiSquare {
+impl core::fmt::Display for ChiSquare {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "自由度: {}", self.degree_of_freedom as u64)?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "自由度: {}", self.degree_of_freedom as u64)?;
         Ok(())
     }
 }

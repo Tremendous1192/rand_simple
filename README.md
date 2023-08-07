@@ -17,8 +17,8 @@
 ## 使用例
 ### 一様分布
 ```rust
-let seeds:[u32; 1_usize] = rand_simple::generate_seeds!(1_usize);
-let mut uniform = rand_simple::Uniform::new(seeds[0]);
+let seed:u32 = 1192_u32;
+let mut uniform = rand_simple::Uniform::new(seed);
 println!("初期設定の場合、閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
 
 // 確率変数のパラメータを変更する場合
@@ -29,7 +29,7 @@ println!("閉区間[{}, {}]の一様乱数を生成する -> {}", min, max, unif
 ```
 ### 正規分布
 ```rust
-let seeds:[u32; 2_usize] = rand_simple::generate_seeds!(2_usize);
+let seeds:[u32; 2_usize] = [1192_u32, 765_u32];
 let mut normal = rand_simple::Normal::new(seeds);
 println!("初期設定の場合、平均値 μ = 0, 分散 σ^2 = 1 の標準正規分布乱数を生成する -> {}", normal.sample());
 

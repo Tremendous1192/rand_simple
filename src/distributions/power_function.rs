@@ -44,12 +44,12 @@ impl PowerFunction {
     }
 }
 
-impl std::fmt::Display for PowerFunction {
+impl core::fmt::Display for PowerFunction {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
         writeln!(f, "形状母数 γ: {}", self.shape_inv.powi(-1))?;
         writeln!(f, "境界母数(小範) a: {}", self.min_a)?;
         writeln!(f, "境界母数(大範) b: {}", self.range_s + self.min_a)?;

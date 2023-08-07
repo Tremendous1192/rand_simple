@@ -36,15 +36,15 @@ impl Gunbel {
     }
 }
 
-impl std::fmt::Display for Gunbel {
+impl core::fmt::Display for Gunbel {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 形状母数
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "位置母数: {}", self.location)?;
-        writeln!(f, "尺度母数: {}", self.scale)?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "位置母数: {}", self.location)?;
+        core::writeln!(f, "尺度母数: {}", self.scale)?;
         Ok(())
     }
 }

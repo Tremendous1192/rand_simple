@@ -31,13 +31,13 @@ impl Uniform {
     }
 }
 
-impl std::fmt::Display for Uniform {
+impl core::fmt::Display for Uniform {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 範囲(閉区間)
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
         Ok(())
     }
 }

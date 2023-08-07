@@ -61,14 +61,14 @@ impl Beta {
     }
 }
 
-impl std::fmt::Display for Beta {
+impl core::fmt::Display for Beta {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
-        writeln!(f, "形状母数 β: {}", self.shape_beta)?;
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
+        core::writeln!(f, "形状母数 β: {}", self.shape_beta)?;
         Ok(())
     }
 }
