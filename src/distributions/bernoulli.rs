@@ -24,22 +24,22 @@ impl Bernoulli {
     /// 確率変数のパラメータを変更する
     /// * `probability` - 尺度母数
     pub fn try_set_params(&mut self, probability: f64) -> Result<f64, &str> {
-        if !(0f64..=1f64).contains(&probability) {
-            core::result::Result::Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
+        if !(0_f64..=1_f64).contains(&probability) {
+            Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.probability = probability;
-            core::result::Result::Ok(probability)
+            Ok(probability)
         }
     }
 }
 
-impl core::fmt::Display for Bernoulli {
+impl std::fmt::Display for Bernoulli {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 発生確率
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "発生確率: {}", self.probability)?;
-        core::result::Result::Ok(())
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "発生確率: {}", self.probability)?;
+        Ok(())
     }
 }

@@ -46,29 +46,29 @@ impl Beta {
         shape_beta: f64,
     ) -> Result<(f64, f64), &str> {
         if shape_alpha <= 0_f64 {
-            core::result::Result::Err("形状母数 α が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            Err("形状母数 α が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape_alpha == 1_f64 / 3_f64 {
-            core::result::Result::Err("形状母数 α が1/3です。確率変数のパラメータは前回の設定を維持します。")
+            Err("形状母数 α が1/3です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape_beta <= 0_f64 {
-            core::result::Result::Err("形状母数 β が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            Err("形状母数 β が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape_beta == 1_f64 / 3_f64 {
-            core::result::Result::Err("形状母数 β が1/3です。確率変数のパラメータは前回の設定を維持します。")
+            Err("形状母数 β が1/3です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_alpha = shape_alpha;
             self.shape_beta = shape_beta;
-            core::result::Result::Ok((shape_alpha, shape_beta))
+            Ok((shape_alpha, shape_beta))
         }
     }
 }
 
-impl core::fmt::Display for Beta {
+impl std::fmt::Display for Beta {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
-        core::writeln!(f, "形状母数 β: {}", self.shape_beta)?;
-        core::result::Result::Ok(())
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
+        writeln!(f, "形状母数 β: {}", self.shape_beta)?;
+        Ok(())
     }
 }

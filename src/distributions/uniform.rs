@@ -22,22 +22,22 @@ impl Uniform {
     /// * `max` - 最大値
     pub fn try_set_params(&mut self, min: f64, max: f64) -> Result<(f64, f64), &str> {
         if min >= max {
-            core::result::Result::Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
+            Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.min = min;
             self.range = max - min;
-            core::result::Result::Ok((self.min, self.min + self.range))
+            Ok((self.min, self.min + self.range))
         }
     }
 }
 
-impl core::fmt::Display for Uniform {
+impl std::fmt::Display for Uniform {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 範囲(閉区間)
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
-        core::result::Result::Ok(())
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
+        Ok(())
     }
 }

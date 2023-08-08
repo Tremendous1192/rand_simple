@@ -22,21 +22,21 @@ impl HalfNormal {
     /// * `variance` - 分散
     pub fn try_set_params(&mut self, variance: f64) -> Result<f64, &str> {
         if variance <= 0_f64 {
-            core::result::Result::Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.std = variance.sqrt();
-            core::result::Result::Ok(variance)
+            Ok(variance)
         }
     }
 }
 
-impl core::fmt::Display for HalfNormal {
+impl std::fmt::Display for HalfNormal {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 分散
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "分散: {}", self.std.powi(2))?;
-        core::result::Result::Ok(())
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "分散: {}", self.std.powi(2))?;
+        Ok(())
     }
 }

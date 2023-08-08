@@ -45,20 +45,20 @@ impl ChiSquare {
     /// * `degree_of_freedom` - 自由度 r
     pub fn try_set_params(&mut self, degree_of_freedom: u64) -> Result<u64, &str> {
         if degree_of_freedom < 1_u64 {
-            core::result::Result::Err("自由度は自然数である必要があります。確率変数のパラメータは前回の設定を維持します。")
+            Err("自由度は自然数である必要があります。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.degree_of_freedom = degree_of_freedom as f64;
-            core::result::Result::Ok(degree_of_freedom)
+            Ok(degree_of_freedom)
         }
     }
 }
 
-impl core::fmt::Display for ChiSquare {
+impl std::fmt::Display for ChiSquare {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "自由度: {}", self.degree_of_freedom as u64)?;
-        core::result::Result::Ok(())
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
+        writeln!(f, "自由度: {}", self.degree_of_freedom as u64)?;
+        Ok(())
     }
 }

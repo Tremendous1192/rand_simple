@@ -1,5 +1,4 @@
 #![doc = include_str!("../README.md")]
-#![cfg_attr(not(feature = "std"), no_std)]
 
 mod distributions; // 確率変数の詳細
 mod standard_distributions; // 標準分布を計算するモジュール
@@ -17,7 +16,6 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 
 // 共通処理
 
-#[cfg(feature = "std")]
 #[macro_export]
 /// 乱数の種の配列を生成する(std環境のみ)
 /// * `$length: usize` - 配列の長さ
@@ -46,14 +44,12 @@ macro_rules! generate_seeds {
 macro_rules! adjust_seeds {
     ($array:expr) => {{
         let mut copy_array = $array;
-        for i in 0..copy_array.len() {
-            for j in 0..copy_array.len() {
-                if i < j {
-                    if copy_array[i] == copy_array[j] {
-                        copy_array[j] = (copy_array[j] << 3) ^ (copy_array[i] >> 2);
-                        if copy_array[j] == 0 {
-                            copy_array[j] = 1192;
-                        }
+        for i in 0..(copy_array.len() - 1) {
+            for j in (i + 1)..copy_array.len() {
+                if copy_array[i] == copy_array[j] {
+                    copy_array[j] = (copy_array[j] << 3) ^ (copy_array[i] >> 2);
+                    if copy_array[j] == 0 {
+                        copy_array[j] = 1192;
                     }
                 }
             }

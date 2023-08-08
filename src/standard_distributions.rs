@@ -26,7 +26,7 @@ pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         xorshift160(xyzuv);
-        if xyzuv[4] != core::u32::MAX {
+        if xyzuv[4] != std::u32::MAX {
             return xyzuv[4] as f64 / MAX_U32_AS_F64;
         }
     }
@@ -37,14 +37,14 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         xorshift160(xyzuv);
-        if xyzuv[4] != 0_u32 && xyzuv[4] != core::u32::MAX {
+        if xyzuv[4] != 0_u32 && xyzuv[4] != std::u32::MAX {
             return xyzuv[4] as f64 / MAX_U32_AS_F64;
         }
     }
 }
 
 // 一様乱数を計算するための分母
-const MAX_U32_AS_F64: f64 = core::u32::MAX as f64;
+const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
 
 // 標準正規分布の定数
 //const A_NORMAL: f64 = 1.17741002252_f64; // √(ln4)
@@ -122,7 +122,7 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
     // step 1: 開区間 (0, 1) の一様乱数
     let u = xorshift160_0_open_1_open(xyzuv0);
     // step 2: 標準分布を計算する
-    (core::f64::consts::PI * (u - 0.5_f64)).tan()
+    (std::f64::consts::PI * (u - 0.5_f64)).tan()
 }
 
 /// 標準指数分布
@@ -159,33 +159,33 @@ pub(crate) fn standard_gamma(
     alpha: &f64,
 ) -> f64 {
     // α = 1 のとき標準指数分布を返す
-    if *alpha == 1f64 {
+    if *alpha == 1_f64 {
         return standard_exponential(xyzuv /*, u_1*/);
     }
     // α < 1 のときは回帰関数で計算する
-    else if *alpha < 1f64 {
-        return standard_gamma(xyzuv, /* u_1,*/ xyzuv0, xyzuv1, &(alpha + 1f64))
-            * xorshift160_0_open_1_open(xyzuv).powf(1f64 / *alpha);
+    else if *alpha < 1_f64 {
+        return standard_gamma(xyzuv, /* u_1,*/ xyzuv0, xyzuv1, &(alpha + 1_f64))
+            * xorshift160_0_open_1_open(xyzuv).powf(1_f64 / *alpha);
     }
     // 前処理
-    let d = *alpha - 1f64 / 3f64;
-    let c = (9f64 * d).powf(-0.5);
+    let d = *alpha - 1_f64 / 3_f64;
+    let c = (9_f64 * d).powf(-0.5);
     loop {
         // step 1
         let z = standard_normal(xyzuv0, xyzuv1);
-        let v = 1f64 + c * z;
+        let v = 1_f64 + c * z;
         // step 2
-        if v > 0f64 {
+        if v > 0_f64 {
             let w = v.powi(3);
             let y = d * w;
             // step 3
             let u: f64 = xorshift160_0_open_1_open(xyzuv);
-            if u <= 1f64 - 0.0331 * z.powi(4) {
+            if u <= 1_f64 - 0.0331 * z.powi(4) {
                 // step 5
                 return y;
             }
             // step 4
-            if z.powi(2) / 2f64 + d * (w.ln() + 1f64) - y >= u.ln() {
+            if z.powi(2) / 2_f64 + d * (w.ln() + 1_f64) - y >= u.ln() {
                 // step 5
                 return y;
             }

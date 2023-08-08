@@ -32,27 +32,27 @@ impl PowerFunction {
         max_b: f64,
     ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0_f64 {
-            core::result::Result::Err("形状母数 γ が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            Err("形状母数 γ が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if min_a >= max_b {
-            core::result::Result::Err("境界母数の大範 b が小範 a と等しいあるいは大きいです。確率変数のパラメータは前回の設定を維持します。")
+            Err("境界母数の大範 b が小範 a と等しいあるいは大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_inv = shape.powi(-1);
             self.min_a = min_a;
             self.range_s = max_b - min_a;
-            core::result::Result::Ok((shape, min_a, max_b))
+            Ok((shape, min_a, max_b))
         }
     }
 }
 
-impl core::fmt::Display for PowerFunction {
+impl std::fmt::Display for PowerFunction {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
         writeln!(f, "形状母数 γ: {}", self.shape_inv.powi(-1))?;
         writeln!(f, "境界母数(小範) a: {}", self.min_a)?;
         writeln!(f, "境界母数(大範) b: {}", self.range_s + self.min_a)?;
-        core::result::Result::Ok(())
+        Ok(())
     }
 }
