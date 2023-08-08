@@ -28,7 +28,7 @@ impl Gamma {
     /// 確率変数のパラメータを変更する
     /// * `shape` - 形状母数
     /// * `scale` - 尺度母数
-    pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
+    pub fn try_set_params(&mut self, shape: f64, scale: f64) -> core::result::Result<(f64, f64), &str> {
         if shape <= 0_f64 {
             core::result::Result::Err("形状母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape == 1_f64 / 3_f64 {

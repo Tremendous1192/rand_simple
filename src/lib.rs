@@ -1,4 +1,4 @@
-#![doc = include_str!("../README.md")]
+#![doc = core::include_str!("../README.md")]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 mod distributions; // 確率変数の詳細
