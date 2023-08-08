@@ -20,7 +20,7 @@ impl Uniform {
     /// 確率変数のパラメータを変更する
     /// * `min` - 最小値
     /// * `max` - 最大値
-    pub fn try_set_params(&mut self, min: f64, max: f64) -> core::result::Result<(f64, f64), &str> {
+    pub fn try_set_params(&mut self, min: f64, max: f64) -> Result<(f64, f64), &str> {
         if min >= max {
             core::result::Result::Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {

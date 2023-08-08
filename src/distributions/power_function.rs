@@ -30,7 +30,7 @@ impl PowerFunction {
         shape: f64,
         min_a: f64,
         max_b: f64,
-    ) -> core::result::Result<(f64, f64, f64), &str> {
+    ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0_f64 {
             core::result::Result::Err("形状母数 γ が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if min_a >= max_b {
@@ -49,10 +49,10 @@ impl core::fmt::Display for PowerFunction {
     /// * 構造体の型
     /// * 尺度母数
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
-        core::writeln!(f, "形状母数 γ: {}", self.shape_inv.powi(-1))?;
-        core::writeln!(f, "境界母数(小範) a: {}", self.min_a)?;
-        core::writeln!(f, "境界母数(大範) b: {}", self.range_s + self.min_a)?;
+        writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        writeln!(f, "形状母数 γ: {}", self.shape_inv.powi(-1))?;
+        writeln!(f, "境界母数(小範) a: {}", self.min_a)?;
+        writeln!(f, "境界母数(大範) b: {}", self.range_s + self.min_a)?;
         core::result::Result::Ok(())
     }
 }

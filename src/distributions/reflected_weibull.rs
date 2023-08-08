@@ -35,7 +35,7 @@ impl ReflectedWeibull {
         shape: f64,
         location: f64,
         scale: f64,
-    ) -> core::result::Result<(f64, f64, f64), &str> {
+    ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0_f64 || scale <= 0_f64 {
             core::result::Result::Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
