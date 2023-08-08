@@ -13,7 +13,7 @@ impl HalfCauchy {
 
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
-        (std::f64::consts::PI * xorshift160_0_1_open(&mut self.xyzuv) / 2_f64).tan() * self.scale
+        (core::f64::consts::PI * xorshift160_0_1_open(&mut self.xyzuv) / 2_f64).tan() * self.scale
     }
 
     /// 確率変数のパラメータを変更する

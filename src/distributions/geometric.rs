@@ -23,7 +23,7 @@ impl Geometric {
 
     /// 確率変数のパラメータを変更する
     /// * `probability` - 発生確率
-    pub fn try_set_params(&mut self, probability: f64) -> Result<f64, &str> {
+    pub fn try_set_params(&mut self, probability: f64) -> core::result::Result<f64, &str> {
         if !(0_f64..=1_f64).contains(&probability) {
             core::result::Result::Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {

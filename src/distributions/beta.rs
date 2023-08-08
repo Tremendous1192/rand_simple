@@ -44,7 +44,7 @@ impl Beta {
         &mut self,
         shape_alpha: f64,
         shape_beta: f64,
-    ) -> Result<(f64, f64), &str> {
+    ) -> core::result::Result<(f64, f64), &str> {
         if shape_alpha <= 0_f64 {
             core::result::Result::Err("形状母数 α が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape_alpha == 1_f64 / 3_f64 {

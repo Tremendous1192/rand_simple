@@ -43,7 +43,7 @@ impl ChiSquare {
 
     /// 確率変数のパラメータを変更する
     /// * `degree_of_freedom` - 自由度 r
-    pub fn try_set_params(&mut self, degree_of_freedom: u64) -> Result<u64, &str> {
+    pub fn try_set_params(&mut self, degree_of_freedom: u64) -> core::result::Result<u64, &str> {
         if degree_of_freedom < 1_u64 {
             core::result::Result::Err("自由度は自然数である必要があります。確率変数のパラメータは前回の設定を維持します。")
         } else {
