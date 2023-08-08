@@ -1,6 +1,5 @@
 use crate::standard_distributions::standard_exponential;
 use crate::{create_state, Weibull};
-use core::result::Result::{Ok, Err};
 
 impl Weibull {
     /// コンストラクタ
@@ -28,11 +27,11 @@ impl Weibull {
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         if shape <= 0_f64 || scale <= 0_f64 {
-            Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_inv = shape.powi(-1);
             self.scale = scale;
-            Ok((shape, scale))
+            core::result::Result::Ok((shape, scale))
         }
     }
 }
@@ -46,6 +45,6 @@ impl core::fmt::Display for Weibull {
         core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
         core::writeln!(f, "形状母数: {}", self.shape_inv.powi(-1))?;
         core::writeln!(f, "尺度母数: {}", self.scale)?;
-        Ok(())
+        core::result::Result::Ok(())
     }
 }

@@ -1,6 +1,5 @@
 use crate::standard_distributions::xorshift160_0_open_1_open;
 use crate::{create_state, ReflectedWeibull};
-use core::result::Result::{Ok, Err};
 
 impl ReflectedWeibull {
     /// コンストラクタ
@@ -38,12 +37,12 @@ impl ReflectedWeibull {
         scale: f64,
     ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0_f64 || scale <= 0_f64 {
-            Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_inv = shape.powi(-1);
             self.location = location;
             self.scale = scale;
-            Ok((shape, location, scale))
+            core::result::Result::Ok((shape, location, scale))
         }
     }
 }
@@ -58,6 +57,6 @@ impl core::fmt::Display for ReflectedWeibull {
         core::writeln!(f, "形状母数: {}", self.shape_inv.powi(-1))?;
         core::writeln!(f, "位置母数: {}", self.location)?;
         core::writeln!(f, "尺度母数: {}", self.scale)?;
-        Ok(())
+        core::result::Result::Ok(())
     }
 }

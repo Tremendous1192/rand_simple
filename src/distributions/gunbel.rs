@@ -1,6 +1,5 @@
 use crate::standard_distributions::standard_exponential;
 use crate::{create_state, Gunbel};
-use core::result::Result::{Ok, Err};
 
 impl Gunbel {
     /// コンストラクタ
@@ -8,8 +7,8 @@ impl Gunbel {
     pub fn new(_seed: u32) -> Self {
         Self {
             xyzuv: create_state(_seed),
-            location: 0f64,
-            scale: 1f64,
+            location: 0_f64,
+            scale: 1_f64,
         }
     }
 
@@ -17,7 +16,7 @@ impl Gunbel {
     pub fn sample(&mut self) -> f64 {
         loop {
             let z = standard_exponential(&mut self.xyzuv);
-            if z > 0f64 {
+            if z > 0_f64 {
                 return -z.ln() * self.scale + self.location;
             }
         }
@@ -28,11 +27,11 @@ impl Gunbel {
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
         if scale <= 0_f64 {
-            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.location = location;
             self.scale = scale;
-            Ok((location, scale))
+            core::result::Result::Ok((location, scale))
         }
     }
 }
@@ -46,6 +45,6 @@ impl core::fmt::Display for Gunbel {
         core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
         core::writeln!(f, "位置母数: {}", self.location)?;
         core::writeln!(f, "尺度母数: {}", self.scale)?;
-        Ok(())
+        core::result::Result::Ok(())
     }
 }

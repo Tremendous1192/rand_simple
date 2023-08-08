@@ -1,6 +1,5 @@
 use crate::standard_distributions::standard_cauchy;
 use crate::{create_state, Cauchy};
-use core::result::Result::{Ok, Err};
 
 impl Cauchy {
     /// コンストラクタ
@@ -23,11 +22,11 @@ impl Cauchy {
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &str> {
         if scale <= 0_f64 {
-            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.location = location;
             self.scale = scale;
-            Ok((location, scale))
+            core::result::Result::Ok((location, scale))
         }
     }
 }
@@ -41,6 +40,6 @@ impl core::fmt::Display for Cauchy {
         core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
         core::writeln!(f, "位置母数: {}", self.location)?;
         core::writeln!(f, "尺度母数: {}", self.scale)?;
-        Ok(())
+        core::result::Result::Ok(())
     }
 }

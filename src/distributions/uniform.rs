@@ -1,6 +1,5 @@
 use crate::standard_distributions::xorshift160_0_1;
 use crate::{create_state, Uniform};
-use core::result::Result::{Ok, Err};
 
 impl Uniform {
     /// コンストラクタ
@@ -23,11 +22,11 @@ impl Uniform {
     /// * `max` - 最大値
     pub fn try_set_params(&mut self, min: f64, max: f64) -> Result<(f64, f64), &str> {
         if min >= max {
-            Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("最小値と最大値が等しい、あるいは最小値の方が大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.min = min;
             self.range = max - min;
-            Ok((self.min, self.min + self.range))
+            core::result::Result::Ok((self.min, self.min + self.range))
         }
     }
 }
@@ -39,6 +38,6 @@ impl core::fmt::Display for Uniform {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
         core::writeln!(f, "閉区間: [{}, {}]", self.min, (self.min + self.range))?;
-        Ok(())
+        core::result::Result::Ok(())
     }
 }
