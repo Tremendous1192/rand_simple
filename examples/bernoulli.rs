@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (-1_f64..2_f64).step(1_f64).use_round().into_segmented(),
+            (-1_f64..3_f64).step(1_f64).use_round().into_segmented(),
             0u32..10_000u32,
         )?;
     // 軸の設定
