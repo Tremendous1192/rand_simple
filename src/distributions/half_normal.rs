@@ -20,7 +20,7 @@ impl HalfNormal {
 
     /// 確率変数のパラメータを変更する
     /// * `variance` - 分散
-    pub fn try_set_params(&mut self, variance: f64) -> core::result::Result<f64, &str> {
+    pub fn try_set_params(&mut self, variance: f64) -> Result<f64, &str> {
         if variance <= 0_f64 {
             core::result::Result::Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
