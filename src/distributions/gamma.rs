@@ -10,8 +10,8 @@ impl Gamma {
             xyzuv: create_state(adjusted_seeds[0]),
             xyzuv0: create_state(adjusted_seeds[1]),
             xyzuv1: create_state(adjusted_seeds[2]),
-            shape: 1f64,
-            scale: 1f64,
+            shape: 1_f64,
+            scale: 1_f64,
         }
     }
 
@@ -30,27 +30,27 @@ impl Gamma {
     /// * `scale` - 尺度母数
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         if shape <= 0_f64 {
-            Err("形状母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("形状母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else if shape == 1_f64 / 3_f64 {
-            Err("形状母数が1/3です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("形状母数が1/3です。確率変数のパラメータは前回の設定を維持します。")
         } else if scale <= 0_f64 {
-            Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape = shape;
             self.scale = scale;
-            Ok((shape, scale))
+            core::result::Result::Ok((shape, scale))
         }
     }
 }
 
-impl std::fmt::Display for Gamma {
+impl core::fmt::Display for Gamma {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "形状母数: {}", self.shape)?;
-        writeln!(f, "尺度母数: {}", self.scale)?;
-        Ok(())
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "形状母数: {}", self.shape)?;
+        core::writeln!(f, "尺度母数: {}", self.scale)?;
+        core::result::Result::Ok(())
     }
 }

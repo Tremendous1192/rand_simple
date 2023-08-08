@@ -26,7 +26,7 @@ pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         xorshift160(xyzuv);
-        if xyzuv[4] != std::u32::MAX {
+        if xyzuv[4] != core::u32::MAX {
             return xyzuv[4] as f64 / MAX_U32_AS_F64;
         }
     }
@@ -37,14 +37,14 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         xorshift160(xyzuv);
-        if xyzuv[4] != 0_u32 && xyzuv[4] != std::u32::MAX {
+        if xyzuv[4] != 0_u32 && xyzuv[4] != core::u32::MAX {
             return xyzuv[4] as f64 / MAX_U32_AS_F64;
         }
     }
 }
 
 // 一様乱数を計算するための分母
-const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
+const MAX_U32_AS_F64: f64 = core::u32::MAX as f64;
 
 // 標準正規分布の定数
 //const A_NORMAL: f64 = 1.17741002252_f64; // √(ln4)
@@ -97,7 +97,7 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
     }
 }
 
-const D_NORMAL: f64 = std::f64::consts::TAU; // b^2 = 2π
+const D_NORMAL: f64 = core::f64::consts::TAU; // b^2 = 2π
 /// 標準正規分布の裾野
 /// アルゴリズム 3.13
 #[inline]
@@ -122,7 +122,7 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
     // step 1: 開区間 (0, 1) の一様乱数
     let u = xorshift160_0_open_1_open(xyzuv0);
     // step 2: 標準分布を計算する
-    (std::f64::consts::PI * (u - 0.5_f64)).tan()
+    (core::f64::consts::PI * (u - 0.5_f64)).tan()
 }
 
 /// 標準指数分布

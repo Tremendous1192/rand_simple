@@ -1,4 +1,5 @@
 #![doc = include_str!("../README.md")]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 mod distributions; // 確率変数の詳細
 mod standard_distributions; // 標準分布を計算するモジュール
@@ -16,8 +17,9 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 
 // 共通処理
 
+#[cfg(feature = "std")]
 #[macro_export]
-/// 乱数の種の配列を生成する
+/// 乱数の種の配列を生成する(std環境のみ)
 /// * `$length: usize` - 配列の長さ
 macro_rules! generate_seeds {
     ($length: expr) => {{

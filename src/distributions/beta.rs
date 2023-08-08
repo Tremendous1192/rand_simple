@@ -4,19 +4,19 @@ use crate::{create_state, Beta};
 impl Beta {
     /// コンストラクタ
     /// * `seeds` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
-    pub fn new(seeds: [u32; 6]) -> Self {
+    pub fn new(seeds: [u32; 6_usize]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
             xyzuv_alpha: create_state(adjusted_seeds[0]),
             xyzuv0_alpha: create_state(adjusted_seeds[1]),
             xyzuv1_alpha: create_state(adjusted_seeds[2]),
-            shape_alpha: 1f64,
+            shape_alpha: 1_f64,
 
             xyzuv_beta: create_state(adjusted_seeds[3]),
             xyzuv0_beta: create_state(adjusted_seeds[4]),
             xyzuv1_beta: create_state(adjusted_seeds[5]),
-            shape_beta: 1f64,
+            shape_beta: 1_f64,
         }
     }
 
@@ -45,30 +45,30 @@ impl Beta {
         shape_alpha: f64,
         shape_beta: f64,
     ) -> Result<(f64, f64), &str> {
-        if shape_alpha <= 0f64 {
-            Err("形状母数 α が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        } else if shape_alpha == 1f64 / 3f64 {
-            Err("形状母数 α が1/3です。確率変数のパラメータは前回の設定を維持します。")
-        } else if shape_beta <= 0f64 {
-            Err("形状母数 β が0以下です。確率変数のパラメータは前回の設定を維持します。")
-        } else if shape_beta == 1f64 / 3f64 {
-            Err("形状母数 β が1/3です。確率変数のパラメータは前回の設定を維持します。")
+        if shape_alpha <= 0_f64 {
+            core::result::Result::Err("形状母数 α が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        } else if shape_alpha == 1_f64 / 3_f64 {
+            core::result::Result::Err("形状母数 α が1/3です。確率変数のパラメータは前回の設定を維持します。")
+        } else if shape_beta <= 0_f64 {
+            core::result::Result::Err("形状母数 β が0以下です。確率変数のパラメータは前回の設定を維持します。")
+        } else if shape_beta == 1_f64 / 3_f64 {
+            core::result::Result::Err("形状母数 β が1/3です。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.shape_alpha = shape_alpha;
             self.shape_beta = shape_beta;
-            Ok((shape_alpha, shape_beta))
+            core::result::Result::Ok((shape_alpha, shape_beta))
         }
     }
 }
 
-impl std::fmt::Display for Beta {
+impl core::fmt::Display for Beta {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 尺度母数
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
-        writeln!(f, "形状母数 β: {}", self.shape_beta)?;
-        Ok(())
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "形状母数 α: {}", self.shape_alpha)?;
+        core::writeln!(f, "形状母数 β: {}", self.shape_beta)?;
+        core::result::Result::Ok(())
     }
 }

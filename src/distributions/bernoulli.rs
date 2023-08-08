@@ -8,16 +8,16 @@ impl Bernoulli {
         let xyzuv: [u32; 5] = create_state(_seed);
         Self {
             xyzuv,
-            probability: 0.5f64,
+            probability: 0.5_f64,
         }
     }
 
     /// ある確率の事象が生じたか(1u64)、否か(0u64)を返す
     pub fn sample(&mut self) -> u64 {
         if xorshift160_0_1(&mut self.xyzuv) <= self.probability {
-            1u64
+            1_u64
         } else {
-            0u64
+            0_u64
         }
     }
 
@@ -25,21 +25,21 @@ impl Bernoulli {
     /// * `probability` - 尺度母数
     pub fn try_set_params(&mut self, probability: f64) -> Result<f64, &str> {
         if !(0f64..=1f64).contains(&probability) {
-            Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
+            core::result::Result::Err("発生確率が0より小さいか、1よりも大きいです。確率変数のパラメータは前回の設定を維持します。")
         } else {
             self.probability = probability;
-            Ok(probability)
+            core::result::Result::Ok(probability)
         }
     }
 }
 
-impl std::fmt::Display for Bernoulli {
+impl core::fmt::Display for Bernoulli {
     /// println!マクロなどで表示するためのフォーマッタ
     /// * 構造体の型
     /// * 発生確率
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "発生確率: {}", self.probability)?;
-        Ok(())
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::writeln!(f, "構造体の型: {}", core::any::type_name::<Self>())?;
+        core::writeln!(f, "発生確率: {}", self.probability)?;
+        core::result::Result::Ok(())
     }
 }
