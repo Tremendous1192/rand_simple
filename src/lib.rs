@@ -345,8 +345,8 @@ pub struct Gamma {
     xyzuv_u: [u32; 5],   // 状態変数
     xyzuv_n_0: [u32; 5], // 状態変数
     xyzuv_n_1: [u32; 5], // 状態変数
-    shape: f64,
-    scale: f64,
+    shape: f64, // 形状母数 α
+    scale: f64, // 尺度母数 β
 }
 
 /// ベータ分布
