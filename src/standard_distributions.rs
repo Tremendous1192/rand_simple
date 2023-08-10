@@ -152,34 +152,33 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5] /* , u_1: &mut f64*/) -> f64
 // アルゴリズム 3.60
 #[inline]
 pub(crate) fn standard_gamma(
-    xyzuv: &mut [u32; 5],
-    //u_1: &mut f64,
-    xyzuv0: &mut [u32; 5],
-    xyzuv1: &mut [u32; 5],
+    xyzuv_u: &mut [u32; 5],
+    xyzuv_n_0: &mut [u32; 5],
+    xyzuv_n_1: &mut [u32; 5],
     alpha: &f64,
 ) -> f64 {
     // α = 1 のとき標準指数分布を返す
     if *alpha == 1_f64 {
-        return standard_exponential(xyzuv /*, u_1*/);
+        return standard_exponential(xyzuv_u);
     }
     // α < 1 のときは回帰関数で計算する
     else if *alpha < 1_f64 {
-        return standard_gamma(xyzuv, /* u_1,*/ xyzuv0, xyzuv1, &(alpha + 1_f64))
-            * xorshift160_0_open_1_open(xyzuv).powf(1_f64 / *alpha);
+        return standard_gamma(xyzuv_u, xyzuv_n_0, xyzuv_n_1, &(alpha + 1_f64))
+            * xorshift160_0_open_1_open(xyzuv_u).powf(1_f64 / *alpha);
     }
     // 前処理
     let d = *alpha - 1_f64 / 3_f64;
     let c = (9_f64 * d).powf(-0.5);
     loop {
         // step 1
-        let z = standard_normal(xyzuv0, xyzuv1);
+        let z = standard_normal(xyzuv_n_0, xyzuv_n_1);
         let v = 1_f64 + c * z;
         // step 2
         if v > 0_f64 {
             let w = v.powi(3);
             let y = d * w;
             // step 3
-            let u: f64 = xorshift160_0_open_1_open(xyzuv);
+            let u: f64 = xorshift160_0_open_1_open(xyzuv_u);
             if u <= 1_f64 - 0.0331 * z.powi(4) {
                 // step 5
                 return y;
