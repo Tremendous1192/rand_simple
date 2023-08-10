@@ -345,8 +345,8 @@ pub struct Gamma {
     xyzuv_u: [u32; 5],   // 状態変数
     xyzuv_n_0: [u32; 5], // 状態変数
     xyzuv_n_1: [u32; 5], // 状態変数
-    shape: f64, // 形状母数 α
-    scale: f64, // 尺度母数 β
+    shape: f64,          // 形状母数 α
+    scale: f64,          // 尺度母数 β
 }
 
 /// ベータ分布
@@ -362,15 +362,15 @@ pub struct Gamma {
 /// println!("形状母数 α = {}, 形状母数 β = {} のベータ分布に従う乱数を生成する -> {}", shape_alpha, shape_beta, beta.sample());
 /// ```
 pub struct Beta {
-    xyzuv_alpha: [u32; 5],  // 状態変数
-    xyzuv0_alpha: [u32; 5], // 状態変数
-    xyzuv1_alpha: [u32; 5], // 状態変数
-    shape_alpha: f64,
+    xyzuv_u_alpha: [u32; 5],   // 状態変数
+    xyzuv_n_0_alpha: [u32; 5], // 状態変数
+    xyzuv_n_1_alpha: [u32; 5], // 状態変数
+    shape_alpha: f64,          // 形状母数 α
 
-    xyzuv_beta: [u32; 5],  // 状態変数
-    xyzuv0_beta: [u32; 5], // 状態変数
-    xyzuv1_beta: [u32; 5], // 状態変数
-    shape_beta: f64,
+    xyzuv_u_beta: [u32; 5],   // 状態変数
+    xyzuv_n_0_beta: [u32; 5], // 状態変数
+    xyzuv_n_1_beta: [u32; 5], // 状態変数
+    shape_beta: f64,          // 形状母数 β
 }
 
 // ディリクレ分布

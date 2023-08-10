@@ -8,14 +8,14 @@ impl Beta {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
-            xyzuv_alpha: create_state(adjusted_seeds[0]),
-            xyzuv0_alpha: create_state(adjusted_seeds[1]),
-            xyzuv1_alpha: create_state(adjusted_seeds[2]),
+            xyzuv_u_alpha: create_state(adjusted_seeds[0]),
+            xyzuv_n_0_alpha: create_state(adjusted_seeds[1]),
+            xyzuv_n_1_alpha: create_state(adjusted_seeds[2]),
             shape_alpha: 1_f64,
 
-            xyzuv_beta: create_state(adjusted_seeds[3]),
-            xyzuv0_beta: create_state(adjusted_seeds[4]),
-            xyzuv1_beta: create_state(adjusted_seeds[5]),
+            xyzuv_u_beta: create_state(adjusted_seeds[3]),
+            xyzuv_n_0_beta: create_state(adjusted_seeds[4]),
+            xyzuv_n_1_beta: create_state(adjusted_seeds[5]),
             shape_beta: 1_f64,
         }
     }
@@ -23,15 +23,15 @@ impl Beta {
     /// ベータ分布に従う乱数を返す
     pub fn sample(&mut self) -> f64 {
         let y1 = standard_gamma(
-            &mut self.xyzuv_alpha,
-            &mut self.xyzuv0_alpha,
-            &mut self.xyzuv1_alpha,
+            &mut self.xyzuv_u_alpha,
+            &mut self.xyzuv_n_0_alpha,
+            &mut self.xyzuv_n_1_alpha,
             &self.shape_alpha,
         );
         let y2 = standard_gamma(
-            &mut self.xyzuv_beta,
-            &mut self.xyzuv0_beta,
-            &mut self.xyzuv1_beta,
+            &mut self.xyzuv_u_beta,
+            &mut self.xyzuv_n_0_beta,
+            &mut self.xyzuv_n_1_beta,
             &self.shape_beta,
         );
         y1 / (y1 + y2)
