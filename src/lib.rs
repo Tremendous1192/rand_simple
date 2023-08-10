@@ -463,8 +463,37 @@ pub struct Chi {
     degree_of_freedom: f64, // 形状母数
 }
 
-// F分布
-//pub struct FDistribution {}
+/// F分布
+/// # 使用例
+/// ```
+/// let mut f = rand_simple::FDistribution::new([1192_u32, 765_u32, 1543_u32, 2003_u32,1192_u32, 765_u32, 1543_u32, 2003_u32]);
+/// println!("初期設定の場合、自由度 (1, 1)のχ二乗分布に従う乱数を返す -> {}", f.sample());
+///
+/// // 確率変数のパラメータを変更する場合
+/// let degree_of_freedom_1: u64 = 2_u64;
+/// let degree_of_freedom_2: u64 = 3_u64;
+/// let result: Result<(u64, u64), &str> = f.try_set_params(degree_of_freedom_1, degree_of_freedom_2);
+/// println!("自由度 {}, {}の乱数を生成する -> {}", degree_of_freedom_1, degree_of_freedom_2, f.sample());
+/// ```
+pub struct FDistribution {
+    xyzuv_alpha_1: [u32; 5],  // 状態変数
+    xyzuv0_alpha_1: [u32; 5], // 状態変数
+    xyzuv1_alpha_1: [u32; 5], // 状態変数
+    shape_alpha_1: f64,
+
+    xyzuv_beta_1: [u32; 5], // 状態変数
+
+    degree_of_freedom_1: f64, // 形状母数
+
+    xyzuv_alpha_2: [u32; 5],  // 状態変数
+    xyzuv0_alpha_2: [u32; 5], // 状態変数
+    xyzuv1_alpha_2: [u32; 5], // 状態変数
+    shape_alpha_2: f64,
+
+    xyzuv_beta_2: [u32; 5], // 状態変数
+
+    degree_of_freedom_2: f64, // 形状母数
+}
 
 // t分布
 //pub struct TDistribution {}
