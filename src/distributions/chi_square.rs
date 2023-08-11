@@ -8,12 +8,11 @@ impl ChiSquare {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
-            xyzuv_alpha: create_state(adjusted_seeds[0]),
-            xyzuv0_alpha: create_state(adjusted_seeds[1]),
-            xyzuv1_alpha: create_state(adjusted_seeds[2]),
-            shape_alpha: 1_f64,
+            xyzuv_u_gamma: create_state(adjusted_seeds[0]),
+            xyzuv_n_0_gamma: create_state(adjusted_seeds[1]),
+            xyzuv_n_1_gamma: create_state(adjusted_seeds[2]),
 
-            xyzuv_beta: create_state(adjusted_seeds[3]),
+            xyzuv_uniform: create_state(adjusted_seeds[3]),
 
             degree_of_freedom: 1_f64,
         }
@@ -24,19 +23,19 @@ impl ChiSquare {
         // アルゴリズム 3.79
         if self.degree_of_freedom > 1_f64 {
             standard_gamma(
-                &mut self.xyzuv_alpha,
-                &mut self.xyzuv0_alpha,
-                &mut self.xyzuv1_alpha,
-                &self.shape_alpha,
+                &mut self.xyzuv_u_gamma,
+                &mut self.xyzuv_n_0_gamma,
+                &mut self.xyzuv_n_1_gamma,
+                &self.degree_of_freedom,
             ) * 2_f64
         } else {
             let y = standard_gamma(
-                &mut self.xyzuv_alpha,
-                &mut self.xyzuv0_alpha,
-                &mut self.xyzuv1_alpha,
+                &mut self.xyzuv_u_gamma,
+                &mut self.xyzuv_n_0_gamma,
+                &mut self.xyzuv_n_1_gamma,
                 &(3_f64 / 2_f64),
             ) * 2_f64;
-            let u = xorshift160_0_1_open(&mut self.xyzuv_beta);
+            let u = xorshift160_0_1_open(&mut self.xyzuv_uniform);
             u.powi(2) * y * 2_f64
         }
     }
