@@ -412,11 +412,11 @@ pub struct PowerFunction {
 /// println!("形状母数 r = {}, 尺度母数 θ = {} のアーラン分布に従う乱数を生成する -> {}", shape, scale, erlang.sample());
 /// ```
 pub struct Erlang {
-    xyzuv: [u32; 5],  // 状態変数
-    xyzuv0: [u32; 5], // 状態変数
-    xyzuv1: [u32; 5], // 状態変数
-    shape: f64,
-    scale: f64,
+    xyzuv_u: [u32; 5],   // 状態変数
+    xyzuv_n_0: [u32; 5], // 状態変数
+    xyzuv_n_1: [u32; 5], // 状態変数
+    shape: f64,          // 形状母数 r ∈ N
+    scale: f64,          // 尺度母数
 }
 
 /// χ二乗分布

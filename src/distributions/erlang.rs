@@ -7,9 +7,9 @@ impl Erlang {
     pub fn new(seeds: [u32; 3_usize]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
         Self {
-            xyzuv: create_state(adjusted_seeds[0]),
-            xyzuv0: create_state(adjusted_seeds[1]),
-            xyzuv1: create_state(adjusted_seeds[2]),
+            xyzuv_u: create_state(adjusted_seeds[0]),
+            xyzuv_n_0: create_state(adjusted_seeds[1]),
+            xyzuv_n_1: create_state(adjusted_seeds[2]),
             shape: 1_f64,
             scale: 1_f64,
         }
@@ -18,9 +18,9 @@ impl Erlang {
     /// 乱数を計算する
     pub fn sample(&mut self) -> f64 {
         standard_gamma(
-            &mut self.xyzuv,
-            &mut self.xyzuv0,
-            &mut self.xyzuv1,
+            &mut self.xyzuv_u,
+            &mut self.xyzuv_n_0,
+            &mut self.xyzuv_n_1,
             &self.shape,
         ) * self.scale
     }
