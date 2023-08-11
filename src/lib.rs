@@ -431,9 +431,9 @@ pub struct Erlang {
 /// println!("自由度 {}の乱数を生成する -> {}", degree_of_freedom, chi_square.sample());
 /// ```
 pub struct ChiSquare {
-    xyzuv_u_gamma: [u32; 5],     // 状態変数
+    xyzuv_u_gamma: [u32; 5],   // 状態変数
     xyzuv_n_0_gamma: [u32; 5], // 状態変数
-    xyzuv_n_1_gamma: [u32; 5],    // 状態変数
+    xyzuv_n_1_gamma: [u32; 5], // 状態変数
 
     xyzuv_uniform: [u32; 5], // 状態変数
 
@@ -452,14 +452,13 @@ pub struct ChiSquare {
 /// println!("自由度 {}の乱数を生成する -> {}", degree_of_freedom, chi.sample());
 /// ```
 pub struct Chi {
-    xyzuv_alpha: [u32; 5],  // 状態変数
-    xyzuv0_alpha: [u32; 5], // 状態変数
-    xyzuv1_alpha: [u32; 5], // 状態変数
-    shape_alpha: f64,
+    xyzuv_u_gamma: [u32; 5],   // 状態変数
+    xyzuv_n_0_gamma: [u32; 5], // 状態変数
+    xyzuv_n_1_gamma: [u32; 5], // 状態変数
 
-    xyzuv_beta: [u32; 5], // 状態変数
+    xyzuv_uniform: [u32; 5], // 状態変数
 
-    degree_of_freedom: f64, // 形状母数
+    degree_of_freedom: f64, // 形状母数 r ∈ N
 }
 
 /// F分布
