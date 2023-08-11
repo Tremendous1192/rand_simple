@@ -474,23 +474,21 @@ pub struct Chi {
 /// println!("自由度 {}, {}の乱数を生成する -> {}", degree_of_freedom_1, degree_of_freedom_2, f.sample());
 /// ```
 pub struct FDistribution {
-    xyzuv_alpha_1: [u32; 5],  // 状態変数
-    xyzuv0_alpha_1: [u32; 5], // 状態変数
-    xyzuv1_alpha_1: [u32; 5], // 状態変数
-    shape_alpha_1: f64,
+    xyzuv_u_gamma_1: [u32; 5],   // 状態変数
+    xyzuv_n_0_gamma_1: [u32; 5], // 状態変数
+    xyzuv_n_1_gamma_1: [u32; 5], // 状態変数
 
-    xyzuv_beta_1: [u32; 5], // 状態変数
+    xyzuv_uniform_1: [u32; 5], // 状態変数
 
-    degree_of_freedom_1: f64, // 形状母数
+    degree_of_freedom_1: f64, // 形状母数 r ∈ N
 
-    xyzuv_alpha_2: [u32; 5],  // 状態変数
-    xyzuv0_alpha_2: [u32; 5], // 状態変数
-    xyzuv1_alpha_2: [u32; 5], // 状態変数
-    shape_alpha_2: f64,
+    xyzuv_u_gamma_2: [u32; 5],   // 状態変数
+    xyzuv_n_0_gamma_2: [u32; 5], // 状態変数
+    xyzuv_n_1_gamma_2: [u32; 5], // 状態変数
 
-    xyzuv_beta_2: [u32; 5], // 状態変数
+    xyzuv_uniform_2: [u32; 5], // 状態変数
 
-    degree_of_freedom_2: f64, // 形状母数
+    degree_of_freedom_2: f64, // 形状母数 r ∈ N
 }
 
 // t分布
