@@ -15,6 +15,7 @@
 1マイクロ秒毎に乱数を生成したとしても、ループが完了するまで$10^{34}$年かかるそうなので、ちょっとした乱数生成の範疇ではこれで十分だと考えています。
 
 ## 使用例
+グラフによる例は[こちらのリポジトリ](https://github.com/Tremendous1192/demo_rand_simple)をご参照ください。
 ### 一様分布
 ```rust
 let seed:u32 = rand_simple::generate_seeds!(1_usize)[0];

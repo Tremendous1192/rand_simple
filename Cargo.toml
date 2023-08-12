@@ -1,6 +1,6 @@
 [package]
 name = "rand_simple"
-version = "0.2.5"
+version = "0.2.6"
 authors = ["Tremendous1192"]
 edition = "2021"
 resolver = "2" # dev-dependencies が通常コンパイルに引き継がれるバグ対応
@@ -15,7 +15,6 @@ keywords = ["rng", "random"]
 [dependencies]
 
 [dev-dependencies]
-plotters = "0.3.5" # グラフ https://plotters-rs.github.io/book/intro/introduction.html
 
 [profile.dev]
 opt-level = 0
