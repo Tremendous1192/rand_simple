@@ -437,7 +437,7 @@ pub struct ChiSquare {
 
     xyzuv_uniform: [u32; 5], // 状態変数
 
-    degree_of_freedom: f64, // 形状母数 r ∈ N
+    degree_of_freedom: f64, // 自由度 r ∈ N
 }
 
 /// χ分布
@@ -458,7 +458,7 @@ pub struct Chi {
 
     xyzuv_uniform: [u32; 5], // 状態変数
 
-    degree_of_freedom: f64, // 形状母数 r ∈ N
+    degree_of_freedom: f64, // 自由度 r ∈ N
 }
 
 /// F分布
@@ -480,7 +480,7 @@ pub struct FDistribution {
 
     xyzuv_uniform_1: [u32; 5], // 状態変数
 
-    degree_of_freedom_1: f64, // 形状母数 r ∈ N
+    degree_of_freedom_1: f64, // 自由度 r ∈ N
 
     xyzuv_u_gamma_2: [u32; 5],   // 状態変数
     xyzuv_n_0_gamma_2: [u32; 5], // 状態変数
@@ -488,11 +488,30 @@ pub struct FDistribution {
 
     xyzuv_uniform_2: [u32; 5], // 状態変数
 
-    degree_of_freedom_2: f64, // 形状母数 r ∈ N
+    degree_of_freedom_2: f64, // 自由度 r ∈ N
 }
 
-// t分布
-//pub struct TDistribution {}
+/// t分布
+/// # 使用例
+/// ```
+/// let mut t = rand_simple::TDistribution::new([1192u32, 765u32, 1543u32, 2003u32, 1867u32]);
+/// println!("初期設定の場合、自由度 1のt分布に従う乱数を返す -> {}", t.sample());
+///
+/// // 確率変数のパラメータを変更する場合
+/// let degree_of_freedom: u64 = 3_u64;
+/// let result: Result<u64, &str> = t.try_set_params(degree_of_freedom);
+/// println!("自由度 {}の乱数を生成する -> {}", degree_of_freedom, t.sample());
+/// ```
+pub struct TDistribution {
+    xyzuv_n_0: [u32; 5], // 状態変数
+    xyzuv_n_1: [u32; 5], // 状態変数
+
+    xyzuv_u_gamma: [u32; 5],   // 状態変数
+    xyzuv_n_0_gamma: [u32; 5], // 状態変数
+    xyzuv_n_1_gamma: [u32; 5], // 状態変数
+
+    degree_of_freedom: f64, // 自由度 r ∈ N
+}
 
 // 逆ガウス分布
 //pub struct InverseGaussian {}
