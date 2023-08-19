@@ -513,8 +513,25 @@ pub struct TDistribution {
     degree_of_freedom: f64, // 自由度 r ∈ N
 }
 
-// 逆ガウス分布
-//pub struct InverseGaussian {}
+/// 逆ガウス分布
+/// # 使用例
+/// ```
+/// let mut inverse_gaussian = rand_simple::InverseGaussian::new([1192u32, 765u32, 1543u32]);
+/// println!("平均 μ = 1, 形状母数 λ = 1 の標準逆ガウス分布に従う乱数を生成する -> {}", inverse_gaussian.sample());
+///
+/// // 確率変数のパラメータを変更する場合
+/// let mean: f64 = 1.5f64;
+/// let shape: f64 = 2f64;
+/// let result: Result<(f64, f64), &str> = inverse_gaussian.try_set_params(mean, shape);
+/// println!("平均 μ = {}, 形状母数 λ = {},  の逆ガウス分布に従う乱数を生成する -> {}", mean, shape, inverse_gaussian.sample());
+/// ```
+pub struct InverseGaussian {
+    xyzuv_u: [u32; 5],    // 状態変数
+    xyzuv_hn_0: [u32; 5], // 状態変数
+    xyzuv_hn_1: [u32; 5], // 状態変数
+    mean: f64,            // 平均
+    shape: f64,           // 形状母数
+}
 
 // 三角分布
 //pub struct Triangular {}
