@@ -61,22 +61,25 @@ pub(crate) use adjust_seeds;
 
 // 連続型確率変数
 
-/// 一様乱数
-/// # 使用例
+// 一様乱数
+/// Uniform Distribution
+/// # Example
 /// ```
 /// let mut uniform = rand_simple::Uniform::new(1192_u32);
-/// println!("閉区間[0, 1]の一様乱数に従う乱数を返す -> {}", uniform.sample());
+/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [0, 1]");
+/// println!("Returns a random number -> {}", uniform.sample());
 ///
-/// // 確率変数のパラメータを変更する
+/// // When changing the parameters of the random variable
 /// let min: f64 = -1_f64;
 /// let max: f64 = 1_f64;
 /// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
-/// println!("閉区間[{}, {}]の一様乱数に従う乱数を返す -> {}", min, max, uniform.sample());
+/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [-1, 1]");
+/// println!("Returns a random number -> {}", uniform.sample());
 /// ```
 pub struct Uniform {
     xyzuv: [u32; 5], // 状態変数
     min: f64,        // 最小値
-    range: f64,      // 範囲
+    max: f64,        // 最大値
 }
 
 /// 正規分布
