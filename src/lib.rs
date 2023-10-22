@@ -72,23 +72,8 @@ pub use crate::distributions::half_normal::HalfNormal;
 // 対数正規分布
 pub use crate::distributions::log_normal::LogNormal;
 
-/// コーシー分布
-/// # 使用例
-/// ```
-/// let mut cauchy = rand_simple::Cauchy::new(1192_u32);
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準コーシー分布に従う乱数を生成する -> {}", cauchy.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let location: f64 = -2_f64;
-/// let scale: f64 = 1.5_f64;
-/// let result: Result<(f64, f64), &str> = cauchy.try_set_params(location, scale);
-/// println!("位置母数 μ = {}, 尺度母数 θ = {} のコーシー分布に従う乱数を生成する -> {}", location, scale, cauchy.sample());
-/// ```
-pub struct Cauchy {
-    xyzuv: [u32; 5], // 状態変数
-    location: f64,   // 位置母数
-    scale: f64,      // 尺度母数
-}
+// コーシー分布
+pub use crate::distributions::cauchy::Cauchy;
 
 /// 半コーシー分布
 /// # 使用例

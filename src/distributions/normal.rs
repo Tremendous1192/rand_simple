@@ -1,7 +1,7 @@
 use crate::create_state;
 use crate::standard_distributions::standard_normal;
 
-/// Normal distribution
+/// Normal Distribution
 /// # Example
 /// ```
 /// let mut normal = rand_simple::Normal::new([1192_u32, 765_u32]);
@@ -43,7 +43,7 @@ impl Normal {
     /// Modify the parameters of the random variable.
     /// * `mean` - Mean
     /// * `std` - Standard deviation
-    pub fn try_set_params(&mut self, mean: f64, std: f64) -> Result<(f64, f64), &str> {
+    pub fn try_set_params(&mut self, mean: f64, std: f64) -> Result<(f64, f64), &'static str> {
         if std <= 0_f64 {
             Err("Standard deviation is less than or equal to 0. The random variable's parameters will remain unchanged.")
         } else {

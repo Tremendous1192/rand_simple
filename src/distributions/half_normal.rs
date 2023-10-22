@@ -1,7 +1,7 @@
 use crate::create_state;
 use crate::standard_distributions::standard_normal;
 
-/// Half Normal distribution
+/// Half Normal Distribution
 /// # Example
 /// ```
 /// let mut half_normal = rand_simple::HalfNormal::new([1192_u32, 765_u32]);
@@ -39,7 +39,7 @@ impl HalfNormal {
 
     /// Modify the parameters of the random variable.
     /// * `std` - Standard deviation
-    pub fn try_set_params(&mut self, std: f64) -> Result<f64, &str> {
+    pub fn try_set_params(&mut self, std: f64) -> Result<f64, &'static str> {
         if std <= 0_f64 {
             Err("Standard deviation is less than or equal to 0. The random variable's parameters will remain unchanged.")
         } else {
