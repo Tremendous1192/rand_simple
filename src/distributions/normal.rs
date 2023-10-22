@@ -54,11 +54,11 @@ impl Normal {
     }
 }
 
-impl std::fmt::Display for Normal {
+impl core::fmt::Display for Normal {
     /// Formatter for displaying in functions like println! macro
     /// * Mean
     /// * Standard deviation
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "N(Mean, Std^2) = N({}, {}^2)", self.mean, self.std)?;
         Ok(())
     }

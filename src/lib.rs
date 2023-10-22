@@ -66,22 +66,8 @@ pub use crate::distributions::uniform::Uniform;
 // 正規分布
 pub use crate::distributions::normal::Normal;
 
-/// 半正規分布
-/// # 使用例
-/// ```
-/// let mut half_normal = rand_simple::HalfNormal::new([1192_u32, 765_u32]);
-/// println!("分散 σ^2 = 1 の標準半正規分布乱数を生成する -> {}", half_normal.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let variance: f64 = 4_f64;
-/// let result: Result<f64, &str> = half_normal.try_set_params(variance);
-/// println!("分散 σ^2 = {} の半正規分布乱数を生成する -> {}", variance, half_normal.sample());
-/// ```
-pub struct HalfNormal {
-    xyzuv0: [u32; 5], // 状態変数
-    xyzuv1: [u32; 5], // 状態変数
-    std: f64,         // 標準偏差
-}
+// 半正規分布
+pub use crate::distributions::half_normal::HalfNormal;
 
 /// 対数正規分布
 /// # 使用例

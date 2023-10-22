@@ -7,7 +7,7 @@ mod frechet; // フレシェ分布
 mod gamma; // ガンマ分布
 mod gunbel; // ガンベル分布
 mod half_cauchy; // 半コーシー分布
-mod half_normal; // 半正規分布
+pub mod half_normal; // 半正規分布
 mod laplace; // ラプラス分布
 mod levy; // レヴィ分布
 mod log_laplace; // 対数ラプラス分布
