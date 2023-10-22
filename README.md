@@ -18,13 +18,15 @@ For graph-based examples, please refer to [this repository](https://github.com/T
 ```rust
 let seed: u32 = rand_simple::generate_seeds!(1_usize)[0];
 let mut uniform = rand_simple::Uniform::new(seed);
-println!("For the initial setup, it returns a random number following the uniform distribution over the closed interval [0, 1] -> {}", uniform.sample());
+assert_eq!(format!("{uniform}"), "Range (Closed Interval): [0, 1]");
+println!("Returns a random number -> {}", uniform.sample());
 
 // When changing the parameters of the random variable
 let min: f64 = -1_f64;
 let max: f64 = 1_f64;
 let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
-println!("Generating a uniform random number over the closed interval [{}, {}] -> {}", min, max, uniform.sample());
+assert_eq!(format!("{uniform}"), "Range (Closed Interval): [-1, 1]");
+println!("Returns a random number -> {}", uniform.sample());
 ```
 
 ### Normal Distribution

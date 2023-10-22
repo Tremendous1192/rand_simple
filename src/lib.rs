@@ -62,6 +62,8 @@ pub(crate) use adjust_seeds;
 // 連続型確率変数
 
 // 一様乱数
+pub use crate::distributions::uniform::Uniform;
+/*
 /// Uniform Distribution
 /// # Example
 /// ```
@@ -81,6 +83,7 @@ pub struct Uniform {
     min: f64,        // 最小値
     max: f64,        // 最大値
 }
+*/
 
 /// 正規分布
 /// # 使用例

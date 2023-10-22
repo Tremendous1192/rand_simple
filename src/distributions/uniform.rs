@@ -1,5 +1,26 @@
 use crate::standard_distributions::xorshift160_0_1;
-use crate::{create_state, Uniform};
+//use crate::{create_state, Uniform};
+use crate::create_state;
+
+/// Uniform Distribution
+/// # Example
+/// ```
+/// let mut uniform = rand_simple::Uniform::new(1192_u32);
+/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [0, 1]");
+/// println!("Returns a random number -> {}", uniform.sample());
+///
+/// // When changing the parameters of the random variable
+/// let min: f64 = -1_f64;
+/// let max: f64 = 1_f64;
+/// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
+/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [-1, 1]");
+/// println!("Returns a random number -> {}", uniform.sample());
+/// ```
+pub struct Uniform {
+    xyzuv: [u32; 5], // 状態変数
+    min: f64,        // 最小値
+    max: f64,        // 最大値
+}
 
 impl Uniform {
     /// Constructor
