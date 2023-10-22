@@ -1,6 +1,5 @@
-use crate::standard_distributions::xorshift160_0_1;
-//use crate::{create_state, Uniform};
 use crate::create_state;
+use crate::standard_distributions::xorshift160_0_1;
 
 /// Uniform Distribution
 /// # Example

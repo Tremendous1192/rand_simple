@@ -5,7 +5,6 @@ mod standard_distributions; // 標準分布を計算するモジュール
                             //#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)]
 mod sandbox; // 試行錯誤するためのテストモジュール
-             //use std::time::{SystemTime, UNIX_EPOCH}; // 時刻の取得
 
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
@@ -63,27 +62,6 @@ pub(crate) use adjust_seeds;
 
 // 一様乱数
 pub use crate::distributions::uniform::Uniform;
-/*
-/// Uniform Distribution
-/// # Example
-/// ```
-/// let mut uniform = rand_simple::Uniform::new(1192_u32);
-/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [0, 1]");
-/// println!("Returns a random number -> {}", uniform.sample());
-///
-/// // When changing the parameters of the random variable
-/// let min: f64 = -1_f64;
-/// let max: f64 = 1_f64;
-/// let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
-/// assert_eq!(format!("{uniform}"), "Range (Closed Interval): [-1, 1]");
-/// println!("Returns a random number -> {}", uniform.sample());
-/// ```
-pub struct Uniform {
-    xyzuv: [u32; 5], // 状態変数
-    min: f64,        // 最小値
-    max: f64,        // 最大値
-}
-*/
 
 /// 正規分布
 /// # 使用例
