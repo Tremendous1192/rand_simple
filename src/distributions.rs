@@ -12,7 +12,7 @@ mod laplace; // ラプラス分布
 mod levy; // レヴィ分布
 mod log_laplace; // 対数ラプラス分布
 mod log_normal; // 対数正規分布
-mod normal; // 正規分布
+pub mod normal; // 正規分布
 mod rayleigh; // レイリー分布
 mod reflected_weibull; // 反射ワイブル分布
 pub mod uniform; // 一様分布

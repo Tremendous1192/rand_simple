@@ -33,13 +33,15 @@ println!("Returns a random number -> {}", uniform.sample());
 ```rust
 let seeds: [u32; 2_usize] = rand_simple::generate_seeds!(2_usize);
 let mut normal = rand_simple::Normal::new(seeds);
-println!("For the initial setup, it generates random numbers following the standard normal distribution with mean μ = 0 and variance σ^2 = 1 -> {}", normal.sample());
+assert_eq!(format!("{normal}"), "N(Mean, Std^2) = N(0, 1^2)");
+println!("Returns a random number -> {}", normal.sample());
 
 // When changing the parameters of the random variable
 let mean: f64 = -3_f64;
 let variance: f64 = 2_f64;
 let result: Result<(f64, f64), &str> = normal.try_set_params(mean, variance);
-println!("Generating random numbers following a normal distribution with mean μ = {} and variance σ^2 = {} -> {}", mean, variance, normal.sample());
+assert_eq!(format!("{normal}"), "N(Mean, Std^2) = N(-3, 2^2)");
+println!("Returns a random number -> {}", normal.sample());
 ```
 
 ## Implementation Status

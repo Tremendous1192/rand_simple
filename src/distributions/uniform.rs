@@ -1,7 +1,7 @@
 use crate::create_state;
 use crate::standard_distributions::xorshift160_0_1;
 
-/// Uniform Distribution
+/// Uniform distribution
 /// # Example
 /// ```
 /// let mut uniform = rand_simple::Uniform::new(1192_u32);
