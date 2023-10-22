@@ -69,24 +69,8 @@ pub use crate::distributions::normal::Normal;
 // 半正規分布
 pub use crate::distributions::half_normal::HalfNormal;
 
-/// 対数正規分布
-/// # 使用例
-/// ```
-/// let mut log_normal = rand_simple::LogNormal::new([1192_u32, 765_u32]);
-/// println!("平均値 μ = 0, 分散 σ^2 = 1 の標準対数正規分布乱数を生成する -> {}", log_normal.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let mean: f64 = -3_f64;
-/// let variance: f64 = 2_f64;
-/// let result: Result<(f64, f64), &str> = log_normal.try_set_params(mean, variance);
-/// println!("平均値 μ = {}, 分散 σ^2 = {} の正規分布乱数を生成する -> {}", mean, variance, log_normal.sample());
-/// ```
-pub struct LogNormal {
-    xyzuv0: [u32; 5], // 状態変数
-    xyzuv1: [u32; 5], // 状態変数
-    mean: f64,        // 平均
-    std: f64,         // 標準偏差
-}
+// 対数正規分布
+pub use crate::distributions::log_normal::LogNormal;
 
 /// コーシー分布
 /// # 使用例

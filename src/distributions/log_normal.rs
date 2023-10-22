@@ -1,9 +1,30 @@
+use crate::create_state;
 use crate::standard_distributions::standard_normal;
-use crate::{create_state, LogNormal};
+
+/// Log-Normal Distribution
+/// # Example
+/// ```
+/// let mut log_normal = rand_simple::LogNormal::new([1192_u32, 765_u32]);
+/// assert_eq!(format!("{log_normal}"), "LN(Mean, Std^2) = LN(0, 1^2)");
+/// println!("Returns a random number -> {}", log_normal.sample());
+///
+/// // If you want to change the parameters of the random variable
+/// let mean: f64 = -3_f64;
+/// let variance: f64 = 2_f64;
+/// let result: Result<(f64, f64), &str> = log_normal.try_set_params(mean, variance);
+/// assert_eq!(format!("{log_normal}"), "LN(Mean, Std^2) = LN(-3, 2^2)");
+/// println!("Returns a random number -> {}", log_normal.sample());
+/// ```
+pub struct LogNormal {
+    xyzuv0: [u32; 5], // 状態変数
+    xyzuv1: [u32; 5], // 状態変数
+    mean: f64,        // 平均
+    std: f64,         // 標準偏差
+}
 
 impl LogNormal {
-    /// コンストラクタ
-    /// * `seeds` - 乱数の種。同じ値にならないようにコンストラクタ側で調整する。
+    /// Constructor
+    /// * `seeds` - Seeds for random number generation. Adjusted on the constructor side to ensure they are not the same.
     pub fn new(seeds: [u32; 2]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
         Self {
@@ -14,34 +35,31 @@ impl LogNormal {
         }
     }
 
-    /// 乱数を計算する
+    /// Generate a random number.
     pub fn sample(&mut self) -> f64 {
         (standard_normal(&mut self.xyzuv0, &mut self.xyzuv1) * self.std + self.mean).exp()
     }
 
-    /// 確率変数のパラメータを変更する
-    /// * `mean` - 平均
-    /// * `variance` - 分散
-    pub fn try_set_params(&mut self, mean: f64, variance: f64) -> Result<(f64, f64), &str> {
-        if variance <= 0_f64 {
-            Err("分散が0以下です。確率変数のパラメータは前回の設定を維持します。")
+    /// Modify the parameters of the random variable.
+    /// * `mean` - Mean
+    /// * `std` - Standard deviation
+    pub fn try_set_params(&mut self, mean: f64, std: f64) -> Result<(f64, f64), &str> {
+        if std <= 0_f64 {
+            Err("Standard deviation is less than or equal to 0. The random variable's parameters will remain unchanged.")
         } else {
             self.mean = mean;
-            self.std = variance.sqrt();
-            Ok((mean, variance))
+            self.std = std;
+            Ok((self.mean, self.std))
         }
     }
 }
 
-impl std::fmt::Display for LogNormal {
-    /// println!マクロなどで表示するためのフォーマッタ
-    /// * 構造体の型
-    /// * 平均
-    /// * 分散
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "平均: {}", self.mean)?;
-        writeln!(f, "分散: {}", self.std.powi(2))?;
+impl core::fmt::Display for LogNormal {
+    /// Formatter for displaying in functions like println! macro
+    /// * Mean
+    /// * Standard deviation
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "LN(Mean, Std^2) = LN({}, {}^2)", self.mean, self.std)?;
         Ok(())
     }
 }

@@ -5,13 +5,13 @@ use crate::standard_distributions::standard_normal;
 /// # Example
 /// ```
 /// let mut half_normal = rand_simple::HalfNormal::new([1192_u32, 765_u32]);
-/// assert_eq!(format!("{half_normal}"), "N(Std^2) = N(1^2)");
+/// assert_eq!(format!("{half_normal}"), "HN(Std^2) = HN(1^2)");
 /// println!("Returns a random number -> {}", half_normal.sample());
 ///
 /// // If you want to change the parameters of the random variable
 /// let variance: f64 = 2_f64;
 /// let result: Result<f64, &str> = half_normal.try_set_params(variance);
-/// assert_eq!(format!("{half_normal}"), "N(Std^2) = N(2^2)");
+/// assert_eq!(format!("{half_normal}"), "HN(Std^2) = HN(2^2)");
 /// println!("Returns a random number -> {}", half_normal.sample());
 /// ```
 pub struct HalfNormal {
@@ -53,7 +53,7 @@ impl core::fmt::Display for HalfNormal {
     /// Formatter for displaying in functions like println! macro
     /// * Standard deviation
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        write!(f, "N(Std^2) = N({}^2)", self.std)?;
+        write!(f, "HN(Std^2) = HN({}^2)", self.std)?;
         Ok(())
     }
 }
