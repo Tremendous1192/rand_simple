@@ -8,15 +8,16 @@ use crate::standard_distributions::xorshift160_0_1_open;
 /// // Create a new Half-Cauchy distribution with a scale parameter of 1
 /// let mut half_cauchy = rand_simple::HalfCauchy::new(1192_u32);
 /// // Ensure that the distribution's representation includes the scale parameter
-/// assert_eq!(format!("{half_cauchy}", "HCa(Scale parameter) = HCa(1)"));
+/// assert_eq!(format!("{half_cauchy}"), "HCa(Scale parameter) = HCa(1)");
 /// // Generate a random number following the Half-Cauchy distribution with the initial scale parameter
 /// println!("Returns a random number -> {}", half_cauchy.sample());
 ///
 /// // Modify the distribution's scale parameter
 /// let scale: f64 = 1.5;
 /// // Update the scale parameter and generate a random number following the modified Half-Cauchy distribution
+/// let result: Result<f64, &str> = half_cauchy.try_set_params(scale);
 /// // Ensure that the distribution's representation includes the updated scale parameter
-/// assert_eq!(format!("{half_cauchy}", "HCa(Scale parameter) = HCa(1.5)"));
+/// assert_eq!(format!("{half_cauchy}"), "HCa(Scale parameter) = HCa(1.5)");
 /// println!("Returns a random number -> {}", half_cauchy.sample());
 /// ```
 pub struct HalfCauchy {
@@ -65,7 +66,7 @@ impl HalfCauchy {
     ///
     /// # Returns
     /// * `Result<f64, &str>` - A `Result` indicating success with the new scale value or an error message.
-    pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &str> {
+    pub fn try_set_params(&mut self, scale: f64) -> Result<f64, &'static str> {
         if scale <= 0_f64 {
             Err("The scale parameter is less than or equal to zero. The parameters of the random variable remain unchanged.")
         } else {
