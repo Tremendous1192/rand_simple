@@ -38,8 +38,8 @@ println!("Returns a random number -> {}", normal.sample());
 
 // When changing the parameters of the random variable
 let mean: f64 = -3_f64;
-let variance: f64 = 2_f64;
-let result: Result<(f64, f64), &str> = normal.try_set_params(mean, variance);
+let std: f64 = 2_f64;
+let result: Result<(f64, f64), &str> = normal.try_set_params(mean, std);
 assert_eq!(format!("{normal}"), "N(Mean, Std^2) = N(-3, 2^2)");
 println!("Returns a random number -> {}", normal.sample());
 ```

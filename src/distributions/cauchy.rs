@@ -40,7 +40,11 @@ impl Cauchy {
     /// Modify the parameters of the random variable.
     /// * `location` - Location parameter
     /// * `scale` - Scale parameter
-    pub fn try_set_params(&mut self, location: f64, scale: f64) -> Result<(f64, f64), &'static str> {
+    pub fn try_set_params(
+        &mut self,
+        location: f64,
+        scale: f64,
+    ) -> Result<(f64, f64), &'static str> {
         if scale <= 0_f64 {
             Err("The scale parameter is less than or equal to 0. The parameters of the random variable will remain as previously set.")
         } else {

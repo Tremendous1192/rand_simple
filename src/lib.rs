@@ -75,21 +75,8 @@ pub use crate::distributions::log_normal::LogNormal;
 // コーシー分布
 pub use crate::distributions::cauchy::Cauchy;
 
-/// 半コーシー分布
-/// # 使用例
-/// ```
-/// let mut half_cauchy = rand_simple::HalfCauchy::new(1192_u32);
-/// println!("尺度母数 θ = 1 の標準半コーシー分布に従う乱数を生成する -> {}", half_cauchy.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let scale: f64 = 1.5f64;
-/// let result: Result<f64, &str> = half_cauchy.try_set_params(scale);
-/// println!("尺度母数 θ = {} の半コーシー分布に従う乱数を生成する -> {}", scale, half_cauchy.sample());
-/// ```
-pub struct HalfCauchy {
-    xyzuv: [u32; 5], // 状態変数
-    scale: f64,      // 尺度母数
-}
+// 半コーシー分布
+pub use crate::distributions::half_cauchy::HalfCauchy;
 
 /// レヴィ分布
 /// # 使用例
