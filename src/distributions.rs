@@ -9,7 +9,7 @@ mod gunbel; // ガンベル分布
 pub mod half_cauchy; // 半コーシー分布
 pub mod half_normal; // 半正規分布
 mod laplace; // ラプラス分布
-mod levy; // レヴィ分布
+pub mod levy; // レヴィ分布
 mod log_laplace; // 対数ラプラス分布
 pub mod log_normal; // 対数正規分布
 pub mod normal; // 正規分布

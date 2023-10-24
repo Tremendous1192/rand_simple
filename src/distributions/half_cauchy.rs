@@ -2,7 +2,7 @@ use crate::create_state;
 use crate::standard_distributions::xorshift160_0_1_open;
 
 /// Half Cauchy Distribution
-/// 
+///
 /// # Example
 /// ```
 /// // Create a new Half-Cauchy distribution with a scale parameter of 1
