@@ -1,10 +1,10 @@
 use crate::create_state;
 use crate::standard_distributions::standard_normal;
 
-/// Levy Distribution
+/// Lévy Distribution
 /// # Example
 /// ```
-/// // Create a new Levy distribution with a location parameter (μ) of 0 and a scale parameter (θ) of 1
+/// // Create a new Lévy distribution with a location parameter (μ) of 0 and a scale parameter (θ) of 1
 /// let mut levy = rand_simple::Levy::new([1192_u32, 765_u32]);
 /// assert_eq!(format!("{levy}"), "Lévy(Location parameter, Scale parameter) = Lévy(0, 1)");
 /// println!("Returns a random number following a standard Levy distribution -> {}", levy.sample());

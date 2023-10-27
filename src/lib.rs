@@ -81,21 +81,8 @@ pub use crate::distributions::half_cauchy::HalfCauchy;
 // レヴィ分布
 pub use crate::distributions::levy::Levy;
 
-/// 指数分布
-/// # 使用例
-/// ```
-/// let mut exponential = rand_simple::Exponential::new(1192_u32);
-/// println!("尺度母数 θ = 1の標準指数分布に従う乱数を生成する -> {}", exponential.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let scale: f64 = 1.5_f64;
-/// let result: Result<f64, &str> = exponential.try_set_params(scale);
-/// println!("尺度母数 θ = {} の指数分布に従う乱数を生成する -> {}", scale, exponential.sample());
-/// ```
-pub struct Exponential {
-    xyzuv: [u32; 5], // 状態変数
-    scale: f64,      // 尺度母数
-}
+// 指数分布
+pub use crate::distributions::exponential::Exponential;
 
 /// ラプラス分布
 /// # 使用例
