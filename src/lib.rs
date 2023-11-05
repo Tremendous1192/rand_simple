@@ -87,23 +87,8 @@ pub use crate::distributions::exponential::Exponential;
 // ラプラス分布
 pub use crate::distributions::laplace::Laplace;
 
-/// 対数ラプラス分布
-/// # 使用例
-/// ```
-/// let mut log_laplace = rand_simple::Laplace::new(1192u32);
-/// println!("位置母数 μ = 0, 尺度母数 θ = 1 の標準対数ラプラス分布に従う乱数を生成する -> {}", log_laplace.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let location: f64 = -2f64;
-/// let scale: f64 = 1.5f64;
-/// let result: Result<(f64, f64), &str> = log_laplace.try_set_params(location, scale);
-/// println!("位置母数 μ = {}, 尺度母数 θ = {} の対数ラプラス分布に従う乱数を生成する -> {}", location, scale, log_laplace.sample());
-/// ```
-pub struct LogLaplace {
-    xyzuv: [u32; 5], // 状態変数
-    location: f64,   // 位置母数
-    scale: f64,      // 尺度母数
-}
+// 対数ラプラス分布
+pub use crate::distributions::log_laplace::LogLaplace;
 
 /// レイリー分布
 /// # 使用例

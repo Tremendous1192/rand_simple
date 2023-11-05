@@ -58,8 +58,8 @@ impl Laplace {
 /// Formatter for displaying with macros like println!
 /// * Location parameter
 /// * Scale parameter
-impl std::fmt::Display for Laplace {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl core::fmt::Display for Laplace {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(
             f,
             "La(Location parameter, Scale parameter) = La({}, {})",
