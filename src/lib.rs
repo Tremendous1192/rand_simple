@@ -90,21 +90,8 @@ pub use crate::distributions::laplace::Laplace;
 // 対数ラプラス分布
 pub use crate::distributions::log_laplace::LogLaplace;
 
-/// レイリー分布
-/// # 使用例
-/// ```
-/// let mut rayleigh = rand_simple::Rayleigh::new(1192u32);
-/// println!("尺度母数 θ = 1の標準レイリー分布に従う乱数を生成する -> {}", rayleigh.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let scale: f64 = 1.5f64;
-/// let result: Result<f64, &str> = rayleigh.try_set_params(scale);
-/// println!("尺度母数 θ = {} の標準レイリー分布に従う乱数を生成する -> {}", scale, rayleigh.sample());
-/// ```
-pub struct Rayleigh {
-    xyzuv: [u32; 5], // 状態変数
-    scale: f64,      // 尺度母数
-}
+// レイリー分布
+pub use crate::distributions::rayleigh::Rayleigh;
 
 /// ワイブル分布
 /// # 使用例
