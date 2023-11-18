@@ -93,23 +93,8 @@ pub use crate::distributions::log_laplace::LogLaplace;
 // レイリー分布
 pub use crate::distributions::rayleigh::Rayleigh;
 
-/// ワイブル分布
-/// # 使用例
-/// ```
-/// let mut weibull = rand_simple::Weibull::new(1192u32);
-/// println!("形状母数 γ = 1, 尺度母数 η = 1 の標準ワイブル分布に従う乱数を生成する -> {}", weibull.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let shape: f64 = 2f64;
-/// let scale: f64 = 1.5f64;
-/// let result: Result<(f64, f64), &str> = weibull.try_set_params(shape, scale);
-/// println!("形状母数 γ = {}, 尺度母数 η = {} のワイブル分布に従う乱数を生成する -> {}", shape, scale, weibull.sample());
-/// ```
-pub struct Weibull {
-    xyzuv: [u32; 5], // 状態変数
-    shape_inv: f64,  // 形状母数の逆数
-    scale: f64,      // 尺度母数
-}
+// ワイブル分布
+pub use crate::distributions::weibull::Weibull;
 
 /// 反射ワイブル分布
 /// # 使用例
