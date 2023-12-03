@@ -96,25 +96,8 @@ pub use crate::distributions::rayleigh::Rayleigh;
 // ワイブル分布
 pub use crate::distributions::weibull::Weibull;
 
-/// 反射ワイブル分布
-/// # 使用例
-/// ```
-/// let mut reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
-/// println!("形状母数 γ = 1, 位置母数 μ = 0, 尺度母数 η = 1 の標準反射ワイブル分布に従う乱数を生成する -> {}", reflected_weibull.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let shape: f64 = 2f64;
-/// let location: f64 = 3f64;
-/// let scale: f64 = 1.5f64;
-/// let result: Result<(f64, f64, f64), &str> = reflected_weibull.try_set_params(shape, location, scale);
-/// println!("形状母数 γ = {}, 位置母数 μ = {}, 尺度母数 η = {} の反射ワイブル分布に従う乱数を生成する -> {}", shape, location, scale, reflected_weibull.sample());
-/// ```
-pub struct ReflectedWeibull {
-    xyzuv: [u32; 5], // 状態変数
-    shape_inv: f64,  // 形状母数の逆数
-    location: f64,   // 位置母数
-    scale: f64,      // 尺度母数
-}
+// 反射ワイブル分布
+pub use crate::distributions::reflected_weibull::ReflectedWeibull;
 
 /// フレシェ分布
 /// # 使用例

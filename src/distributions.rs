@@ -14,7 +14,7 @@ pub mod log_laplace; // 対数ラプラス分布
 pub mod log_normal; // 対数正規分布
 pub mod normal; // 正規分布
 pub mod rayleigh; // レイリー分布
-mod reflected_weibull; // 反射ワイブル分布
+pub mod reflected_weibull; // 反射ワイブル分布
 pub mod uniform; // 一様分布
 pub mod weibull; // ワイブル分布
                  //mod dirichlet; // ディリクレ分布

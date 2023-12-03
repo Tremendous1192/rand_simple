@@ -1,35 +1,57 @@
+use crate::create_state;
 use crate::standard_distributions::xorshift160_0_open_1_open;
-use crate::{create_state, ReflectedWeibull};
+
+/// 反射ワイブル分布
+/// # 使用例
+/// ```
+/// let mut reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
+/// assert_eq!(format!("{reflected_weibull}"), "RWeibull(Shape parameter, Location Parameter, Scale parameter) = RWeibull(1, 0, 1)");
+///
+/// // 確率変数のパラメータを変更する場合
+/// let shape: f64 = 2f64;
+/// let location: f64 = 3f64;
+/// let scale: f64 = 1.5f64;
+/// let result: Result<(f64, f64, f64), &str> = reflected_weibull.try_set_params(shape, location, scale);
+/// assert_eq!(format!("{reflected_weibull}"), "RWeibull(Shape parameter, Location Parameter, Scale parameter) = RWeibull(2, 3, 1.5)");
+/// ```
+pub struct ReflectedWeibull {
+    xyzuv: [u32; 5], // 状態変数
+    shape: f64,  // 形状母数の逆数
+    location: f64,   // 位置母数
+    scale: f64,      // 尺度母数
+}
 
 impl ReflectedWeibull {
-    /// コンストラクタ
-    /// * `_seed` - 乱数の種
+    /// Constructor
+    /// * `_seed` - Random seed
     pub fn new(_seed: u32) -> Self {
         Self {
             xyzuv: create_state(_seed),
-            shape_inv: 1_f64,
+            shape: 1_f64,
             location: 0_f64,
             scale: 1_f64,
         }
     }
 
-    /// 乱数を計算する
+    /// Computes a random number.
     pub fn sample(&mut self) -> f64 {
-        // アルゴリズム 3.53: 逆関数法
-        // step 1: (0, 1) の一様乱数
+        // Algorithm 3.53: Inverse Transform Sampling
+        // Step 1: Uniform random number in (0, 1)
         let u = xorshift160_0_open_1_open(&mut self.xyzuv);
-        // step 2
+        // Step 2
         if u < 0.5_f64 {
-            -(-(2_f64 * u).ln()).powf(self.shape_inv) * self.scale + self.location
+            // Apply the inverse function for the lower half of the distribution
+            -(-(2_f64 * u).ln()).powf(self.shape.powi(-1)) * self.scale + self.location
         } else {
-            (-(2_f64 * (1_f64 - u)).ln()).powf(self.shape_inv) * self.scale + self.location
+            // Apply the inverse function for the upper half of the distribution
+            (-(2_f64 * (1_f64 - u)).ln()).powf(self.shape.powi(-1)) * self.scale + self.location
         }
     }
 
-    /// 確率変数のパラメータを変更する
-    /// * `shape` - 形状母数
-    /// * `location` - 位置母数
-    /// * `scale` - 尺度母数
+    /// Changes the parameters of the probability variable.
+    /// * `shape` - Shape parameter
+    /// * `location` - Location parameter
+    /// * `scale` - Scale parameter
     pub fn try_set_params(
         &mut self,
         shape: f64,
@@ -37,9 +59,11 @@ impl ReflectedWeibull {
         scale: f64,
     ) -> Result<(f64, f64, f64), &str> {
         if shape <= 0_f64 || scale <= 0_f64 {
-            Err("形状母数あるいは尺度母数が0以下です。確率変数のパラメータは前回の設定を維持します。")
+            // Returns an error if the shape or scale parameters are less than or equal to 0.
+            Err("Shape or scale parameter is less than or equal to 0. The parameters of the probability variable will remain unchanged.")
         } else {
-            self.shape_inv = shape.powi(-1);
+            // Updates the parameters and returns the new values.
+            self.shape = shape;
             self.location = location;
             self.scale = scale;
             Ok((shape, location, scale))
@@ -48,15 +72,17 @@ impl ReflectedWeibull {
 }
 
 impl std::fmt::Display for ReflectedWeibull {
-    /// println!マクロなどで表示するためのフォーマッタ
-    /// * 構造体の型
-    /// * 形状母数
-    /// * 尺度母数
+    /// Formatter for displaying using println! macro and similar constructs.
+    /// * Type of the struct
+    /// * Shape parameter (inverse)
+    /// * Location parameter
+    /// * Scale parameter
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "形状母数: {}", self.shape_inv.powi(-1))?;
-        writeln!(f, "位置母数: {}", self.location)?;
-        writeln!(f, "尺度母数: {}", self.scale)?;
+        write!(
+            f,
+            "RWeibull(Shape parameter, Location Parameter, Scale parameter) = RWeibull({}, {}, {})",
+            self.shape, self.location, self.scale
+        )?;
         Ok(())
     }
 }
