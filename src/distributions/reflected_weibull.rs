@@ -16,7 +16,7 @@ use crate::standard_distributions::xorshift160_0_open_1_open;
 /// ```
 pub struct ReflectedWeibull {
     xyzuv: [u32; 5], // 状態変数
-    shape: f64,  // 形状母数の逆数
+    shape: f64,      // 形状母数の逆数
     location: f64,   // 位置母数
     scale: f64,      // 尺度母数
 }

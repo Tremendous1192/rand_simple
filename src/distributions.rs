@@ -3,7 +3,7 @@
 mod beta; // ベータ分布
 pub mod cauchy; // コーシー分布
 pub mod exponential; // 指数分布
-mod frechet; // フレシェ分布
+pub mod frechet; // フレシェ分布
 mod gamma; // ガンマ分布
 mod gunbel; // ガンベル分布
 pub mod half_cauchy; // 半コーシー分布
