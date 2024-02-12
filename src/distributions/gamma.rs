@@ -1,8 +1,7 @@
 use crate::create_state;
 use crate::standard_distributions::standard_gamma;
 
-// Gamma Distribution
-/// Represents a gamma distribution.
+/// Gamma Distribution
 /// # Example
 /// ```
 /// let mut gamma = rand_simple::Gamma::new([1192u32, 765u32, 1543u32]);
