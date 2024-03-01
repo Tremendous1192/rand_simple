@@ -1,6 +1,6 @@
 // 子モジュールに、各疑似乱数の詳細を記述する
 // 連続型確率変数
-mod beta; // ベータ分布
+pub mod beta; // ベータ分布
 pub mod cauchy; // コーシー分布
 pub mod exponential; // 指数分布
 pub mod frechet; // フレシェ分布
