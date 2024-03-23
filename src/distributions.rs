@@ -18,8 +18,8 @@ pub mod reflected_weibull; // 反射ワイブル分布
 pub mod uniform; // 一様分布
 pub mod weibull; // ワイブル分布
                  //mod dirichlet; // ディリクレ分布
-mod power_function; // べき関数分布
-                    //mod exponential_power; // 指数べき分布
+pub mod power_function; // べき関数分布
+                        //mod exponential_power; // 指数べき分布
 mod chi; // χ分布
 mod chi_square; // χ二乗分布
 mod erlang; // アーラン分布

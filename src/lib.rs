@@ -114,25 +114,8 @@ pub use crate::distributions::beta::Beta;
 // ディリクレ分布
 //pub struct Dirichlet {}
 
-/// べき関数分布
-/// # 使用例
-/// ```
-/// let mut power_function = rand_simple::PowerFunction::new(1192u32);
-/// println!("形状母数 1, 開区間(0, 1)のべき関数分布を返す -> {}", power_function.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let shape: f64 = 2_f64;
-/// let min: f64 = -1f64;
-/// let max: f64 = 1f64;
-/// let result: Result<(f64, f64, f64), &str> = power_function.try_set_params(shape,min, max);
-/// println!("形状母数 {}, 開区間({}, {})のべき関数分布を生成する -> {}", shape, min, max, power_function.sample());
-/// ```
-pub struct PowerFunction {
-    xyzuv: [u32; 5], // 状態変数
-    shape_inv: f64,  // 形状母数
-    min_a: f64,      // 境界母数(小範)
-    range_s: f64,    // 境界母数の差
-}
+// べき関数分布
+pub use crate::distributions::power_function::PowerFunction;
 
 // 指数べき分布
 //pub struct ExponentialPower {}
