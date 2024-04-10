@@ -120,24 +120,40 @@ pub use crate::distributions::power_function::PowerFunction;
 // 指数べき分布
 //pub struct ExponentialPower {}
 
-/// アーラン分布
-/// # 使用例
-/// ```
-/// let mut erlang = rand_simple::Erlang::new([1192u32, 765u32, 1543u32]);
-/// println!("形状母数 r = 1, 尺度母数 θ = 1 の標準アーラン分布に従う乱数を生成する -> {}", erlang.sample());
+// アーラン分布
+/// Erlang Distribution
 ///
-/// // 確率変数のパラメータを変更する場合
+/// Represents a random variable following the Erlang distribution.
+///
+/// # Examples
+///
+/// ```
+/// // Create a new Erlang distribution with specified seeds
+/// let mut erlang = rand_simple::Erlang::new([1192u32, 765u32, 1543u32]);
+///
+/// // Ensure the initial parameters are correctly set
+/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(1, 1)");
+///
+/// // Generate a random number from the Erlang distribution
+/// println!("Generating a random number following the standard Erlang distribution with shape parameter r = 1 and scale parameter θ = 1 -> {}", erlang.sample());
+///
+/// // Modify the parameters of the random variable
 /// let shape: i64 = 2_i64;
 /// let scale: f64 = 1.5_f64;
 /// let result: Result<(i64, f64), &str> = erlang.try_set_params(shape, scale);
-/// println!("形状母数 r = {}, 尺度母数 θ = {} のアーラン分布に従う乱数を生成する -> {}", shape, scale, erlang.sample());
+///
+/// // Ensure the parameters are updated correctly
+/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(2, 1.5)");
+///
+/// // Generate a random number from the modified Erlang distribution
+/// println!("Generating a random number following the Erlang distribution with shape parameter r = {} and scale parameter θ = {} -> {}", shape, scale, erlang.sample());
 /// ```
 pub struct Erlang {
-    xyzuv_u: [u32; 5],   // 状態変数
-    xyzuv_n_0: [u32; 5], // 状態変数
-    xyzuv_n_1: [u32; 5], // 状態変数
-    shape: f64,          // 形状母数 r ∈ N
-    scale: f64,          // 尺度母数
+    xyzuv_u: [u32; 5],   // State variable
+    xyzuv_n_0: [u32; 5], // State variable
+    xyzuv_n_1: [u32; 5], // State variable
+    shape: f64,          // Shape parameter r ∈ N
+    scale: f64,          // Scale parameter
 }
 
 /// χ二乗分布
