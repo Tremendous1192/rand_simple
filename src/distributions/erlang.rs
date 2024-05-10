@@ -1,5 +1,40 @@
+use crate::create_state;
 use crate::standard_distributions::standard_gamma;
-use crate::{create_state, Erlang};
+
+/// Erlang Distribution
+///
+/// Represents a random variable following the Erlang distribution.
+///
+/// # Examples
+///
+/// ```
+/// // Create a new Erlang distribution with specified seeds
+/// let mut erlang = rand_simple::Erlang::new([1192u32, 765u32, 1543u32]);
+///
+/// // Ensure the initial parameters are correctly set
+/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(1, 1)");
+///
+/// // Generate a random number from the Erlang distribution
+/// println!("Generating a random number following the standard Erlang distribution with shape parameter r = 1 and scale parameter θ = 1 -> {}", erlang.sample());
+///
+/// // Modify the parameters of the random variable
+/// let shape: i64 = 2_i64;
+/// let scale: f64 = 1.5_f64;
+/// let result: Result<(i64, f64), &str> = erlang.try_set_params(shape, scale);
+///
+/// // Ensure the parameters are updated correctly
+/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(2, 1.5)");
+///
+/// // Generate a random number from the modified Erlang distribution
+/// println!("Generating a random number following the Erlang distribution with shape parameter r = {} and scale parameter θ = {} -> {}", shape, scale, erlang.sample());
+/// ```
+pub struct Erlang {
+    xyzuv_u: [u32; 5],   // State variable
+    xyzuv_n_0: [u32; 5], // State variable
+    xyzuv_n_1: [u32; 5], // State variable
+    shape: f64,          // Shape parameter r ∈ N
+    scale: f64,          // Scale parameter
+}
 
 impl Erlang {
     /// Constructor

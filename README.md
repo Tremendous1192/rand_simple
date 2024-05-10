@@ -66,7 +66,7 @@ println!("Returns a random number -> {}", normal.sample());
 * [ ] 3.13 Dirichlet distribution
 * [x] 3.14 Power Function distribution
 * [ ] 3.15 Exponential Power distribution
-  * [] Half Exponential Power distribution
+  * [ ] Half Exponential Power distribution
 * [x] 3.16 Erlang distribution
 * [x] 3.17 Chi-Square distribution
 * [x] 3.18 Chi distribution

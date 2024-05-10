@@ -16,7 +16,7 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 // 共通処理
 
 #[macro_export]
-/// 乱数の種の配列を生成する(std環境のみ)
+/// std環境で乱数の種の配列を生成するマクロ
 /// * `$length: usize` - 配列の長さ
 macro_rules! generate_seeds {
     ($length: expr) => {{
@@ -39,7 +39,7 @@ macro_rules! generate_seeds {
     }};
 }
 
-// 配列の要素を全て異なる値に変更するマクロ
+// 配列の要素を互いに異なる値に変更するマクロ
 macro_rules! adjust_seeds {
     ($array:expr) => {{
         let mut copy_array = $array;
@@ -121,61 +121,10 @@ pub use crate::distributions::power_function::PowerFunction;
 //pub struct ExponentialPower {}
 
 // アーラン分布
-/// Erlang Distribution
-///
-/// Represents a random variable following the Erlang distribution.
-///
-/// # Examples
-///
-/// ```
-/// // Create a new Erlang distribution with specified seeds
-/// let mut erlang = rand_simple::Erlang::new([1192u32, 765u32, 1543u32]);
-///
-/// // Ensure the initial parameters are correctly set
-/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(1, 1)");
-///
-/// // Generate a random number from the Erlang distribution
-/// println!("Generating a random number following the standard Erlang distribution with shape parameter r = 1 and scale parameter θ = 1 -> {}", erlang.sample());
-///
-/// // Modify the parameters of the random variable
-/// let shape: i64 = 2_i64;
-/// let scale: f64 = 1.5_f64;
-/// let result: Result<(i64, f64), &str> = erlang.try_set_params(shape, scale);
-///
-/// // Ensure the parameters are updated correctly
-/// assert_eq!(format!("{erlang}"), "Er(Shape parameter, Scale parameter) = Er(2, 1.5)");
-///
-/// // Generate a random number from the modified Erlang distribution
-/// println!("Generating a random number following the Erlang distribution with shape parameter r = {} and scale parameter θ = {} -> {}", shape, scale, erlang.sample());
-/// ```
-pub struct Erlang {
-    xyzuv_u: [u32; 5],   // State variable
-    xyzuv_n_0: [u32; 5], // State variable
-    xyzuv_n_1: [u32; 5], // State variable
-    shape: f64,          // Shape parameter r ∈ N
-    scale: f64,          // Scale parameter
-}
+pub use crate::distributions::erlang::Erlang;
 
-/// χ二乗分布
-/// # 使用例
-/// ```
-/// let mut chi_square = rand_simple::ChiSquare::new([1192_u32, 765_u32, 1543_u32, 2003_u32]);
-/// println!("初期設定の場合、自由度 1のχ二乗分布に従う乱数を返す -> {}", chi_square.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let degree_of_freedom: u64 = 2_u64;
-/// let result: Result<u64, &str> = chi_square.try_set_params(degree_of_freedom);
-/// println!("自由度 {}の乱数を生成する -> {}", degree_of_freedom, chi_square.sample());
-/// ```
-pub struct ChiSquare {
-    xyzuv_u_gamma: [u32; 5],   // 状態変数
-    xyzuv_n_0_gamma: [u32; 5], // 状態変数
-    xyzuv_n_1_gamma: [u32; 5], // 状態変数
-
-    xyzuv_uniform: [u32; 5], // 状態変数
-
-    degree_of_freedom: f64, // 自由度 r ∈ N
-}
+// χ二乗分布
+pub use crate::distributions::chi_square::ChiSquare;
 
 /// χ分布
 /// # 使用例
