@@ -126,26 +126,8 @@ pub use crate::distributions::erlang::Erlang;
 // χ二乗分布
 pub use crate::distributions::chi_square::ChiSquare;
 
-/// χ分布
-/// # 使用例
-/// ```
-/// let mut chi = rand_simple::Chi::new([1192_u32, 765_u32, 1543_u32, 2003_u32]);
-/// println!("初期設定の場合、自由度 1のχ二乗分布に従う乱数を返す -> {}", chi.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let degree_of_freedom: u64 = 2_u64;
-/// let result: Result<u64, &str> = chi.try_set_params(degree_of_freedom);
-/// println!("自由度 {}の乱数を生成する -> {}", degree_of_freedom, chi.sample());
-/// ```
-pub struct Chi {
-    xyzuv_u_gamma: [u32; 5],   // 状態変数
-    xyzuv_n_0_gamma: [u32; 5], // 状態変数
-    xyzuv_n_1_gamma: [u32; 5], // 状態変数
-
-    xyzuv_uniform: [u32; 5], // 状態変数
-
-    degree_of_freedom: f64, // 自由度 r ∈ N
-}
+// χ分布
+pub use crate::distributions::chi::Chi;
 
 /// F分布
 /// # 使用例

@@ -20,7 +20,7 @@ pub mod weibull; // ワイブル分布
                  //mod dirichlet; // ディリクレ分布
 pub mod power_function; // べき関数分布
                         //mod exponential_power; // 指数べき分布
-mod chi; // χ分布
+pub mod chi; // χ分布
 pub mod chi_square; // χ二乗分布
 pub mod erlang; // アーラン分布
 mod f; // F分布
