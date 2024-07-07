@@ -16,32 +16,56 @@ For graph-based examples, please refer to [this repository](https://github.com/T
 
 ### Uniform Distribution
 ```rust
+// Generate a single seed value for initializing the random number generator
 let seed: u32 = rand_simple::generate_seeds!(1_usize)[0];
+
+// Create a new instance of the Uniform distribution with the generated seed
 let mut uniform = rand_simple::Uniform::new(seed);
+
+// Check the default range of the uniform distribution and print it
 assert_eq!(format!("{uniform}"), "Range (Closed Interval): [0, 1]");
 println!("Returns a random number -> {}", uniform.sample());
 
 // When changing the parameters of the random variable
+
+// Define new minimum and maximum values for the uniform distribution
 let min: f64 = -1_f64;
 let max: f64 = 1_f64;
+
+// Attempt to set the new parameters for the uniform distribution
 let result: Result<(f64, f64), &str> = uniform.try_set_params(min, max);
+
+// Check the updated range of the uniform distribution and print it
 assert_eq!(format!("{uniform}"), "Range (Closed Interval): [-1, 1]");
 println!("Returns a random number -> {}", uniform.sample());
+
 ```
 
 ### Normal Distribution
 ```rust
+// Generate two seed values for initializing the random number generator
 let seeds: [u32; 2_usize] = rand_simple::generate_seeds!(2_usize);
+
+// Create a new instance of the Normal distribution with the generated seeds
 let mut normal = rand_simple::Normal::new(seeds);
+
+// Check the default parameters of the normal distribution (mean = 0, std deviation = 1) and print it
 assert_eq!(format!("{normal}"), "N(Mean, Std^2) = N(0, 1^2)");
 println!("Returns a random number -> {}", normal.sample());
 
 // When changing the parameters of the random variable
+
+// Define new mean and standard deviation values for the normal distribution
 let mean: f64 = -3_f64;
 let std: f64 = 2_f64;
+
+// Attempt to set the new parameters for the normal distribution
 let result: Result<(f64, f64), &str> = normal.try_set_params(mean, std);
+
+// Check the updated parameters of the normal distribution and print it
 assert_eq!(format!("{normal}"), "N(Mean, Std^2) = N(-3, 2^2)");
 println!("Returns a random number -> {}", normal.sample());
+
 ```
 
 ## Implementation Status
