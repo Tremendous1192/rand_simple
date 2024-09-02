@@ -110,30 +110,29 @@ impl ChiSquare {
         }
     }
 
-/// Sets the Parameters of the Probability Variable
-///
-/// This method allows for changing the parameters of the Chi-Square distribution.
-///
-/// # Arguments
-///
-/// * `degree_of_freedom` - The degree of freedom (r) parameter of the distribution.
-///
-/// # Returns
-///
-/// Returns `Ok(degree_of_freedom)` if successful, else returns an error message.
-///
-pub fn try_set_params(&mut self, degree_of_freedom: u64) -> Result<u64, &str> {
-    if degree_of_freedom < 1_u64 {
-        // Degree of freedom must be a natural number
-        Err("The degree of freedom must be a natural number. The parameters of the probability variable will remain unchanged.")
-    } else {
-        // Sets the degree of freedom and calculates r_div2
-        self.degree_of_freedom = degree_of_freedom;
-        self.r_div2 = degree_of_freedom as f64 / 2f64;
-        Ok(degree_of_freedom)
+    /// Sets the Parameters of the Probability Variable
+    ///
+    /// This method allows for changing the parameters of the Chi-Square distribution.
+    ///
+    /// # Arguments
+    ///
+    /// * `degree_of_freedom` - The degree of freedom (r) parameter of the distribution.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(degree_of_freedom)` if successful, else returns an error message.
+    ///
+    pub fn try_set_params(&mut self, degree_of_freedom: u64) -> Result<u64, &str> {
+        if degree_of_freedom < 1_u64 {
+            // Degree of freedom must be a natural number
+            Err("The degree of freedom must be a natural number. The parameters of the probability variable will remain unchanged.")
+        } else {
+            // Sets the degree of freedom and calculates r_div2
+            self.degree_of_freedom = degree_of_freedom;
+            self.r_div2 = degree_of_freedom as f64 / 2f64;
+            Ok(degree_of_freedom)
+        }
     }
-}
-
 }
 
 /// Formatter for Displaying the Chi-Square Distribution
@@ -159,6 +158,3 @@ impl core::fmt::Display for ChiSquare {
         Ok(())
     }
 }
-
-
-
