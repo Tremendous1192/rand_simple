@@ -24,7 +24,7 @@ pub mod chi; // χ分布
 pub mod chi_square; // χ二乗分布
 pub mod erlang; // アーラン分布
 pub mod f; // F分布
-mod inverse_gaussian; // 逆ガウス分布
+pub mod inverse_gaussian; // 逆ガウス分布
 pub mod t; // t分布
 mod triangular; // 三角分布
                 //mod pareto; // パレート分布
