@@ -138,25 +138,8 @@ pub use crate::distributions::t::TDistribution;
 // 逆ガウス分布
 pub use crate::distributions::inverse_gaussian::InverseGaussian;
 
-/// 三角分布
-/// # 使用例
-/// ```
-/// let mut triangular = rand_simple::Triangular::new(1192_u32);
-/// println!("閉区間[0, 1], モード 0.5の三角分布に従う乱数を返す -> {}", triangular.sample());
-///
-/// // 確率変数のパラメータを変更する
-/// let min: f64 = -1_f64;
-/// let max: f64 = 1_f64;
-/// let mode: f64 = 0.25_f64;
-/// let result: Result<(f64, f64, f64), &str> = triangular.try_set_params(min, max, mode);
-/// println!("閉区間[{}, {}], モード {}の三角分布に従う乱数を返す -> {}", min, max, mode, triangular.sample());
-/// ```
-pub struct Triangular {
-    xyzuv: [u32; 5], // 状態変数
-    min: f64,        // 最小値
-    max: f64,        // 最大値
-    mode: f64,       // モード
-}
+// 三角分布
+pub use crate::distributions::triangular::Triangular;
 
 // パレート分布
 //pub struct Pareto {}

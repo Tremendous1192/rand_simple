@@ -1,6 +1,6 @@
 [package]
 name = "rand_simple"
-version = "0.2.33"
+version = "0.2.34"
 authors = ["Tremendous1192"]
 edition = "2021"
 resolver = "2" # dev-dependencies が通常コンパイルに引き継がれるバグ対応
