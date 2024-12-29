@@ -1,5 +1,26 @@
+use crate::create_state;
 use crate::standard_distributions::xorshift160_0_1;
-use crate::{create_state, Geometric};
+
+/// Geometric Distribution
+///
+/// # Example Usage
+/// ```
+/// let mut geometric = rand_simple::Geometric::new(1192u32);
+///
+/// // Default parameters
+/// assert_eq!(format!("{geometric}"), "Geometric(Probability) = Geometric(0.5)");
+/// println!("Number of trials until success with probability θ = 0.5 -> {}", geometric.sample());
+///
+/// // Updating the probability parameter
+/// let probability: f64 = 0.8f64;
+/// let result: Result<f64, &str> = geometric.try_set_params(probability);
+/// assert_eq!(format!("{geometric}"), "Geometric(Probability) = Geometric(0.8)");
+/// println!("Number of trials until success with probability θ = {} -> {}", probability, geometric.sample());
+/// ```
+pub struct Geometric {
+    xyzuv: [u32; 5],  // 状態変数
+    probability: f64, // 発生確率
+}
 
 impl Geometric {
     /// コンストラクタ
@@ -33,13 +54,14 @@ impl Geometric {
     }
 }
 
-impl std::fmt::Display for Geometric {
-    /// println!マクロなどで表示するためのフォーマッタ
-    /// * 構造体の型
-    /// * 発生確率
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "発生確率: {}", self.probability)?;
+impl core::fmt::Display for Geometric {
+    /// Formatter for displaying in functions like println! macro
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(
+            f,
+            "Geometric(Probability) = Geometric({})",
+            self.probability
+        )?;
         Ok(())
     }
 }

@@ -1,12 +1,12 @@
-use crate::standard_distributions::xorshift160_0_1;
 use crate::create_state;
+use crate::standard_distributions::xorshift160_0_1;
 
 /// Bernoulli Distribution
 ///
 /// # Example Usage
 /// ```
 /// let mut bernoulli = rand_simple::Bernoulli::new(1192u32);
-/// 
+///
 /// // Default parameters
 /// assert_eq!(format!("{bernoulli}"), "Bernoulli(Probability) = Bernoulli(0.5)");
 /// println!("Does the event occur (1) or not (0) with a probability θ = 0.5? -> {}", bernoulli.sample());
@@ -54,11 +54,14 @@ impl Bernoulli {
     }
 }
 
-
 impl core::fmt::Display for Bernoulli {
     /// Formatter for displaying in functions like println! macro
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        write!(f, "Bernoulli(Probability) = Bernoulli({})", self.probability)?;
+        write!(
+            f,
+            "Bernoulli(Probability) = Bernoulli({})",
+            self.probability
+        )?;
         Ok(())
     }
 }

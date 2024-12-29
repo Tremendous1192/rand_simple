@@ -43,14 +43,14 @@ pub mod triangular; // 三角分布
 
 // 離散型確率変数
 pub mod bernoulli; // ベルヌーイ分布
-               //mod Binomial // 二項分布
-mod geometric; // 幾何分布
-               //mod Poisson // ポアソン分布
-               //mod HeyperGeometric // 超幾何分布
-               //mod Multinominal // 多項分布
-               //mod NegativeBinomial // 負の二項分布
-               //mod NegativeHeyperGeometric // 負の超幾何分布
-               //mod LogarithmicSeries // 対数級数分布
-               //mod YuleSimon // ユール・シモン分布
-               //mod ZipfMandelbrot // ジップ・マンデルブロート分布
-               //mod Zeta // ゼータ分布
+                   //mod Binomial // 二項分布
+pub mod geometric; // 幾何分布
+                   //mod Poisson // ポアソン分布
+                   //mod HeyperGeometric // 超幾何分布
+                   //mod Multinominal // 多項分布
+                   //mod NegativeBinomial // 負の二項分布
+                   //mod NegativeHeyperGeometric // 負の超幾何分布
+                   //mod LogarithmicSeries // 対数級数分布
+                   //mod YuleSimon // ユール・シモン分布
+                   //mod ZipfMandelbrot // ジップ・マンデルブロート分布
+                   //mod Zeta // ゼータ分布

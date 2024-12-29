@@ -188,21 +188,8 @@ pub use crate::distributions::bernoulli::Bernoulli;
 // 二項分布
 //pub  struct Binomial {}
 
-/// 幾何分布
-/// # 使用例
-/// ```
-/// let mut geometric = rand_simple::Geometric::new(1192u32);
-/// println!("発生確率 θ = 0.5 の事象が生じるまでの試行回数 -> {}", geometric.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let probability: f64 = 0.8f64;
-/// let result: Result<f64, &str> = geometric.try_set_params(probability);
-/// println!("発生確率 θ = {} の事象が生じるまでの試行回数 -> {}", probability, geometric.sample());
-/// ```
-pub struct Geometric {
-    xyzuv: [u32; 5],  // 状態変数
-    probability: f64, // 発生確率
-}
+// 幾何分布
+pub use crate::distributions::geometric::Geometric;
 
 // ポアソン分布
 //pub struct Poisson {}
