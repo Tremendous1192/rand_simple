@@ -42,7 +42,7 @@ pub mod triangular; // 三角分布
                     //mod plank; // プランク分布
 
 // 離散型確率変数
-mod bernoulli; // ベルヌーイ分布
+pub mod bernoulli; // ベルヌーイ分布
                //mod Binomial // 二項分布
 mod geometric; // 幾何分布
                //mod Poisson // ポアソン分布

@@ -182,21 +182,8 @@ pub use crate::distributions::triangular::Triangular;
 
 // 離散型確率変数
 
-/// ベルヌーイ分布
-/// # 使用例
-/// ```
-/// let mut bernoulli = rand_simple::Bernoulli::new(1192u32);
-/// println!("発生確率 θ = 0.5 の事象が生じたか(1)、否か(0)の判定 -> {}", bernoulli.sample());
-///
-/// // 確率変数のパラメータを変更する場合
-/// let probability: f64 = 0.8f64;
-/// let result: Result<f64, &str> = bernoulli.try_set_params(probability);
-/// println!("発生確率 θ = {} の事象が生じたか(1)、否か(0)の判定 -> {}", probability, bernoulli.sample());
-/// ```
-pub struct Bernoulli {
-    xyzuv: [u32; 5],  // 状態変数
-    probability: f64, // 発生確率
-}
+// ベルヌーイ分布
+pub use crate::distributions::bernoulli::Bernoulli;
 
 // 二項分布
 //pub  struct Binomial {}

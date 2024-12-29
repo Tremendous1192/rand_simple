@@ -1,5 +1,26 @@
 use crate::standard_distributions::xorshift160_0_1;
-use crate::{create_state, Bernoulli};
+use crate::create_state;
+
+/// Bernoulli Distribution
+///
+/// # Example Usage
+/// ```
+/// let mut bernoulli = rand_simple::Bernoulli::new(1192u32);
+/// 
+/// // Default parameters
+/// assert_eq!(format!("{bernoulli}"), "Bernoulli(Probability) = Bernoulli(0.5)");
+/// println!("Does the event occur (1) or not (0) with a probability θ = 0.5? -> {}", bernoulli.sample());
+///
+/// // Updating the probability parameter
+/// let probability: f64 = 0.8f64;
+/// let result: Result<f64, &str> = bernoulli.try_set_params(probability);
+/// assert_eq!(format!("{bernoulli}"), "Bernoulli(Probability) = Bernoulli(0.8)");
+/// println!("Does the event occur (1) or not (0) with a probability θ = {}? -> {}", probability, bernoulli.sample());
+/// ```
+pub struct Bernoulli {
+    xyzuv: [u32; 5],  // 状態変数
+    probability: f64, // 発生確率
+}
 
 impl Bernoulli {
     /// コンストラクタ
@@ -33,13 +54,11 @@ impl Bernoulli {
     }
 }
 
-impl std::fmt::Display for Bernoulli {
-    /// println!マクロなどで表示するためのフォーマッタ
-    /// * 構造体の型
-    /// * 発生確率
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "構造体の型: {}", std::any::type_name::<Self>())?;
-        writeln!(f, "発生確率: {}", self.probability)?;
+
+impl core::fmt::Display for Bernoulli {
+    /// Formatter for displaying in functions like println! macro
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "Bernoulli(Probability) = Bernoulli({})", self.probability)?;
         Ok(())
     }
 }
