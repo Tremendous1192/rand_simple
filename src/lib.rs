@@ -16,8 +16,51 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 // 共通処理
 
 #[macro_export]
-/// std環境で乱数の種の配列を生成するマクロ
-/// * `$length: usize` - 配列の長さ
+/// Macro to generate an array of random seeds in a `std` environment.
+///
+/// This macro produces a `u32` array of a specified length, where each element is derived from
+/// the current system time since the UNIX epoch. The generated seeds can be used for initializing
+/// random number generators.
+///
+/// # Parameters
+/// - `$length: usize` - The length of the array to be generated.
+///
+/// # Implementation Details
+/// 1. **Initialization**:
+///    - A mutable array `array` of size `$length` is created and initialized with zeros (`[0_u32; $length]`).
+///
+/// 2. **System Time**:
+///    - The current system time is retrieved using `std::time::SystemTime::now()`.
+///    - The duration since the UNIX epoch is calculated using `duration_since(std::time::UNIX_EPOCH)`.
+///    - If the system clock is misconfigured (e.g., time moves backwards), it will panic with an error message.
+///
+/// 3. **Seed Generation Logic**:
+///    - Each element of the array is assigned a value based on the index `i` modulo 6. This ensures
+///      that a mix of time-based values is used to generate diverse seeds:
+///        - **Case 0**: The seed is derived from the number of milliseconds since the epoch (`as_millis`).
+///        - **Case 1**: The seed is the maximum `u32` value minus the nanoseconds since the epoch (`as_nanos`).
+///        - **Case 2**: The seed is the number of seconds since the epoch divided by 60.
+///        - **Case 3**: The seed is the maximum `u32` value minus the microseconds since the epoch (`as_micros`).
+///        - **Case 4**: The seed is the number of seconds since the epoch.
+///        - **Case 5**: The seed is the number of milliseconds since the epoch divided by 60.
+///        - **Default Case**: If the index doesn't match any case (which is improbable), it assigns a fixed value of `1_192_765_u32`.
+///
+/// 4. **Return Value**:
+///    - The populated array is returned, providing a set of random seeds.
+///
+/// # Example Usage
+/// ```
+/// use rand_simple::generate_seeds;
+/// // Generate an array of 5 random seeds
+/// let seeds = generate_seeds!(5);
+/// println!("Generated seeds: {:?}", seeds);
+///
+/// // The resulting `seeds` array will contain 5 `u32` values derived from the current system time.
+/// ```
+///
+/// # Notes
+/// - The seeds generated are dependent on the system time and provide a level of randomness sufficient for most applications.
+/// - This macro is designed to work in environments where `std` is available, as it relies on `std::time::SystemTime`.
 macro_rules! generate_seeds {
     ($length: expr) => {{
         let mut array = [0_u32; $length];
