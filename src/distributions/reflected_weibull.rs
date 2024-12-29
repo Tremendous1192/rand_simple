@@ -1,17 +1,24 @@
 use crate::create_state;
 use crate::standard_distributions::xorshift160_0_open_1_open;
 
-/// 反射ワイブル分布
-/// # 使用例
+/// Reflected Weibull Distribution
+///
+/// # Example Usage
 /// ```
+/// // Create an instance of the Reflected Weibull distribution with default parameters
 /// let mut reflected_weibull = rand_simple::ReflectedWeibull::new(1192u32);
+///
+/// // The default parameters are:
+/// // Shape = 1, Location = 0, Scale = 1
 /// assert_eq!(format!("{reflected_weibull}"), "RWeibull(Shape parameter, Location Parameter, Scale parameter) = RWeibull(1, 0, 1)");
 ///
-/// // 確率変数のパラメータを変更する場合
-/// let shape: f64 = 2f64;
-/// let location: f64 = 3f64;
-/// let scale: f64 = 1.5f64;
+/// // Adjusting the parameters of the distribution:
+/// let shape: f64 = 2f64;     // The shape parameter, controlling the distribution's tail
+/// let location: f64 = 3f64;  // The location parameter, shifting the distribution
+/// let scale: f64 = 1.5f64;   // The scale parameter, stretching or compressing the distribution
 /// let result: Result<(f64, f64, f64), &str> = reflected_weibull.try_set_params(shape, location, scale);
+///
+/// // After updating the parameters, verify the distribution's state
 /// assert_eq!(format!("{reflected_weibull}"), "RWeibull(Shape parameter, Location Parameter, Scale parameter) = RWeibull(2, 3, 1.5)");
 /// ```
 pub struct ReflectedWeibull {
