@@ -4,7 +4,8 @@ const A_XORSHIFT160: u32 = 7_u32;
 const B_XORSHIFT160: u32 = 13_u32;
 const C_XORSHIFT160: u32 = 6_u32;
 
-/// Xorshift160の基本計算
+/// Xorshift160の基本計算\
+/// 状態変数のシフト演算結果を返す。
 /// # 参考文献
 /// * Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1–6.
 /// * URL: https://doi.org/10.18637/jss.v008.i14
@@ -24,10 +25,10 @@ pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
     return xyzuv[4];
 }
 
-// 閉区間[0, 1]の一様乱数
+/// 閉区間 ```[0, 1]```の一様乱数
 #[inline]
 pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
-    xorshift160(xyzuv) as f64 / MAX_U32_AS_F64
+    return f64::from(xorshift160(xyzuv)) / MAX_U32_AS_F64;
 }
 
 // 区間[0, 1)の一様乱数
