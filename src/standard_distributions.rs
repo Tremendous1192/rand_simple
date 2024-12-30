@@ -44,13 +44,13 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     }
 }
 
-// 開区間(0, 1)の一様乱数
+/// 開区間(0, 1)の一様乱数
 #[inline]
 pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
-        xorshift160(xyzuv);
+        _ = xorshift160(xyzuv);
         if xyzuv[4] != 0_u32 && xyzuv[4] != std::u32::MAX {
-            return xyzuv[4] as f64 / MAX_U32_AS_F64;
+            return f64::from(xyzuv[4]) / MAX_U32_AS_F64;
         }
     }
 }

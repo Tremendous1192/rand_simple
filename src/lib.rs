@@ -1,10 +1,11 @@
 #![doc = include_str!("../README.md")]
 
 mod distributions; // 確率変数の詳細
-mod standard_distributions; // 標準分布を計算するモジュール
-                            //#[cfg(test)] mod test_distributions; // 機能確認のためのテストモジュール
 #[cfg(test)]
 mod sandbox; // 試行錯誤するためのテストモジュール
+mod standard_distributions; // 標準分布を計算するモジュール
+                            //#[cfg(test)]
+                            //mod test_distributions; // 機能確認のためのテストモジュール
 
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
