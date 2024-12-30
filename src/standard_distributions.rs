@@ -1,18 +1,27 @@
-// 基本計算
-// 論文
-// Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1?6. https://doi.org/10.18637/jss.v008.i14
-// 参考コード
-// http://www.6809.net/tenk/?%e9%9b%91%e8%a8%98%2f2010
-// http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
+// Xorshift160のシフト演算の定数
+// [A, B, C] = [2, 1, 4], [7, 13, 6], [1, 1, 20] のいずれかを選択する。
+const A_XORSHIFT160: u32 = 7_u32;
+const B_XORSHIFT160: u32 = 13_u32;
+const C_XORSHIFT160: u32 = 6_u32;
+
+/// Xorshift160の基本計算
+/// # 参考文献
+/// * Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1–6.
+/// * URL: https://doi.org/10.18637/jss.v008.i14
+/// ## C++でXorshift160を実装しているブログ
+/// * http://www.6809.net/tenk/?%e9%9b%91%e8%a8%98%2f2010
+/// * http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
 #[inline]
 pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
-    let t = xyzuv[0] ^ (xyzuv[0] << 7_u32);
+    // 参考文献P4の下部の式に基づいて乱数を計算する。
+    let t = xyzuv[0] ^ (xyzuv[0] << A_XORSHIFT160);
     xyzuv[0] = xyzuv[1];
     xyzuv[1] = xyzuv[2];
     xyzuv[2] = xyzuv[3];
     xyzuv[3] = xyzuv[4];
-    xyzuv[4] = (xyzuv[4] ^ (xyzuv[4] >> 6_u32)) ^ (t ^ (t >> 13_u32));
-    xyzuv[4]
+    xyzuv[4] = (xyzuv[4] ^ (xyzuv[4] >> C_XORSHIFT160)) ^ (t ^ (t >> B_XORSHIFT160));
+
+    return xyzuv[4];
 }
 
 // 閉区間[0, 1]の一様乱数
