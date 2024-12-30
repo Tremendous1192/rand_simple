@@ -14,8 +14,10 @@ const C_XORSHIFT160: u32 = 6_u32;
 /// * http://www.6809.net/tenk/html/prog/xorshiftrand/XorShiftRand.h.html
 #[inline]
 pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
-    // 参考文献P4の下部の式に基づいて乱数を計算する。
-    let t = xyzuv[0] ^ (xyzuv[0] << A_XORSHIFT160);
+    // 参考文献P4の式に基づいて乱数を計算する。
+    // ※ 物理教育の慣れで論文と異なるアルファベットの組を使用している。
+    //    論文:(x, y, z, w, v) -> コード(x, y, z, u, v)
+    let t: u32 = xyzuv[0] ^ (xyzuv[0] << A_XORSHIFT160);
     xyzuv[0] = xyzuv[1];
     xyzuv[1] = xyzuv[2];
     xyzuv[2] = xyzuv[3];
