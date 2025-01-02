@@ -145,12 +145,13 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
         if u_dash.ln() * 2_f64 < -u_x.powi(2_i32) {
             sign * u_x
         } else {
-            // step 9: yを計算して、最後の分岐
+            // step 9: yを計算して、条件を満たす場合、標準正規分布 y を返す
             let y: f64 = sign * S_NORMAL * (B_NORMAL - u_x);
             if (P_NORMAL - u_dash).ln() < Q_NORMAL - y.powi(2_i32) / 2_f64 {
                 y
             } else {
-                // step 10: アルゴリズム 3.13の裾野の計算
+                // step 10: 条件を満たさない場合、正規分布の裾野を計算する
+                // アルゴリズム 3.1x
                 sign * standard_normal_foot(xyzuv0, xyzuv1)
             }
         }
@@ -159,16 +160,16 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
 
 const D_NORMAL: f64 = core::f64::consts::TAU; // b^2 = 2π
 /// 標準正規分布の裾野\
-/// アルゴリズム 3.13
+/// アルゴリズム 3.13 (棄却採択法) に基づいて乱数を計算する
 #[inline]
 fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     loop {
-        // step 2: (0, 1) と [0, 1] の一様乱数を生成する
-        let u_1: f64 = xorshift160_0_open_1_open(xyzuv0);
+        // step 2: 区間[0, 1) の一様乱数 u_1 と [0, 1] の一様乱数 u_2 を生成する
+        let u_1: f64 = xorshift160_0_1_open(xyzuv0);
         let u_2: f64 = xorshift160_0_1(xyzuv1);
         // 乱数 x を計算する
         let x: f64 = (D_NORMAL - 2_f64 * (1_f64 - u_1).ln()).sqrt();
-        // step 3: 条件分岐
+        // step 3: x * u_2 <= B_NORMAL の場合、Xを標準正規分布の裾野として返す。
         if x * u_2 <= B_NORMAL {
             return x;
         }
