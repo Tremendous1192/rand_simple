@@ -195,13 +195,13 @@ pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5]) -> f64 {
     -(1_f64 - xorshift160_0_or_greater_and_less_than_1(xyzuv)).ln()
 }
 
-/// 標準ラプラス分布
-/// アルゴリズム 3.45
+/// 標準ラプラス分布\
+/// アルゴリズム 3.45 (逆関数法) に基づいて乱数を計算する
 #[inline]
-pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5] /* , u_1: &mut f64*/) -> f64 {
-    // step 1: (0, 1) の一様乱数の生成
+pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5]) -> f64 {
+    // step 1: 開区間 (0, 1) の一様乱数を生成する
     let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv);
-    // step 2: 分岐
+    // step 2: u が 0.5 より小さいか否かで分岐して、標準ラプラス分布を計算して返す
     if u < 0.5_f64 {
         (2_f64 * u).ln()
     } else {
