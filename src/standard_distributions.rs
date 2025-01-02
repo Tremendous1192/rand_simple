@@ -37,7 +37,7 @@ pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
     xyzuv[3] = xyzuv[4];
     xyzuv[4] = (xyzuv[4] ^ (xyzuv[4] >> C_XORSHIFT160)) ^ (t ^ (t >> B_XORSHIFT160));
 
-    return xyzuv[4];
+    xyzuv[4]
 }
 
 /// 疑似乱数の再現性を保っていることを確認するテスト
