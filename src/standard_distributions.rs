@@ -27,6 +27,34 @@ pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
     return xyzuv[4];
 }
 
+/// 疑似乱数の再現性を保っていることを確認するテスト
+#[test]
+fn test_xorshift160(){
+    // 乱数の種
+    let seed: u32 = 1192;
+    let mut xyzuv: [u32; 5_usize] = [123456789, 362436069, 521288629, 88675123, seed];
+
+    // 状態変数の比較
+    assert_eq!(xyzuv, [123456789, 362436069, 521288629, 88675123, 1192]);
+
+    // 乱数計算と状態変数の比較
+    // 1
+    let _ = xorshift160(&mut xyzuv);
+    assert_eq!(xyzuv, [362436069, 521288629, 88675123, 1192, 2864191173]);
+    // 2
+    let _ = xorshift160(&mut xyzuv);
+    assert_eq!(xyzuv, [521288629, 88675123, 1192, 2864191173, 1889834110]);
+    // 3
+    let _ = xorshift160(&mut xyzuv);
+    assert_eq!(xyzuv, [88675123, 1192, 2864191173, 1889834110, 3882702693]);
+    // 4
+    let _ = xorshift160(&mut xyzuv);
+    assert_eq!(xyzuv, [1192, 2864191173, 1889834110, 3882702693, 1161127567]);
+    // 5
+    let _ = xorshift160(&mut xyzuv);
+    assert_eq!(xyzuv, [2864191173, 1889834110, 3882702693, 1161127567, 1143202735]);
+}
+
 /// 閉区間 ```[0, 1]```の一様乱数
 #[inline]
 pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
