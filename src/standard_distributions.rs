@@ -78,7 +78,7 @@ fn test_xorshift160() {
 /// 閉区間 ```[0, 1]```の一様乱数
 #[inline]
 pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
-    return f64::from(xorshift160(xyzuv)) / MAX_U32_AS_F64;
+    f64::from(xorshift160(xyzuv)) / MAX_U32_AS_F64
 }
 
 /// 区間[0, 1)の一様乱数
