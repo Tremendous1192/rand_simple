@@ -103,8 +103,8 @@ pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     }
 }
 
-// 一様乱数を計算するための分母
-const MAX_U32_AS_F64: f64 = std::u32::MAX as f64;
+/// Xorshift160の基本計算を[0, 1]の一様乱数に変換するための分母
+const MAX_U32_AS_F64: f64 = u32::MAX as f64;
 
 // 標準正規分布の定数
 //const A_NORMAL: f64 = 1.17741002252_f64; // √(ln4)
