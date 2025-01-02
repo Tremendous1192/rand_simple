@@ -115,32 +115,32 @@ const W_NORMAL: f64 = 0.00003824869_f64; // b / (2^(m/2) - 1)
 const P_NORMAL: f64 = 0.94289567219_f64; // (s + 1) / 2
 const Q_NORMAL: f64 = -0.12127385907_f64; // ln(s)
 const HALF_BIT_NORMAL: u32 = 65535_u32; // 2^(m/2) - 1
-/// 標準正規分布
-/// アルゴリズム 3.5: Monty Python法
+/// 標準正規分布\
+/// アルゴリズム 3.5: Monty Python法に基づいて乱数を計算する。
 #[inline]
 pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
-    // step 1: m bit符号無整数型の一様乱数の生成
+    // step 1: m bit符号無整数型の一様乱数を生成する
     let u_mbit_integer: u32 = xorshift160(xyzuv0);
-    // step 2: 乱数の符号を最下位ビットで計算する
+    // step 2:　符号無整数型の一様乱数と 1 のbit論理積を乱数の符号とする。
     let sign: f64 = if (u_mbit_integer & 1_u32) == 1_u32 {
         1_f64
     } else {
         -1_f64
     };
-    // 1ビット右シフトしたものを準備する
-    let u_m_1: u32 = u_mbit_integer >> 1_u32;
+    // 符号無整数型の一様乱数の1ビット右シフトした値で乱数の絶対値を計算する
+    let u_m_minus_1_bit_integer: u32 = u_mbit_integer >> 1_u32;
     // step 3: (m/2) bitとの論理積を計算する
-    let u_half_m_integer: u32 = u_m_1 & HALF_BIT_NORMAL;
-    // step 4: u_x = u_half_m_integer * W;
-    let u_x: f64 = u_half_m_integer as f64 * W_NORMAL;
-    // step 5: u_half_m_integer < K の場合、y = sign * u_x を返す
-    if u_half_m_integer < K_NORMAL {
+    let u_half_m_bit_integer: u32 = u_m_minus_1_bit_integer & HALF_BIT_NORMAL;
+    // step 4: u_x = u_half_m_bit_integer * W;
+    let u_x: f64 = f64::from(u_half_m_bit_integer) * W_NORMAL;
+    // step 5: u_half_m_bit_integer < K の場合、y = sign * u_x を返す
+    if u_half_m_bit_integer < K_NORMAL {
         sign * u_x
     } else {
         // step 6: u_m_1 をさらに右に(m/2)ビットシフトする
-        let u_half_m_1 = u_m_1 >> 16_u32;
-        // step 7: u_dash = (u_half_m_1 as f64 + 0.5f64) / (2^(m/2) - 2)
-        let u_dash: f64 = (u_half_m_1 as f64 + 0.5_f64) / 65534_f64;
+        let u_half_m_minus_1_bit_integer: u32 = u_m_minus_1_bit_integer >> 16_u32;
+        // step 7: u_dash = ( u_half_m_minus_1_bit_integer as f64 + 0.5f64) / (2^(m/2) - 2)
+        let u_dash: f64 = (f64::from(u_half_m_minus_1_bit_integer) + 0.5_f64) / 65534_f64;
         // step 8: ln(u_dash) < - u_x^2 / 2 のとき、y = sign * ux を返す
         if u_dash.ln() * 2_f64 < -u_x.powi(2_i32) {
             sign * u_x
@@ -150,7 +150,7 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
             if (P_NORMAL - u_dash).ln() < Q_NORMAL - y.powi(2_i32) / 2_f64 {
                 y
             } else {
-                // step 10: アルゴリズム 3.1*の裾野の計算
+                // step 10: アルゴリズム 3.13の裾野の計算
                 sign * standard_normal_foot(xyzuv0, xyzuv1)
             }
         }
@@ -158,7 +158,7 @@ pub(crate) fn standard_normal(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f
 }
 
 const D_NORMAL: f64 = core::f64::consts::TAU; // b^2 = 2π
-/// 標準正規分布の裾野
+/// 標準正規分布の裾野\
 /// アルゴリズム 3.13
 #[inline]
 fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
