@@ -8,7 +8,7 @@
 /// * URL: https://doi.org/10.18637/jss.v008.i14
 #[inline]
 pub(crate) fn generate_random_state(_seed: u32) -> [u32; 5] {
-    return [123456789, 362436069, 521288629, 88675123, _seed];
+    [123456789, 362436069, 521288629, 88675123, _seed]
 }
 
 // Xorshift160のシフト演算の定数
