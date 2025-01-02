@@ -50,7 +50,7 @@ impl Weibull {
     /// Attempts to set the parameters of the probability variable.
     /// * `shape` - Shape parameter.
     /// * `scale` - Scale parameter.
-    /// Returns a Result containing a tuple (shape, scale) on success, or an error message if the parameters are invalid.
+    ///   Returns a Result containing a tuple (shape, scale) on success, or an error message if the parameters are invalid.
     pub fn try_set_params(&mut self, shape: f64, scale: f64) -> Result<(f64, f64), &str> {
         // Check if the shape or scale parameters are non-positive, and return an error if so.
         if shape <= 0_f64 || scale <= 0_f64 {
