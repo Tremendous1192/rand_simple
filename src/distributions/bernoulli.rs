@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_1;
+use crate::standard_distributions::xorshift160_0_to_1;
 
 /// Bernoulli Distribution
 ///
@@ -35,7 +35,7 @@ impl Bernoulli {
 
     /// ある確率の事象が生じたか(1u64)、否か(0u64)を返す
     pub fn sample(&mut self) -> u64 {
-        if xorshift160_0_1(&mut self.xyzuv) <= self.probability {
+        if xorshift160_0_to_1(&mut self.xyzuv) <= self.probability {
             1_u64
         } else {
             0_u64

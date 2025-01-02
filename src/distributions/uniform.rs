@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_1;
+use crate::standard_distributions::xorshift160_0_to_1;
 
 /// Uniform distribution
 /// # Example
@@ -36,7 +36,7 @@ impl Uniform {
     /// # Returns
     /// A random floating-point number within the specified range.
     pub fn sample(&mut self) -> f64 {
-        xorshift160_0_1(&mut self.xyzuv) * (self.max - self.min) + self.min
+        xorshift160_0_to_1(&mut self.xyzuv) * (self.max - self.min) + self.min
     }
 
     /// Attempt to modify the parameters of the random variable.

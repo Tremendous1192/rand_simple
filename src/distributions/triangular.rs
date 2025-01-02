@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_1;
+use crate::standard_distributions::xorshift160_0_to_1;
 
 /// Represents a triangular distribution defined by a minimum value, maximum value, and mode.
 ///
@@ -72,7 +72,7 @@ impl Triangular {
         let d_1m = 1_f64 - d;
 
         // step 1
-        let u = xorshift160_0_1(&mut self.xyzuv);
+        let u = xorshift160_0_to_1(&mut self.xyzuv);
 
         // step 2
         let y = if u < d {

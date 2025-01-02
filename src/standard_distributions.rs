@@ -77,7 +77,7 @@ fn test_xorshift160() {
 
 /// 閉区間 ```[0, 1]```の一様乱数
 #[inline]
-pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
+pub(crate) fn xorshift160_0_to_1(xyzuv: &mut [u32; 5]) -> f64 {
     f64::from(xorshift160(xyzuv)) / MAX_U32_AS_F64
 }
 
@@ -166,7 +166,7 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     loop {
         // step 2: 区間[0, 1) の一様乱数 u_1 と [0, 1] の一様乱数 u_2 を生成する
         let u_1: f64 = xorshift160_0_or_greater_and_less_than_1(xyzuv0);
-        let u_2: f64 = xorshift160_0_1(xyzuv1);
+        let u_2: f64 = xorshift160_0_to_1(xyzuv1);
         // 乱数 x を計算する
         let x: f64 = (D_NORMAL - 2_f64 * (1_f64 - u_1).ln()).sqrt();
         // step 3: x * u_2 <= B_NORMAL の場合、Xを標準正規分布の裾野として返す。

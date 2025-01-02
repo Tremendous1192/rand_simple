@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_1;
+use crate::standard_distributions::xorshift160_0_to_1;
 
 /// Geometric Distribution
 ///
@@ -36,7 +36,7 @@ impl Geometric {
     /// ある確率の事象が初めて生じるまでの試行回数を返す
     pub fn sample(&mut self) -> u64 {
         let mut x: u64 = 1_u64;
-        while xorshift160_0_1(&mut self.xyzuv) > self.probability {
+        while xorshift160_0_to_1(&mut self.xyzuv) > self.probability {
             x += 1_u64;
         }
         x

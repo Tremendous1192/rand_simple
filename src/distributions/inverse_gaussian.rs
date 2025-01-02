@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::{standard_normal, xorshift160_0_1};
+use crate::standard_distributions::{standard_normal, xorshift160_0_to_1};
 
 /// Represents an Inverse Gaussian (IG) distribution.
 ///
@@ -83,7 +83,7 @@ impl InverseGaussian {
             let x_1 = v + (v.powi(2) - p).sqrt();
 
             // step 3
-            let u = xorshift160_0_1(&mut self.xyzuv_u);
+            let u = xorshift160_0_to_1(&mut self.xyzuv_u);
             if u * (x_1 + self.mean) <= self.mean {
                 // step 3 -> step 5
                 x_1
