@@ -97,7 +97,7 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
 pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         _ = xorshift160(xyzuv);
-        if xyzuv[4] != 0_u32 && xyzuv[4] != std::u32::MAX {
+        if xyzuv[4] != 0_u32 && xyzuv[4] != u32::MAX {
             return f64::from(xyzuv[4]) / MAX_U32_AS_F64;
         }
     }
