@@ -209,44 +209,45 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5]) -> f64 {
     }
 }
 
-/// 標準ガンマ分布\
+/// 標準ガンマ分布(β = 1 の場合のガンマ分布)\
 /// アルゴリズム 3.60 に基づいて乱数を計算する
 #[inline]
 pub(crate) fn standard_gamma(
-    xyzuv_u: &mut [u32; 5],
-    xyzuv_n_0: &mut [u32; 5],
-    xyzuv_n_1: &mut [u32; 5],
+    xyzuv_uniform: &mut [u32; 5],
+    xyzuv_normal_0: &mut [u32; 5],
+    xyzuv_normal_1: &mut [u32; 5],
     alpha: &f64,
 ) -> f64 {
     // α = 1 のときは標準指数分布を返す
     if *alpha == 1_f64 {
-        return standard_exponential(xyzuv_u);
+        return standard_exponential(xyzuv_uniform);
     }
     // α < 1 のときは再帰的に乱数を計算する
     else if *alpha < 1_f64 {
-        let y: f64 = standard_gamma(xyzuv_u, xyzuv_n_0, xyzuv_n_1, &(alpha + 1_f64));
-        let t: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_u);
-        let alpha_inverse = 1_f64 / *alpha;
+        let y: f64 = standard_gamma(xyzuv_uniform, xyzuv_normal_0, xyzuv_normal_1, &(alpha + 1_f64));
+        let t: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_uniform);
+        let alpha_inverse: f64 = 1_f64 / *alpha;
         return y * t.powf(alpha_inverse);
     }
     // 前処理
-    let d = *alpha - 1_f64 / 3_f64;
-    let c = (9_f64 * d).powf(-0.5);
+    let d: f64 = *alpha - 1_f64 / 3_f64;
+    let c: f64 = (9_f64 * d).powf(-0.5);
     loop {
-        // step 1
-        let z = standard_normal(xyzuv_n_0, xyzuv_n_1);
-        let v = 1_f64 + c * z;
-        // step 2
+        // step 1: 標準正規分布に従う乱数 z を生成して、 v = (1 + cz) を計算する
+        let z: f64 = standard_normal(xyzuv_normal_0, xyzuv_normal_1);
+        let v: f64 = 1_f64 + c * z;
+        // step 2: v > 0 になるまで step 1 を繰り返す。
+        //         その後、 w = v^3, y = dw を計算する。
         if v > 0_f64 {
-            let w = v.powi(3);
-            let y = d * w;
-            // step 3
-            let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_u);
+            let w: f64 = v.powi(3);
+            let y: f64 = d * w;
+            // step 3: 開区間 (0, 1) の一様乱数 u を生成して, u ≦ 1 0.0331z^4 の場合, step 5 に進
+            let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_uniform);
             if u <= 1_f64 - 0.0331 * z.powi(4) {
-                // step 5
+                // step 5: y を β = 1 の場合のガンマ分布として返す
                 return y;
             }
-            // step 4
+            // step 4: 下記の条件式を満たしていない場合、 step 1 に戻る
             if z.powi(2) / 2_f64 + d * (w.ln() + 1_f64) - y >= u.ln() {
                 // step 5
                 return y;
