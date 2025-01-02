@@ -186,12 +186,12 @@ pub(crate) fn standard_cauchy(xyzuv: &mut [u32; 5]) -> f64 {
     (core::f64::consts::PI * (u - 0.5_f64)).tan()
 }
 
-/// 標準指数分布
-/// アルゴリズム 3.41: 逆関数法
+/// 標準指数分布\
+/// アルゴリズム 3.41 (逆関数法) に基づいて乱数を計算する
 #[inline]
-pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> f64 {
-    // step 1: [0, 1) の一様乱数を生成する
-    // step 2: y = -ln(1 - u) を計算する
+pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5]) -> f64 {
+    // step 1: 区間 [0, 1) の一様乱数を生成する
+    // step 2: y = -ln(1 - u) を標準指数分布として返す
     -(1_f64 - xorshift160_0_or_greater_and_less_than_1(xyzuv)).ln()
 }
 
