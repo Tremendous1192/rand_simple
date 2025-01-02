@@ -209,8 +209,8 @@ pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5]) -> f64 {
     }
 }
 
-// 標準ガンマ分布
-// アルゴリズム 3.60
+/// 標準ガンマ分布\
+/// アルゴリズム 3.60 に基づいて乱数を計算する
 #[inline]
 pub(crate) fn standard_gamma(
     xyzuv_u: &mut [u32; 5],
@@ -218,14 +218,16 @@ pub(crate) fn standard_gamma(
     xyzuv_n_1: &mut [u32; 5],
     alpha: &f64,
 ) -> f64 {
-    // α = 1 のとき標準指数分布を返す
+    // α = 1 のときは標準指数分布を返す
     if *alpha == 1_f64 {
         return standard_exponential(xyzuv_u);
     }
-    // α < 1 のときは回帰関数で計算する
+    // α < 1 のときは再帰的に乱数を計算する
     else if *alpha < 1_f64 {
-        return standard_gamma(xyzuv_u, xyzuv_n_0, xyzuv_n_1, &(alpha + 1_f64))
-            * xorshift160_greater_than_0_and_less_than_1(xyzuv_u).powf(1_f64 / *alpha);
+        let y: f64 = standard_gamma(xyzuv_u, xyzuv_n_0, xyzuv_n_1, &(alpha + 1_f64));
+        let t: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_u);
+        let alpha_inverse = 1_f64 / *alpha;
+        return y * t.powf(alpha_inverse);
     }
     // 前処理
     let d = *alpha - 1_f64 / 3_f64;
