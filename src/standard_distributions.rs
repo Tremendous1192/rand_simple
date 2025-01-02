@@ -1,3 +1,16 @@
+/// Xorshift160の状態変数を作成する。
+/// # 引数
+/// ```_seed: u32```: 乱数の種
+/// # 戻り値
+/// ```[u32; 5]```: 状態変数(x, y, z, u, v)
+/// # 参考文献
+/// * Marsaglia, G. (2003). Xorshift RNGs. Journal of Statistical Software, 8(14), 1–6.
+/// * URL: https://doi.org/10.18637/jss.v008.i14
+#[inline]
+pub(crate) fn generate_random_state(_seed: u32) -> [u32; 5] {
+    return [123456789, 362436069, 521288629, 88675123, _seed];
+}
+
 // Xorshift160のシフト演算の定数
 // [A, B, C] = [2, 1, 4], [7, 13, 6], [1, 1, 20] のいずれかを選択する。
 const A_XORSHIFT160: u32 = 7_u32;
@@ -29,10 +42,10 @@ pub(crate) fn xorshift160(xyzuv: &mut [u32; 5]) -> u32 {
 
 /// 疑似乱数の再現性を保っていることを確認するテスト
 #[test]
-fn test_xorshift160(){
+fn test_xorshift160() {
     // 乱数の種
     let seed: u32 = 1192;
-    let mut xyzuv: [u32; 5_usize] = [123456789, 362436069, 521288629, 88675123, seed];
+    let mut xyzuv: [u32; 5_usize] = generate_random_state(seed);
 
     // 状態変数の比較
     assert_eq!(xyzuv, [123456789, 362436069, 521288629, 88675123, 1192]);
@@ -49,10 +62,16 @@ fn test_xorshift160(){
     assert_eq!(xyzuv, [88675123, 1192, 2864191173, 1889834110, 3882702693]);
     // 4
     let _ = xorshift160(&mut xyzuv);
-    assert_eq!(xyzuv, [1192, 2864191173, 1889834110, 3882702693, 1161127567]);
+    assert_eq!(
+        xyzuv,
+        [1192, 2864191173, 1889834110, 3882702693, 1161127567]
+    );
     // 5
     let _ = xorshift160(&mut xyzuv);
-    assert_eq!(xyzuv, [2864191173, 1889834110, 3882702693, 1161127567, 1143202735]);
+    assert_eq!(
+        xyzuv,
+        [2864191173, 1889834110, 3882702693, 1161127567, 1143202735]
+    );
 }
 
 /// 閉区間 ```[0, 1]```の一様乱数
