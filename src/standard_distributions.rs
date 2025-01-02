@@ -176,14 +176,14 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     }
 }
 
-/// 標準コーシー分布
-/// アルゴリズム　3.26: (逆関数法)
+/// 標準コーシー分布\
+/// アルゴリズム 3.26 (逆関数法) に基づいて乱数を計算する
 #[inline]
 pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
-    // step 1: 開区間 (0, 1) の一様乱数
+    // step 1: 開区間 (0, 1) の一様乱数 u を生成する。
     let u = xorshift160_0_open_1_open(xyzuv0);
-    // step 2: 標準分布を計算する
-    (std::f64::consts::PI * (u - 0.5_f64)).tan()
+    // step 2: 標準コーシー分布を計算して返す
+    (core::f64::consts::PI * (u - 0.5_f64)).tan()
 }
 
 /// 標準指数分布
