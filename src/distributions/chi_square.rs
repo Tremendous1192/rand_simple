@@ -1,6 +1,6 @@
 use crate::create_state;
 use crate::standard_distributions::{
-    standard_exponential, standard_gamma, xorshift160_0_open_1_open,
+    standard_exponential, standard_gamma, xorshift160_greater_than_0_and_less_than_1,
 };
 
 /// Chi-Square Distribution
@@ -105,7 +105,7 @@ impl ChiSquare {
                 &mut self.xyzuv_n_1_gamma,
                 &(3f64 / 2f64),
             ) * 2f64;
-            let u = xorshift160_0_open_1_open(&mut self.xyzuv_uniform);
+            let u = xorshift160_greater_than_0_and_less_than_1(&mut self.xyzuv_uniform);
             u.powi(2) * y * 2_f64
         }
     }

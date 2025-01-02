@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::{standard_gamma, xorshift160_0_1_open};
+use crate::standard_distributions::{standard_gamma, xorshift160_0_or_greater_and_less_than_1};
 
 /// F-distribution
 /// # Usage Example
@@ -111,7 +111,7 @@ impl FDistribution {
                 &mut self.xyzuv_n_1_gamma_1,
                 &(3_f64 / 2_f64),
             ) * 2_f64;
-            let u = xorshift160_0_1_open(&mut self.xyzuv_uniform_1);
+            let u = xorshift160_0_or_greater_and_less_than_1(&mut self.xyzuv_uniform_1);
             u.powi(2) * y * 2_f64
         };
 
@@ -129,7 +129,7 @@ impl FDistribution {
                 &mut self.xyzuv_n_1_gamma_2,
                 &(3_f64 / 2_f64),
             ) * 2_f64;
-            let u = xorshift160_0_1_open(&mut self.xyzuv_uniform_2);
+            let u = xorshift160_0_or_greater_and_less_than_1(&mut self.xyzuv_uniform_2);
             u.powi(2) * y * 2_f64
         };
 

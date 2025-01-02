@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_1_open;
+use crate::standard_distributions::xorshift160_0_or_greater_and_less_than_1;
 
 /// Half Cauchy Distribution
 ///
@@ -52,7 +52,7 @@ impl HalfCauchy {
     /// # Returns
     /// * `f64` - A random number following the Cauchy distribution scaled by the `scale` parameter.
     pub fn sample(&mut self) -> f64 {
-        (std::f64::consts::PI * xorshift160_0_1_open(&mut self.xyzuv) / 2_f64).tan() * self.scale
+        (std::f64::consts::PI * xorshift160_0_or_greater_and_less_than_1(&mut self.xyzuv) / 2_f64).tan() * self.scale
     }
 
     /// Attempt to change the parameters of the random variable.

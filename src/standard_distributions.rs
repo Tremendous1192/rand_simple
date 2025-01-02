@@ -83,7 +83,7 @@ pub(crate) fn xorshift160_0_1(xyzuv: &mut [u32; 5]) -> f64 {
 
 /// 区間[0, 1)の一様乱数
 #[inline]
-pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
+pub(crate) fn xorshift160_0_or_greater_and_less_than_1(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         _ = xorshift160(xyzuv);
         if xyzuv[4] != u32::MAX {
@@ -94,7 +94,7 @@ pub(crate) fn xorshift160_0_1_open(xyzuv: &mut [u32; 5]) -> f64 {
 
 /// 開区間(0, 1)の一様乱数
 #[inline]
-pub(crate) fn xorshift160_0_open_1_open(xyzuv: &mut [u32; 5]) -> f64 {
+pub(crate) fn xorshift160_greater_than_0_and_less_than_1(xyzuv: &mut [u32; 5]) -> f64 {
     loop {
         _ = xorshift160(xyzuv);
         if xyzuv[4] != 0_u32 && xyzuv[4] != u32::MAX {
@@ -165,7 +165,7 @@ const D_NORMAL: f64 = core::f64::consts::TAU; // b^2 = 2π
 fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
     loop {
         // step 2: 区間[0, 1) の一様乱数 u_1 と [0, 1] の一様乱数 u_2 を生成する
-        let u_1: f64 = xorshift160_0_1_open(xyzuv0);
+        let u_1: f64 = xorshift160_0_or_greater_and_less_than_1(xyzuv0);
         let u_2: f64 = xorshift160_0_1(xyzuv1);
         // 乱数 x を計算する
         let x: f64 = (D_NORMAL - 2_f64 * (1_f64 - u_1).ln()).sqrt();
@@ -181,7 +181,7 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
 #[inline]
 pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
     // step 1: 開区間 (0, 1) の一様乱数 u を生成する。
-    let u = xorshift160_0_open_1_open(xyzuv0);
+    let u = xorshift160_greater_than_0_and_less_than_1(xyzuv0);
     // step 2: 標準コーシー分布を計算して返す
     (core::f64::consts::PI * (u - 0.5_f64)).tan()
 }
@@ -192,7 +192,7 @@ pub(crate) fn standard_cauchy(xyzuv0: &mut [u32; 5]) -> f64 {
 pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> f64 {
     // step 1: [0, 1) の一様乱数を生成する
     // step 2: y = -ln(1 - u) を計算する
-    -(1_f64 - xorshift160_0_1_open(xyzuv)).ln()
+    -(1_f64 - xorshift160_0_or_greater_and_less_than_1(xyzuv)).ln()
 }
 
 /// 標準ラプラス分布
@@ -200,7 +200,7 @@ pub(crate) fn standard_exponential(xyzuv: &mut [u32; 5] /*, u_1: &mut f64*/) -> 
 #[inline]
 pub(crate) fn standard_laplace(xyzuv: &mut [u32; 5] /* , u_1: &mut f64*/) -> f64 {
     // step 1: (0, 1) の一様乱数の生成
-    let u: f64 = xorshift160_0_open_1_open(xyzuv);
+    let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv);
     // step 2: 分岐
     if u < 0.5_f64 {
         (2_f64 * u).ln()
@@ -225,7 +225,7 @@ pub(crate) fn standard_gamma(
     // α < 1 のときは回帰関数で計算する
     else if *alpha < 1_f64 {
         return standard_gamma(xyzuv_u, xyzuv_n_0, xyzuv_n_1, &(alpha + 1_f64))
-            * xorshift160_0_open_1_open(xyzuv_u).powf(1_f64 / *alpha);
+            * xorshift160_greater_than_0_and_less_than_1(xyzuv_u).powf(1_f64 / *alpha);
     }
     // 前処理
     let d = *alpha - 1_f64 / 3_f64;
@@ -239,7 +239,7 @@ pub(crate) fn standard_gamma(
             let w = v.powi(3);
             let y = d * w;
             // step 3
-            let u: f64 = xorshift160_0_open_1_open(xyzuv_u);
+            let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_u);
             if u <= 1_f64 - 0.0331 * z.powi(4) {
                 // step 5
                 return y;

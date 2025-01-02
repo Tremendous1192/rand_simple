@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::{standard_gamma, xorshift160_0_1_open};
+use crate::standard_distributions::{standard_gamma, xorshift160_0_or_greater_and_less_than_1};
 
 /// Chi Distribution
 ///
@@ -91,7 +91,7 @@ impl Chi {
                 &mut self.xyzuv_n_1_gamma,
                 &(3_f64 / 2_f64),
             ) * 2_f64;
-            let u = xorshift160_0_1_open(&mut self.xyzuv_uniform); // Generate a uniform random number in the interval (0, 1)
+            let u = xorshift160_0_or_greater_and_less_than_1(&mut self.xyzuv_uniform); // Generate a uniform random number in the interval (0, 1)
             u.powi(2) * y * 2_f64
         };
         // Step 2: Calculate X = √Y

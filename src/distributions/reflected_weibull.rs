@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_open_1_open;
+use crate::standard_distributions::xorshift160_greater_than_0_and_less_than_1;
 
 /// Reflected Weibull Distribution
 ///
@@ -44,7 +44,7 @@ impl ReflectedWeibull {
     pub fn sample(&mut self) -> f64 {
         // Algorithm 3.53: Inverse Transform Sampling
         // Step 1: Uniform random number in (0, 1)
-        let u = xorshift160_0_open_1_open(&mut self.xyzuv);
+        let u = xorshift160_greater_than_0_and_less_than_1(&mut self.xyzuv);
         // Step 2
         if u < 0.5_f64 {
             // Apply the inverse function for the lower half of the distribution

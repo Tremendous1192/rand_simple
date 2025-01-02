@@ -1,5 +1,5 @@
 use crate::create_state;
-use crate::standard_distributions::xorshift160_0_open_1_open;
+use crate::standard_distributions::xorshift160_greater_than_0_and_less_than_1;
 
 /// Power function distribution
 /// # Examples
@@ -40,7 +40,7 @@ impl PowerFunction {
         // Generate a uniform random number U in the interval (0, 1) and calculate Y = U^γ_inv
         // Step 2
         // Calculate X = a + (b - a)Y as the desired random number
-        xorshift160_0_open_1_open(&mut self.xyzuv).powf(self.shape.powi(-1))
+        xorshift160_greater_than_0_and_less_than_1(&mut self.xyzuv).powf(self.shape.powi(-1))
             * (self.max_b - self.min_a)
             + self.min_a
     }
