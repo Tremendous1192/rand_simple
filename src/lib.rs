@@ -64,23 +64,32 @@ pub(crate) fn create_state(_seed: u32) -> [u32; 5] {
 /// - This macro is designed to work in environments where `std` is available, as it relies on `std::time::SystemTime`.
 macro_rules! generate_seeds {
     ($length: expr) => {{
+        // 状態変数を保存する配列を保存する。
         let mut array = [0_u32; $length];
+        // UNIX_EPOCH からの経過時間を基に乱数の種を計算する。
         let duration = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .expect("Time went backwards");
         for i in 0..array.len() {
             array[i] = match i % 6_usize {
-                0_usize => duration.as_millis() as u32,
-                1_usize => std::u32::MAX - duration.as_nanos() as u32,
-                2_usize => (duration.as_secs() as u32) / 60_u32,
-                3_usize => std::u32::MAX - duration.as_micros() as u32,
-                4_usize => duration.as_secs() as u32,
-                5_usize => (duration.as_millis() as u32) / 60_u32,
+                0_usize => (duration.as_millis() & 0xFFFF_FFFF) as u32,
+                1_usize => std::u32::MAX - (duration.as_nanos() & 0xFFFF_FFFF) as u32,
+                2_usize => ((duration.as_secs() & 0xFFFF_FFFF) as u32) / 60_u32,
+                3_usize => std::u32::MAX - (duration.as_micros() & 0xFFFF_FFFF) as u32,
+                4_usize => (duration.as_secs() & 0xFFFF_FFFF) as u32,
+                5_usize => ((duration.as_millis() & 0xFFFF_FFFF) as u32) / 60_u32,
                 _ => 1_192_765_u32,
             };
         }
         array
     }};
+}
+
+/// 現在時刻に基づいて乱数の種を作成するマクロの動作確認
+#[test]
+fn test_generate_seeds() {
+    let seeds6: [u32; 6] = generate_seeds!(6);
+    println!("{:#?}", seeds6);
 }
 
 /// 独立な乱数を生成するために、配列の要素を互いに異なる値に変更するマクロ
