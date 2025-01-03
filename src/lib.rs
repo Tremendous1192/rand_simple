@@ -83,14 +83,22 @@ macro_rules! generate_seeds {
     }};
 }
 
-// 配列の要素を互いに異なる値に変更するマクロ
+/// 独立な乱数を生成するために、配列の要素を互いに異なる値に変更するマクロ
+/// # 引数
+/// 乱数の種の配列
+/// # 戻り値
+/// 互いに異なる値に修正した乱数の種の配列
 macro_rules! adjust_seeds {
     ($array:expr) => {{
+        // 値を上書きするために配列のコピーを作成する。
         let mut copy_array = $array;
+        // 互いに異なる値であるかを確認するために2重ループを使用する。
         for i in 0..(copy_array.len() - 1) {
             for j in (i + 1)..copy_array.len() {
+                // 乱数の種が等しい場合ビット演算で値を変更する
                 if copy_array[i] == copy_array[j] {
                     copy_array[j] = (copy_array[j] << 3) ^ (copy_array[i] >> 2);
+                    // ビット演算後の値が0になってしまった場合、マジックナンバーを代入する
                     if copy_array[j] == 0 {
                         copy_array[j] = 1192;
                     }
