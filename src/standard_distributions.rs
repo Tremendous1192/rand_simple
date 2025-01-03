@@ -181,7 +181,7 @@ fn standard_normal_foot(xyzuv0: &mut [u32; 5], xyzuv1: &mut [u32; 5]) -> f64 {
 #[inline]
 pub(crate) fn standard_cauchy(xyzuv: &mut [u32; 5]) -> f64 {
     // step 1: 開区間 (0, 1) の一様乱数 u を生成する。
-    let u:f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv);
+    let u: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv);
     // step 2: 標準コーシー分布を計算して返す
     (core::f64::consts::PI * (u - 0.5_f64)).tan()
 }
@@ -224,7 +224,12 @@ pub(crate) fn standard_gamma(
     }
     // α < 1 のときは再帰的に乱数を計算する
     else if *alpha < 1_f64 {
-        let y: f64 = standard_gamma(xyzuv_uniform, xyzuv_normal_0, xyzuv_normal_1, &(alpha + 1_f64));
+        let y: f64 = standard_gamma(
+            xyzuv_uniform,
+            xyzuv_normal_0,
+            xyzuv_normal_1,
+            &(alpha + 1_f64),
+        );
         let t: f64 = xorshift160_greater_than_0_and_less_than_1(xyzuv_uniform);
         let alpha_inverse: f64 = 1_f64 / *alpha;
         return y * t.powf(alpha_inverse);

@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::xorshift160_0_to_1;
+use crate::standard_distributions::{generate_random_state, xorshift160_0_to_1};
 
 /// Uniform distribution
 /// # Example
@@ -26,7 +25,7 @@ impl Uniform {
     /// * `_seed` - The seed for the random number generator
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             min: 0_f64,
             max: 1_f64,
         }
