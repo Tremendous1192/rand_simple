@@ -6,6 +6,10 @@ mod sandbox; // 試行錯誤するためのテストモジュール
 mod standard_distributions; // 標準分布を計算するモジュール
                             //#[cfg(test)]
                             //mod test_distributions; // 機能確認のためのテストモジュール
+mod error_message; // パラメータ更新時のエラーメッセージモジュール
+
+// エラーメッセージ
+//pub use crate::error_message::ParameterUpdateError;
 
 // 状態変数(x, y, z, u, v)を設定する
 // 下記の論文の初期値を参考にする
