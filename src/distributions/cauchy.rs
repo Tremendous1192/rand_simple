@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_cauchy;
+use crate::standard_distributions::{generate_random_state, standard_cauchy};
 
 /// Cauchy Distribution
 /// # Example
@@ -26,7 +25,7 @@ impl Cauchy {
     /// * `_seed` - Random seed to initialize the generator.
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             location: 0_f64,
             scale: 1_f64,
         }
