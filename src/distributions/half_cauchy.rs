@@ -1,5 +1,6 @@
-use crate::create_state;
-use crate::standard_distributions::xorshift160_0_or_greater_and_less_than_1;
+use crate::standard_distributions::{
+    generate_random_state, xorshift160_0_or_greater_and_less_than_1,
+};
 
 /// Half Cauchy Distribution
 ///
@@ -38,7 +39,7 @@ impl HalfCauchy {
     /// A new instance of the HalfCauchy distribution.
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             scale: 1_f64,
         }
     }
