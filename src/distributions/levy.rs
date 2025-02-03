@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_normal;
+use crate::standard_distributions::{generate_random_state, standard_normal};
 
 /// Lévy Distribution
 /// # Example
@@ -30,8 +29,8 @@ impl Levy {
     pub fn new(seeds: [u32; 2_usize]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
         Self {
-            xyzuv0: create_state(adjusted_seeds[0]),
-            xyzuv1: create_state(adjusted_seeds[1]),
+            xyzuv0: generate_random_state(adjusted_seeds[0]),
+            xyzuv1: generate_random_state(adjusted_seeds[1]),
             location: 0_f64,
             scale: 1_f64,
         }
