@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_exponential;
+use crate::standard_distributions::{generate_random_state, standard_exponential};
 
 /// Exponential Distribution
 /// # Example
@@ -29,7 +28,7 @@ impl Exponential {
     /// * `_seed` - Random number seed
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             scale: 1_f64,
         }
     }

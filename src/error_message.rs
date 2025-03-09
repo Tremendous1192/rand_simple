@@ -45,5 +45,8 @@ fn test_parameter_update_error() {
         min: 11_f64,
         max: -1_f64,
     };
-    println!("{}", error);
+    assert_eq!(
+        format!("{error}"),
+        "最小値 11 は最大値 -1 よりも小さくしてください"
+    );
 }
