@@ -1,6 +1,5 @@
-use crate::create_state;
 use crate::standard_distributions::{
-    standard_cauchy, standard_exponential, standard_gamma, standard_normal,
+    generate_random_state, standard_cauchy, standard_exponential, standard_gamma, standard_normal,
 };
 
 /// t-distribution (Student's t-distribution)
@@ -55,12 +54,12 @@ impl TDistribution {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
-            xyzuv_n_0: create_state(adjusted_seeds[0]),
-            xyzuv_n_1: create_state(adjusted_seeds[1]),
+            xyzuv_n_0: generate_random_state(adjusted_seeds[0]),
+            xyzuv_n_1: generate_random_state(adjusted_seeds[1]),
 
-            xyzuv_u_gamma: create_state(adjusted_seeds[2]),
-            xyzuv_n_0_gamma: create_state(adjusted_seeds[3]),
-            xyzuv_n_1_gamma: create_state(adjusted_seeds[4]),
+            xyzuv_u_gamma: generate_random_state(adjusted_seeds[2]),
+            xyzuv_n_0_gamma: generate_random_state(adjusted_seeds[3]),
+            xyzuv_n_1_gamma: generate_random_state(adjusted_seeds[4]),
 
             degree_of_freedom: 1_u64,
         }

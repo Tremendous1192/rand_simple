@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::xorshift160_0_to_1;
+use crate::standard_distributions::{generate_random_state, xorshift160_0_to_1};
 
 /// Represents a triangular distribution defined by a minimum value, maximum value, and mode.
 ///
@@ -52,7 +51,7 @@ impl Triangular {
     /// - `mode`: 0.5 (most likely value within the interval)
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             min: 0_f64,
             max: 1_f64,
             mode: 0.5_f64,

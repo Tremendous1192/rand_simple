@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_exponential;
+use crate::standard_distributions::{generate_random_state, standard_exponential};
 
 /// Weibull Distribution
 /// # Example
@@ -26,7 +25,7 @@ impl Weibull {
         // Create a new instance of the Weibull random number generator with the specified seed,
         // and default shape and scale parameters set to 1.0.
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             shape: 1_f64,
             scale: 1_f64,
         }

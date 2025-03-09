@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::{standard_normal, xorshift160_0_to_1};
+use crate::standard_distributions::{generate_random_state, standard_normal, xorshift160_0_to_1};
 
 /// Represents an Inverse Gaussian (IG) distribution.
 ///
@@ -45,9 +44,9 @@ impl InverseGaussian {
     pub fn new(seeds: [u32; 3]) -> Self {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
         Self {
-            xyzuv_u: create_state(adjusted_seeds[0]),
-            xyzuv_hn_0: create_state(adjusted_seeds[1]),
-            xyzuv_hn_1: create_state(adjusted_seeds[2]),
+            xyzuv_u: generate_random_state(adjusted_seeds[0]),
+            xyzuv_hn_0: generate_random_state(adjusted_seeds[1]),
+            xyzuv_hn_1: generate_random_state(adjusted_seeds[2]),
             mean: 1_f64,
             shape: 1_f64,
         }

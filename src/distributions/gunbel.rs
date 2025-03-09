@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_exponential;
+use crate::standard_distributions::{generate_random_state, standard_exponential};
 
 /// Gunbel Distribution
 /// # Examples
@@ -32,7 +31,7 @@ impl Gunbel {
     /// ```
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             location: 0_f64,
             scale: 1_f64,
         }

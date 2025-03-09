@@ -1,5 +1,6 @@
-use crate::create_state;
-use crate::standard_distributions::xorshift160_greater_than_0_and_less_than_1;
+use crate::standard_distributions::{
+    generate_random_state, xorshift160_greater_than_0_and_less_than_1,
+};
 
 /// Power function distribution
 /// # Examples
@@ -26,7 +27,7 @@ impl PowerFunction {
     /// * `_seed` - Random seed
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             shape: 1_f64,
             min_a: 0_f64,
             max_b: 1_f64,

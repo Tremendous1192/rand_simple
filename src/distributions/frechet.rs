@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_exponential;
+use crate::standard_distributions::{generate_random_state, standard_exponential};
 
 /// Frechet Distribution
 /// # Example
@@ -31,7 +30,7 @@ impl Frechet {
     /// A new instance of the Frechet distribution with default parameters (shape = 1, scale = 1).
     pub fn new(_seed: u32) -> Self {
         Self {
-            xyzuv: create_state(_seed),
+            xyzuv: generate_random_state(_seed),
             shape: 1_f64,
             scale: 1_f64,
         }

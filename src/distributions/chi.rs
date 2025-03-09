@@ -1,5 +1,6 @@
-use crate::create_state;
-use crate::standard_distributions::{standard_gamma, xorshift160_0_or_greater_and_less_than_1};
+use crate::standard_distributions::{
+    generate_random_state, standard_gamma, xorshift160_0_or_greater_and_less_than_1,
+};
 
 /// Chi Distribution
 ///
@@ -60,12 +61,12 @@ impl Chi {
         // Create a new instance of the Chi struct with the adjusted seeds
         Self {
             // Initialize the state variables for gamma distribution random number generation
-            xyzuv_u_gamma: create_state(adjusted_seeds[0]), // Seed for gamma distribution random number generator 1
-            xyzuv_n_0_gamma: create_state(adjusted_seeds[1]), // Seed for gamma distribution random number generator 2
-            xyzuv_n_1_gamma: create_state(adjusted_seeds[2]), // Seed for gamma distribution random number generator 3
+            xyzuv_u_gamma: generate_random_state(adjusted_seeds[0]), // Seed for gamma distribution random number generator 1
+            xyzuv_n_0_gamma: generate_random_state(adjusted_seeds[1]), // Seed for gamma distribution random number generator 2
+            xyzuv_n_1_gamma: generate_random_state(adjusted_seeds[2]), // Seed for gamma distribution random number generator 3
 
             // Initialize the state variable for uniform distribution random number generation
-            xyzuv_uniform: create_state(adjusted_seeds[3]), // Seed for uniform distribution random number generator
+            xyzuv_uniform: generate_random_state(adjusted_seeds[3]), // Seed for uniform distribution random number generator
 
             // Set the initial degrees of freedom
             degree_of_freedom: 1_u64, // Default degrees of freedom

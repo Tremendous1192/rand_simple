@@ -1,5 +1,6 @@
-use crate::create_state;
-use crate::standard_distributions::{standard_gamma, xorshift160_0_or_greater_and_less_than_1};
+use crate::standard_distributions::{
+    generate_random_state, standard_gamma, xorshift160_0_or_greater_and_less_than_1,
+};
 
 /// F-distribution
 /// # Usage Example
@@ -68,19 +69,19 @@ impl FDistribution {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
-            xyzuv_u_gamma_1: create_state(adjusted_seeds[0]),
-            xyzuv_n_0_gamma_1: create_state(adjusted_seeds[1]),
-            xyzuv_n_1_gamma_1: create_state(adjusted_seeds[2]),
+            xyzuv_u_gamma_1: generate_random_state(adjusted_seeds[0]),
+            xyzuv_n_0_gamma_1: generate_random_state(adjusted_seeds[1]),
+            xyzuv_n_1_gamma_1: generate_random_state(adjusted_seeds[2]),
 
-            xyzuv_uniform_1: create_state(adjusted_seeds[3]),
+            xyzuv_uniform_1: generate_random_state(adjusted_seeds[3]),
 
             degree_of_freedom_1: 1_u64,
 
-            xyzuv_u_gamma_2: create_state(adjusted_seeds[4]),
-            xyzuv_n_0_gamma_2: create_state(adjusted_seeds[5]),
-            xyzuv_n_1_gamma_2: create_state(adjusted_seeds[6]),
+            xyzuv_u_gamma_2: generate_random_state(adjusted_seeds[4]),
+            xyzuv_n_0_gamma_2: generate_random_state(adjusted_seeds[5]),
+            xyzuv_n_1_gamma_2: generate_random_state(adjusted_seeds[6]),
 
-            xyzuv_uniform_2: create_state(adjusted_seeds[7]),
+            xyzuv_uniform_2: generate_random_state(adjusted_seeds[7]),
 
             degree_of_freedom_2: 1_u64,
         }

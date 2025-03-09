@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::xorshift160_0_to_1;
+use crate::standard_distributions::{generate_random_state, xorshift160_0_to_1};
 
 /// Geometric Distribution
 ///
@@ -26,7 +25,7 @@ impl Geometric {
     /// コンストラクタ
     /// * `_seed` - 乱数の種
     pub fn new(_seed: u32) -> Self {
-        let xyzuv: [u32; 5] = create_state(_seed);
+        let xyzuv: [u32; 5] = generate_random_state(_seed);
         Self {
             xyzuv,
             probability: 0.5_f64,

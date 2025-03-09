@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_gamma;
+use crate::standard_distributions::{generate_random_state, standard_gamma};
 
 /// Erlang Distribution
 ///
@@ -62,9 +61,9 @@ impl Erlang {
 
         // Create a new instance with adjusted seeds and default parameters
         Self {
-            xyzuv_u: create_state(adjusted_seeds[0]),
-            xyzuv_n_0: create_state(adjusted_seeds[1]),
-            xyzuv_n_1: create_state(adjusted_seeds[2]),
+            xyzuv_u: generate_random_state(adjusted_seeds[0]),
+            xyzuv_n_0: generate_random_state(adjusted_seeds[1]),
+            xyzuv_n_1: generate_random_state(adjusted_seeds[2]),
             shape: 1_f64, // Default shape parameter
             scale: 1_f64, // Default scale parameter
         }

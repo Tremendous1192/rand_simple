@@ -1,5 +1,4 @@
-use crate::create_state;
-use crate::standard_distributions::standard_gamma;
+use crate::standard_distributions::{generate_random_state, standard_gamma};
 
 /// Beta Distribution
 /// # Example
@@ -41,15 +40,15 @@ impl Beta {
 
         Self {
             // Alpha parameters
-            xyzuv_u_alpha: create_state(adjusted_seeds[0]),
-            xyzuv_n_0_alpha: create_state(adjusted_seeds[1]),
-            xyzuv_n_1_alpha: create_state(adjusted_seeds[2]),
+            xyzuv_u_alpha: generate_random_state(adjusted_seeds[0]),
+            xyzuv_n_0_alpha: generate_random_state(adjusted_seeds[1]),
+            xyzuv_n_1_alpha: generate_random_state(adjusted_seeds[2]),
             shape_alpha: 1_f64,
 
             // Beta parameters
-            xyzuv_u_beta: create_state(adjusted_seeds[3]),
-            xyzuv_n_0_beta: create_state(adjusted_seeds[4]),
-            xyzuv_n_1_beta: create_state(adjusted_seeds[5]),
+            xyzuv_u_beta: generate_random_state(adjusted_seeds[3]),
+            xyzuv_n_0_beta: generate_random_state(adjusted_seeds[4]),
+            xyzuv_n_1_beta: generate_random_state(adjusted_seeds[5]),
             shape_beta: 1_f64,
         }
     }

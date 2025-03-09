@@ -1,6 +1,6 @@
-use crate::create_state;
 use crate::standard_distributions::{
-    standard_exponential, standard_gamma, xorshift160_greater_than_0_and_less_than_1,
+    generate_random_state, standard_exponential, standard_gamma,
+    xorshift160_greater_than_0_and_less_than_1,
 };
 
 /// Chi-Square Distribution
@@ -59,11 +59,11 @@ impl ChiSquare {
         let adjusted_seeds = crate::adjust_seeds!(seeds);
 
         Self {
-            xyzuv_u_gamma: create_state(adjusted_seeds[0]), // State variable for gamma distribution 1
-            xyzuv_n_0_gamma: create_state(adjusted_seeds[1]), // State variable for gamma distribution 2
-            xyzuv_n_1_gamma: create_state(adjusted_seeds[2]), // State variable for gamma distribution 3
+            xyzuv_u_gamma: generate_random_state(adjusted_seeds[0]), // State variable for gamma distribution 1
+            xyzuv_n_0_gamma: generate_random_state(adjusted_seeds[1]), // State variable for gamma distribution 2
+            xyzuv_n_1_gamma: generate_random_state(adjusted_seeds[2]), // State variable for gamma distribution 3
 
-            xyzuv_uniform: create_state(adjusted_seeds[3]), // State variable for uniform distribution
+            xyzuv_uniform: generate_random_state(adjusted_seeds[3]), // State variable for uniform distribution
 
             degree_of_freedom: 1u64, // Degrees of freedom
             r_div2: 0.5f64,          // Preprocessing for random number calculation
