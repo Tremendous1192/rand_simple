@@ -1,8 +1,8 @@
 #![doc = include_str!("../README.md")]
 
 mod distributions; // 確率変数の詳細
-#[cfg(test)]
-mod sandbox; // 試行錯誤するためのテストモジュール
+                   //#[cfg(test)]
+                   //mod sandbox; // 試行錯誤するためのテストモジュール
 mod standard_distributions; // 標準分布を計算するモジュール
                             //#[cfg(test)]
                             //mod test_distributions; // 機能確認のためのテストモジュール
