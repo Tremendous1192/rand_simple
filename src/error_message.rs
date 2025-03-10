@@ -1,52 +1,37 @@
-/// エラーメッセージ
+use std::fmt;
+//use std::io;// 標準エラーのfromを実装する場合に使用する。
+
+/// Enum representing possible errors when updating a parameter.
+#[derive(Debug)]
 pub enum ParameterUpdateError {
-    /// 閉区間 ```[min, max]``` の設定ミス
+    /// Error for invalid range configuration within a closed interval `[min, max]`.
+    /// This occurs when the minimum value is greater than the maximum value.
     ParameterRangeErrorF64 { min: f64, max: f64 },
-    //InvalidParameter(String),
-    //MissingParameter(String),
-    //ImmutableParameter(String),
-    //ParameterRangeError { parameter: String, min: i32, max: i32 },
 }
 
-impl core::fmt::Display for ParameterUpdateError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+impl fmt::Display for ParameterUpdateError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ParameterUpdateError::ParameterRangeErrorF64 { min, max } => {
-                write!(
-                    f,
-                    "最小値 {} は最大値 {} よりも小さくしてください",
-                    min, max
-                )
-            } /*
-              ParameterUpdateError::InvalidParameter(param) => {
-                  write!(f, "Invalid parameter: '{}'", param)
-              }
-              ParameterUpdateError::MissingParameter(param) => {
-                  write!(f, "Missing required parameter: '{}'", param)
-              }
-              ParameterUpdateError::ImmutableParameter(param) => {
-                  write!(f, "Parameter '{}' is immutable and cannot be updated", param)
-              }
-              ParameterUpdateError::ParameterRangeError { parameter, min, max } => {
-                  write!(
-                      f,
-                      "Parameter '{}' is out of range. Valid range is {} to {}",
-                      parameter, min, max
-                  )
-              }*/
+            Self::ParameterRangeErrorF64 { min, max } => write!(
+                f,
+                "Minimum value {min:?} must be less than maximum value {max:?}."
+            ),
         }
     }
 }
 
-/// エラーメッセージの動作確認
+/// Unit test to verify the behavior of `ParameterUpdateError`.
 #[test]
 fn test_parameter_update_error() {
+    // Create an instance of the error with an incorrect range configuration.
     let error = ParameterUpdateError::ParameterRangeErrorF64 {
-        min: 11_f64,
+        min: 11_f64, // Invalid: minimum is greater than maximum
         max: -1_f64,
     };
+
+    // Verify that the error message matches the expected string.
     assert_eq!(
-        format!("{error}"),
-        "最小値 11 は最大値 -1 よりも小さくしてください"
+        error.to_string(),
+        "Minimum value 11.0 must be less than maximum value -1.0." // Expected output
     );
 }

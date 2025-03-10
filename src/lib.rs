@@ -9,7 +9,7 @@ mod standard_distributions; // 標準分布を計算するモジュール
 mod error_message; // パラメータ更新時のエラーメッセージモジュール
 
 // エラーメッセージ
-//pub use crate::error_message::ParameterUpdateError;
+pub use crate::error_message::ParameterUpdateError;
 
 // 共通処理
 
